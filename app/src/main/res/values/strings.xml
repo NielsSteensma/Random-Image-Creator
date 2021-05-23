@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Random Image Creator</string>
+    <string name="temp_button">Generate</string>
 </resources>
