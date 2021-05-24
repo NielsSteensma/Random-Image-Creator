@@ -4,16 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.MainActivity">
+    tools:context=".ui.createdimages.CreatedImagesActivity">
 
-    <Button
-        android:id="@+id/temp_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/temp_button"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_created_images"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/design_default_color_primary_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
