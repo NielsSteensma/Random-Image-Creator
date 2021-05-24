@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Random Image Creator</string>
-    <string name="temp_button">Generate</string>
+    <string name="image_creator_option_amount">Amount</string>
+    <string name="image_creator_option_width">Width</string>
+    <string name="image_creator_option_height">Height</string>
+    <string name="image_creator_option_invalid">Value missing</string>
+    <string name="image_creator_button_create">Create</string>
 </resources>

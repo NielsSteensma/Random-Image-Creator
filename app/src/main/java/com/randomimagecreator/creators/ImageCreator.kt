@@ -15,7 +15,7 @@ abstract class ImageCreator {
     fun createBitmaps(imageCreatorOptions: ImageCreatorOptions? = null): MutableList<Bitmap> {
         val options = imageCreatorOptions ?: ImageCreatorOptions()
         val bitmaps = mutableListOf<Bitmap>()
-        for (i in 0..options.amount) {
+        for (i in 0 until options.amount) {
             bitmaps.add(createBitmap(options))
         }
         return bitmaps

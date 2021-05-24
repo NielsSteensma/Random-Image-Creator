@@ -20,19 +20,19 @@ class SolidColorCreator : ImageCreator() {
     private val possibleHexadecimalCharacters =
         charArrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F')
 
-    override fun createBitmap(options: ImageCreatorOptions): Bitmap {
+    override fun createBitmap(imageCreatorOptions: ImageCreatorOptions): Bitmap {
         val color = Color.parseColor(generateRandomHexColorValue())
 
         val bitmap = Bitmap.createBitmap(
-            options.width,
-            options.height,
+            imageCreatorOptions.width,
+            imageCreatorOptions.height,
             Bitmap.Config.ARGB_8888
         ).apply {
             setHasAlpha(false)
         }
 
-        for (x in 0..99) {
-            for (y in 0..99) {
+        for (x in 0 until imageCreatorOptions.width) {
+            for (y in 0 until imageCreatorOptions.height) {
                 bitmap.setPixel(x, y, color)
             }
         }
