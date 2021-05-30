@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Convenient method that updates the given [MutableLiveData] of type int with the given
+     * Convenient method that updates the given [MutableLiveData] of type [Int] with the given
      * [value] if the value is not null, otherwise sets the value as 0.
      */
     private fun onTextChangedHandler(liveData: MutableLiveData<Int>, value: CharSequence?) {

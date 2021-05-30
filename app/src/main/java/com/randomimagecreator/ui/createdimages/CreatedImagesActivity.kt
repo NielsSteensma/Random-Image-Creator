@@ -26,7 +26,7 @@ class CreatedImagesActivity : BaseActivity() {
     }
 
     /**
-     * Sets up the recyclerview to show the 2x2 grid of images.
+     * Sets up the RecyclerView to show the 2x2 grid of images.
      */
     private fun setupRecyclerView() {
         val recyclerview: RecyclerView = findViewById(R.id.recyclerview_created_images)

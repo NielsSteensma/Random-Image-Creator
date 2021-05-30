@@ -3,7 +3,7 @@ package com.randomimagecreator.ui.shared
 import androidx.appcompat.app.AppCompatActivity
 
 /**
- * Contains common logic used across different activities
+ * Contains common logic used across different activities.
  */
 open class BaseActivity : AppCompatActivity() {
 

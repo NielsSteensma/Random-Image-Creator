@@ -6,7 +6,7 @@ import com.randomimagecreator.ImageCreatorOptions
 import kotlin.random.Random
 
 /**
- * Responsible for creating bitmap with a random solid color.
+ * Creates bitmaps with a random solid color.
  *
  * Note: The algorithm works by keeping a list of all 16 possible hex characters. Then it selects
  * 6 times a random value of this list to construct a random hex color code.
@@ -20,19 +20,19 @@ class SolidColorCreator : ImageCreator() {
     private val possibleHexadecimalCharacters =
         charArrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F')
 
-    override fun createBitmap(imageCreatorOptions: ImageCreatorOptions): Bitmap {
+    override fun createBitmap(options: ImageCreatorOptions): Bitmap {
         val color = Color.parseColor(generateRandomHexColorValue())
 
         val bitmap = Bitmap.createBitmap(
-            imageCreatorOptions.width,
-            imageCreatorOptions.height,
+            options.width,
+            options.height,
             Bitmap.Config.ARGB_8888
         ).apply {
             setHasAlpha(false)
         }
 
-        for (x in 0 until imageCreatorOptions.width) {
-            for (y in 0 until imageCreatorOptions.height) {
+        for (x in 0 until options.width) {
+            for (y in 0 until options.height) {
                 bitmap.setPixel(x, y, color)
             }
         }

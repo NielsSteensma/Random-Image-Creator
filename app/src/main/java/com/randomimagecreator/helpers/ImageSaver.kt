@@ -8,10 +8,30 @@ import android.provider.MediaStore
 import java.util.*
 
 /**
- * Helper class for saving images
+ * Helper class for saving images.
  */
 class ImageSaver {
     companion object {
+        /**
+         * Saves the given array of bitmaps to the user his external storage.
+         *
+         * @param bitmaps           A list of all bitmaps to save.
+         * @param contentResolver  The contentResolver to use for saving.
+         * @param directory         Name of the directory to create inside
+         *                            "Pictures/RandomImageCreator" for saving.
+         */
+        fun saveBitmaps(
+            bitmaps: MutableList<Bitmap>,
+            contentResolver: ContentResolver,
+            directory: String
+        ): ArrayList<Uri> {
+            val savedBitmapUris = arrayListOf<Uri>()
+            for (bitmap in bitmaps) {
+                savedBitmapUris.add(saveBitmap(bitmap, contentResolver, directory))
+            }
+            return savedBitmapUris;
+        }
+
         /**
          * Saves the given bitmap to the user his external storage.
          */
@@ -34,21 +54,6 @@ class ImageSaver {
             contentResolver.openOutputStream(uri!!)
                 .use { stream -> bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream) }
             return uri
-        }
-
-        /**
-         * Saves the given array of bitmaps to the user his external storage.
-         */
-        fun saveBitmaps(
-            bitmaps: MutableList<Bitmap>,
-            contentResolver: ContentResolver,
-            directory: String
-        ): ArrayList<Uri> {
-            val savedBitmapUris = arrayListOf<Uri>()
-            for (bitmap in bitmaps) {
-                savedBitmapUris.add(saveBitmap(bitmap, contentResolver, directory))
-            }
-            return savedBitmapUris;
         }
 
         /**
