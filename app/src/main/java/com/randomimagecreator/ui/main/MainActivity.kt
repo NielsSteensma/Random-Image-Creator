@@ -3,21 +3,21 @@ package com.randomimagecreator.ui.main
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
+import androidx.lifecycle.MutableLiveData
 import com.google.android.material.textfield.TextInputEditText
-import com.randomimagecreator.ImageCreatorOptions
 import com.randomimagecreator.R
-import com.randomimagecreator.creators.SolidColorCreator
-import com.randomimagecreator.helpers.ImageSaver
-import com.randomimagecreator.helpers.toString
 import com.randomimagecreator.ui.createdimages.CreatedImagesActivity
-import java.util.*
 
 /**
  * Activity that shows to the user the form with the image creation options.
  */
 class MainActivity : AppCompatActivity() {
+    private val viewModel = MainViewModel()
     private lateinit var amountTextField: TextInputEditText
     private lateinit var widthTextField: TextInputEditText
     private lateinit var heightTextField: TextInputEditText
@@ -25,73 +25,92 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        // Bind fields
-        val createButton = findViewById<Button>(R.id.image_creator_button_create)
-        createButton.setOnClickListener(GenerateImageButtonOnClickListener())
-        amountTextField = findViewById<TextInputEditText>(R.id.image_creator_option_amount)
-        widthTextField = findViewById(R.id.image_creator_option_width)
-        heightTextField = findViewById(R.id.image_creator_option_height)
+        bindToViewModel()
     }
 
     /**
-     * Validates if the creation can be performed. This might not be the case if options are missing
-     * for example.
-     *
-     * For all found invalid fields an error will be shown to the user.
+     * Binds the activity to the viewModel.
      */
-    private fun validateCreation(): Boolean {
-        var isValid = true
-        if (amountTextField.text.toString().isBlank()) {
-            amountTextField.error = resources.getString(R.string.image_creator_option_invalid)
-            isValid = false
-        }
-        if (widthTextField.text.toString().isBlank()) {
-            widthTextField.error = resources.getString(R.string.image_creator_option_invalid)
-            isValid = false
-        }
-        if (heightTextField.text.toString().isBlank()) {
-            heightTextField.error = resources.getString(R.string.image_creator_option_invalid)
-            isValid = false
-        }
-        return isValid
-    }
-
-    private fun getImageCreatorOptions(): ImageCreatorOptions {
-        return ImageCreatorOptions(
-            amount = Integer.parseInt(amountTextField.text.toString()),
-            width = Integer.parseInt(widthTextField.text.toString()),
-            height = Integer.parseInt(heightTextField.text.toString()),
-            storageDirectory = Calendar.getInstance().time.toString("dd-MM-YY hhmmss")
-        )
-    }
-
-    inner class GenerateImageButtonOnClickListener : View.OnClickListener {
-        override fun onClick(view: View?) {
-            val isValid = validateCreation()
-            if (!isValid) return
-
-
-            val bitmaps = SolidColorCreator().createBitmaps(getImageCreatorOptions())
-
-            // Save to storage
-            val createdImageUris = ImageSaver.saveBitmaps(
-                bitmaps,
-                contentResolver,
-                getImageCreatorOptions().storageDirectory
-            )
-
-            // Start activity to show generated bitmaps.
-            // We pass URI's here because intent has 1mb limit
-            val intent = Intent(baseContext, CreatedImagesActivity::class.java).apply {
-                putExtra(CreatedImagesActivity.INTENT_KEY_CREATED_IMAGE_URIS, createdImageUris)
-                putExtra(
-                    CreatedImagesActivity.INTENT_KEY_CREATED_IMAGE_OPTIONS,
-                    getImageCreatorOptions()
-                )
+    private fun bindToViewModel() {
+        viewModel.state.observe(this) { state ->
+            when (state) {
+                MainViewModel.State.INVALID_FORM_FOUND ->
+                    showValidationErrors()
+                MainViewModel.State.STARTED_CREATING_IMAGES ->
+                    showGeneratingImagesSpinner()
+                MainViewModel.State.FINISHED_CREATING_IMAGES ->
+                    navigateToCreatedImagesActivity()
+                else -> {
+                }
             }
-
-            startActivity(intent)
         }
+
+        findViewById<Button>(R.id.image_creator_button_create).setOnClickListener {
+            viewModel.onUserWantsToCreateImages(contentResolver)
+        }
+
+        amountTextField = findViewById<TextInputEditText>(R.id.image_creator_option_amount).apply {
+            doOnTextChanged { text, _, _, _ -> onTextChangedHandler(viewModel.amount, text) }
+        }
+        widthTextField = findViewById<TextInputEditText>(R.id.image_creator_option_width).apply {
+            doOnTextChanged { text, _, _, _ -> onTextChangedHandler(viewModel.width, text) }
+        }
+        heightTextField = findViewById<TextInputEditText>(R.id.image_creator_option_height).apply {
+            doOnTextChanged { text, _, _, _ -> onTextChangedHandler(viewModel.height, text) }
+        }
+    }
+
+    /**
+     * Convenient method that updates the given [MutableLiveData] of type int with the given
+     * [value] if the value is not null, otherwise sets the value as 0.
+     */
+    private fun onTextChangedHandler(liveData: MutableLiveData<Int>, value: CharSequence?) {
+        liveData.value = if (value.isNullOrBlank()) {
+            0
+        } else {
+            Integer.parseInt(value.toString())
+        }
+    }
+
+    /**
+     * Shows validation errors for all invalid form fields.
+     */
+    private fun showValidationErrors() {
+        val amount = viewModel.amount.value?.toString()
+        if (amount == null || amount == "0") {
+            amountTextField.error = resources.getString(R.string.image_creator_option_invalid)
+        }
+
+        val width = viewModel.width.value?.toString()
+        if (width == null || width == "0") {
+            widthTextField.error = resources.getString(R.string.image_creator_option_invalid)
+        }
+
+        val height = viewModel.height.value?.toString()
+        if (height == null || height == "0") {
+            heightTextField.error = resources.getString(R.string.image_creator_option_invalid)
+        }
+    }
+
+    private fun showGeneratingImagesSpinner() {
+        findViewById<ProgressBar>(R.id.image_creator_progressbar).visibility = View.VISIBLE
+    }
+
+    private fun navigateToCreatedImagesActivity() {
+        findViewById<ProgressBar>(R.id.image_creator_progressbar).visibility = View.INVISIBLE
+
+        // We pass URI's here because intent has 1mb limit
+        val intent = Intent(baseContext, CreatedImagesActivity::class.java).apply {
+            putExtra(
+                CreatedImagesActivity.INTENT_KEY_CREATED_IMAGE_URIS,
+                viewModel.createdImageUris
+            )
+            putExtra(
+                CreatedImagesActivity.INTENT_KEY_CREATED_IMAGE_OPTIONS,
+                viewModel.imageCreatorOptions
+            )
+        }
+
+        startActivity(intent)
     }
 }

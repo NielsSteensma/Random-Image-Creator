@@ -14,5 +14,5 @@
     <string name="created_images_title">Created images</string>
     <string name="created_images_amount_single">Created 1 image</string>
     <string name="created_images_amount_multiple">Created %1$d images</string>
-    <string name="created_images_location">The created images can be found in the Pictures folder under the directory \"%1$s\"</string>
+    <string name="created_images_location">The created images can be found in the Pictures folder under the directory \"RandomImageCreator/%1$s\"</string>
 </resources>

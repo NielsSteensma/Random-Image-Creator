@@ -5,7 +5,6 @@ import android.content.ContentValues
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
-import java.io.File
 import java.util.*
 
 /**
@@ -23,7 +22,10 @@ class ImageSaver {
         ): Uri {
             val values = ContentValues().apply {
                 put(MediaStore.Images.Media.DISPLAY_NAME, createUniqueFileName())
-                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures${File.separator + directory}")
+                put(
+                    MediaStore.Images.Media.RELATIVE_PATH,
+                    "Pictures/RandomImageCreator/${directory}"
+                )
                 put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
             }
             val contentUri =
