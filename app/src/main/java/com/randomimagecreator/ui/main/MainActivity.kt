@@ -2,10 +2,7 @@ package com.randomimagecreator.ui.main
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.Button
-import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.MutableLiveData
@@ -36,8 +33,6 @@ class MainActivity : AppCompatActivity() {
             when (state) {
                 MainViewModel.State.INVALID_FORM_FOUND ->
                     showValidationErrors()
-                MainViewModel.State.STARTED_CREATING_IMAGES ->
-                    showGeneratingImagesSpinner()
                 MainViewModel.State.FINISHED_CREATING_IMAGES ->
                     navigateToCreatedImagesActivity()
                 else -> {
@@ -92,13 +87,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showGeneratingImagesSpinner() {
-        findViewById<ProgressBar>(R.id.image_creator_progressbar).visibility = View.VISIBLE
-    }
-
     private fun navigateToCreatedImagesActivity() {
-        findViewById<ProgressBar>(R.id.image_creator_progressbar).visibility = View.INVISIBLE
-
         // We pass URI's here because intent has 1mb limit
         val intent = Intent(baseContext, CreatedImagesActivity::class.java).apply {
             putExtra(
