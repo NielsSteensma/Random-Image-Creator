@@ -6,18 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.MainActivity">
 
-    <include
-        android:id="@+id/shared_logo"
-        layout="@layout/shared_top_logo"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginEnd="100dp"
+        android:layout_marginStart="75dp"
+        android:layout_marginEnd="75dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@id/image_creator_button_create"
         app:layout_constraintEnd_toEndOf="parent"
@@ -26,8 +19,10 @@
 
         <!-- Options: amount -->
         <com.google.android.material.textfield.TextInputLayout
+            style="@style/Theme.RandomImageCreator.InputField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:hint="@string/image_creator_option_amount">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -39,9 +34,11 @@
 
         <!-- Options: width -->
         <com.google.android.material.textfield.TextInputLayout
+            style="@style/Theme.RandomImageCreator.InputField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/image_creator_option_width">
+            android:layout_marginBottom="10dp"
+            android:hint="@string/image_creator_option_width_hint">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/image_creator_option_width"
@@ -52,9 +49,10 @@
 
         <!-- Options: height -->
         <com.google.android.material.textfield.TextInputLayout
+            style="@style/Theme.RandomImageCreator.InputField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/image_creator_option_height">
+            android:hint="@string/image_creator_option_height_hint">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/image_creator_option_height"
@@ -65,12 +63,20 @@
 
     </LinearLayout>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/image_creator_button_create"
+        style="@style/Theme.RandomImageCreator.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/image_creator_button_create"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/shared_logo"
+        layout="@layout/shared_top_logo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

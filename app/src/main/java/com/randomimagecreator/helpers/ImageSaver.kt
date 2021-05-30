@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
+import java.io.File
 import java.util.*
 
 /**
@@ -13,14 +14,21 @@ import java.util.*
 class ImageSaver {
     companion object {
         /**
-         * Saves the given bitmap to the user his external storage
+         * Saves the given bitmap to the user his external storage.
          */
-        private fun saveBitmap(bitmap: Bitmap, contentResolver: ContentResolver): Uri {
-            val downloads = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        private fun saveBitmap(
+            bitmap: Bitmap,
+            contentResolver: ContentResolver,
+            directory: String
+        ): Uri {
             val values = ContentValues().apply {
                 put(MediaStore.Images.Media.DISPLAY_NAME, createUniqueFileName())
+                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures${File.separator + directory}")
+                put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
             }
-            val uri = contentResolver.insert(downloads, values)
+            val contentUri =
+                MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+            val uri = contentResolver.insert(contentUri, values)
             contentResolver.openOutputStream(uri!!)
                 .use { stream -> bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream) }
             return uri
@@ -31,11 +39,12 @@ class ImageSaver {
          */
         fun saveBitmaps(
             bitmaps: MutableList<Bitmap>,
-            contentResolver: ContentResolver
+            contentResolver: ContentResolver,
+            directory: String
         ): ArrayList<Uri> {
             val savedBitmapUris = arrayListOf<Uri>()
             for (bitmap in bitmaps) {
-                savedBitmapUris.add(saveBitmap(bitmap, contentResolver))
+                savedBitmapUris.add(saveBitmap(bitmap, contentResolver, directory))
             }
             return savedBitmapUris;
         }

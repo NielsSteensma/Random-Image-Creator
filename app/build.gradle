@@ -1,16 +1,19 @@
+
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
 }
 
+apply plugin: 'kotlin-parcelize'
+
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion 30
+    buildToolsVersion "30.0.2"
 
     defaultConfig {
         applicationId "com.randomimagecreator"
-        minSdkVersion 23
-        targetSdkVersion 29
+        minSdkVersion 29
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 

@@ -1,15 +1,14 @@
 package com.randomimagecreator
 
-import android.net.Uri
+import android.os.Parcelable
 
 /**
  * Holds all user-selectable options of the image creator screen
  */
+@kotlinx.parcelize.Parcelize
 data class ImageCreatorOptions(
-    val amount: Int = 1,
-    val width: Int = 100,
-    val height: Int = 100,
-    val format: ImageCreatorFormat = ImageCreatorFormat(""),
-    val pattern: ImageCreatorPattern = ImageCreatorPattern(""),
-    val storageLocation: Uri = Uri.EMPTY
-)
+    val amount: Int,
+    val width: Int,
+    val height: Int,
+    val storageDirectory: String
+) : Parcelable

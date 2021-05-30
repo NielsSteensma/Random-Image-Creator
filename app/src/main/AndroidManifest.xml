@@ -17,7 +17,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.createdimages.CreatedImagesActivity" />
+        <activity
+            android:name=".ui.createdimages.CreatedImagesActivity"
+            android:theme="@style/Theme.RandomImageCreator.WithActionBar" />
     </application>
 
 </manifest>

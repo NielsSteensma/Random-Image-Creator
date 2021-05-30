@@ -10,21 +10,26 @@ import com.randomimagecreator.ImageCreatorOptions
 import com.randomimagecreator.R
 import com.randomimagecreator.creators.SolidColorCreator
 import com.randomimagecreator.helpers.ImageSaver
+import com.randomimagecreator.helpers.toString
 import com.randomimagecreator.ui.createdimages.CreatedImagesActivity
+import java.util.*
 
+/**
+ * Activity that shows to the user the form with the image creation options.
+ */
 class MainActivity : AppCompatActivity() {
     private lateinit var amountTextField: TextInputEditText
     private lateinit var widthTextField: TextInputEditText
     private lateinit var heightTextField: TextInputEditText
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val createButton = findViewById<Button>(R.id.image_creator_button_create)
-        createButton.setOnClickListener(GenerateImageButtonOnClickListener())
 
         // Bind fields
-        amountTextField = findViewById(R.id.image_creator_option_amount)
+        val createButton = findViewById<Button>(R.id.image_creator_button_create)
+        createButton.setOnClickListener(GenerateImageButtonOnClickListener())
+        amountTextField = findViewById<TextInputEditText>(R.id.image_creator_option_amount)
         widthTextField = findViewById(R.id.image_creator_option_width)
         heightTextField = findViewById(R.id.image_creator_option_height)
     }
@@ -52,12 +57,14 @@ class MainActivity : AppCompatActivity() {
         return isValid
     }
 
-    private fun getImageCreatorOptions() =
-        ImageCreatorOptions(
+    private fun getImageCreatorOptions(): ImageCreatorOptions {
+        return ImageCreatorOptions(
             amount = Integer.parseInt(amountTextField.text.toString()),
             width = Integer.parseInt(widthTextField.text.toString()),
-            height = Integer.parseInt(heightTextField.text.toString())
+            height = Integer.parseInt(heightTextField.text.toString()),
+            storageDirectory = Calendar.getInstance().time.toString("dd-MM-YY hhmmss")
         )
+    }
 
     inner class GenerateImageButtonOnClickListener : View.OnClickListener {
         override fun onClick(view: View?) {
@@ -68,12 +75,20 @@ class MainActivity : AppCompatActivity() {
             val bitmaps = SolidColorCreator().createBitmaps(getImageCreatorOptions())
 
             // Save to storage
-            val createdImageUris = ImageSaver.saveBitmaps(bitmaps, contentResolver)
+            val createdImageUris = ImageSaver.saveBitmaps(
+                bitmaps,
+                contentResolver,
+                getImageCreatorOptions().storageDirectory
+            )
 
             // Start activity to show generated bitmaps.
             // We pass URI's here because intent has 1mb limit
             val intent = Intent(baseContext, CreatedImagesActivity::class.java).apply {
                 putExtra(CreatedImagesActivity.INTENT_KEY_CREATED_IMAGE_URIS, createdImageUris)
+                putExtra(
+                    CreatedImagesActivity.INTENT_KEY_CREATED_IMAGE_OPTIONS,
+                    getImageCreatorOptions()
+                )
             }
 
             startActivity(intent)

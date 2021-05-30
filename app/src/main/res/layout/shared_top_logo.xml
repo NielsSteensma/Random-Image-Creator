@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/shared_logo"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="120dp"
     android:background="@color/primary"
     android:orientation="vertical">
 
@@ -14,8 +14,9 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="22dp"
         android:text="@string/app_name"
         android:textAlignment="center"
+        android:textSize="18sp"
         android:textColor="@color/white" />
 </LinearLayout>
