@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Random Image Creator</string>
+
+    <!-- Main activity -->
+    <string name="image_creator_option_amount">Amount</string>
+    <string name="image_creator_option_width">Width (px)</string>
+    <string name="image_creator_option_height">Height (px)</string>
+    <string name="image_creator_option_width_hint">Width</string>
+    <string name="image_creator_option_height_hint">Height</string>
+    <string name="image_creator_option_invalid">Value missing</string>
+    <string name="image_creator_button_create">Create</string>
+
+    <!-- Created images activity -->
+    <string name="created_images_title">Created images</string>
+    <string name="created_images_amount_single">Created 1 image</string>
+    <string name="created_images_amount_multiple">Created %1$d images</string>
+    <string name="created_images_location">The created images can be found in the Pictures folder under the directory \"RandomImageCreator/%1$s\"</string>
 </resources>
