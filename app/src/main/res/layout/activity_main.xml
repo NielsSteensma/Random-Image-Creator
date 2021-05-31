@@ -7,10 +7,12 @@
     tools:context=".ui.main.MainActivity">
 
     <LinearLayout
+        android:id="@+id/image_creator_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="75dp"
         android:layout_marginEnd="75dp"
+        android:layout_marginTop="50dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@id/image_creator_button_create"
         app:layout_constraintEnd_toEndOf="parent"
@@ -69,10 +71,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/image_creator_button_create"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/image_creator_form" />
 
     <include
         android:id="@+id/shared_logo"
