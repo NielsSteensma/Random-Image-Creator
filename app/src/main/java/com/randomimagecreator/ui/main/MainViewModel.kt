@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.randomimagecreator.ImageCreatorOptions
+import com.randomimagecreator.analytics.AnalyticsManager
 import com.randomimagecreator.creators.SolidColorCreator
 import com.randomimagecreator.helpers.ImageSaver
 import com.randomimagecreator.helpers.toString
@@ -60,8 +61,8 @@ class MainViewModel : ViewModel() {
             state.postValue(State.STARTED_CREATING_IMAGES)
 
             val options = imageCreatorOptions
+            AnalyticsManager.logImageCreationEvent(options)
             val bitmaps = SolidColorCreator().createBitmaps(options)
-
             createdImageUris =
                 ImageSaver.saveBitmaps(bitmaps, contentResolver, options.storageDirectory)
             state.postValue(State.FINISHED_CREATING_IMAGES)

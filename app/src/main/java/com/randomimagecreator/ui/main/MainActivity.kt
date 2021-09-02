@@ -8,6 +8,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.textfield.TextInputEditText
 import com.randomimagecreator.R
+import com.randomimagecreator.analytics.AnalyticsManager
 import com.randomimagecreator.ui.createdimages.CreatedImagesActivity
 
 /**
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AnalyticsManager.setup()
         setContentView(R.layout.activity_main)
         bindToViewModel()
     }

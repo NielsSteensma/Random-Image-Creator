@@ -30,7 +30,7 @@ class CreatedImagesActivity : BaseActivity() {
         setupSupportActionBar(R.string.created_images_title)
         actionModeHandler = ActionModeHandler()
         setupTextFields()
-        /**startActionMode(actionModeHandler)
+        startActionMode(actionModeHandler)
         val actionBarContextView =
             this@CreatedImagesActivity.window.decorView.findViewById<View>(R.id.action_context_bar) as ActionBarContextView?
                 ?: return
@@ -40,7 +40,7 @@ class CreatedImagesActivity : BaseActivity() {
             if (child is ActionMenuItemView) {
                 child.setTextColor(resources.getColor(R.color.primary))
             }
-        }**/
+        }
     }
 
     /**
