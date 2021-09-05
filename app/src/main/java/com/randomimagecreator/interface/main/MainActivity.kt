@@ -1,19 +1,20 @@
-package com.randomimagecreator.ui.main
+package com.randomimagecreator.`interface`.main
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.textfield.TextInputEditText
 import com.randomimagecreator.R
-import com.randomimagecreator.ui.createdimages.CreatedImagesActivity
+import com.randomimagecreator.analytics.AnalyticsManager
+import com.randomimagecreator.`interface`.createdimages.CreatedImagesActivity
+import com.randomimagecreator.`interface`.shared.BaseActivity
 
 /**
  * Activity that shows to the user the form with the image creation options.
  */
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
     private val viewModel = MainViewModel()
     private lateinit var amountTextField: TextInputEditText
     private lateinit var widthTextField: TextInputEditText
@@ -21,12 +22,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AnalyticsManager.setup()
         setContentView(R.layout.activity_main)
         bindToViewModel()
     }
 
     /**
-     * Binds the activity to the viewModel.
+     * Binds the activity to the view model.
      */
     private fun bindToViewModel() {
         viewModel.state.observe(this) { state ->

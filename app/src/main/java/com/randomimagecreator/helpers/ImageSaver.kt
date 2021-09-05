@@ -57,7 +57,7 @@ class ImageSaver {
         }
 
         /**
-         * Creates an 'unique' name based on the current epoch time in milliseconds.
+         * Creates a 'unique' name based on the current epoch time in milliseconds.
          */
         private fun createUniqueFileName() =
             System.currentTimeMillis()

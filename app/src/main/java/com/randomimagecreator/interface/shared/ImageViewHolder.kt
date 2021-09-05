@@ -1,4 +1,4 @@
-package com.randomimagecreator.ui.shared
+package com.randomimagecreator.`interface`.shared
 
 import android.net.Uri
 import android.view.View

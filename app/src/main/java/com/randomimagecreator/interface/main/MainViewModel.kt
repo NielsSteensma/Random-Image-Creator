@@ -1,4 +1,4 @@
-package com.randomimagecreator.ui.main
+package com.randomimagecreator.`interface`.main
 
 import android.content.ContentResolver
 import android.net.Uri
@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.randomimagecreator.ImageCreatorOptions
+import com.randomimagecreator.analytics.AnalyticsManager
 import com.randomimagecreator.creators.SolidColorCreator
 import com.randomimagecreator.helpers.ImageSaver
 import com.randomimagecreator.helpers.toString
@@ -60,8 +61,8 @@ class MainViewModel : ViewModel() {
             state.postValue(State.STARTED_CREATING_IMAGES)
 
             val options = imageCreatorOptions
+            AnalyticsManager.logImageCreationEvent(options)
             val bitmaps = SolidColorCreator().createBitmaps(options)
-
             createdImageUris =
                 ImageSaver.saveBitmaps(bitmaps, contentResolver, options.storageDirectory)
             state.postValue(State.FINISHED_CREATING_IMAGES)
@@ -72,7 +73,6 @@ class MainViewModel : ViewModel() {
      *  Represents all possible states the [MainViewModel] can have.
      */
     enum class State {
-        INITIAL,
         INVALID_FORM_FOUND,
         STARTED_CREATING_IMAGES,
         FINISHED_CREATING_IMAGES
