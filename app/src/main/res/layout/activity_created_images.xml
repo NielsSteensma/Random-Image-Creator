@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.createdimages.CreatedImagesActivity">
+    tools:context=".interface.createdimages.CreatedImagesActivity">
 
     <LinearLayout
         android:id="@+id/wrapper_created_images"

@@ -1,4 +1,4 @@
-package com.randomimagecreator.ui.main
+package com.randomimagecreator.`interface`.main
 
 import android.content.ContentResolver
 import android.net.Uri
@@ -73,7 +73,6 @@ class MainViewModel : ViewModel() {
      *  Represents all possible states the [MainViewModel] can have.
      */
     enum class State {
-        INITIAL,
         INVALID_FORM_FOUND,
         STARTED_CREATING_IMAGES,
         FINISHED_CREATING_IMAGES

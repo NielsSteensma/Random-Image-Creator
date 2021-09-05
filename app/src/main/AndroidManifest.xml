@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.RandomImageCreator">
-        <activity android:name=".ui.main.MainActivity">
+        <activity android:name=".interface.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,7 +18,9 @@
         </activity>
 
         <activity
-            android:name=".ui.createdimages.CreatedImagesActivity"
+            android:name=".interface.createdimages.CreatedImagesActivity"
+            android:parentActivityName="com.randomimagecreator.interface.createdimages.CreatedImagesActivity"
+            android:label="@string/created_images_title"
             android:theme="@style/Theme.RandomImageCreator.WithActionBar" />
     </application>
 

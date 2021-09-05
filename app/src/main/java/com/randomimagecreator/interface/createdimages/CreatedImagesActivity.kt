@@ -1,18 +1,13 @@
-package com.randomimagecreator.ui.createdimages
+package com.randomimagecreator.`interface`.createdimages
 
 import android.net.Uri
 import android.os.Bundle
-import android.view.*
 import android.widget.TextView
-import androidx.appcompat.view.menu.ActionMenuItemView
-import androidx.appcompat.widget.ActionBarContextView
-import androidx.appcompat.widget.ActionMenuView
-import androidx.core.view.children
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.randomimagecreator.ImageCreatorOptions
 import com.randomimagecreator.R
-import com.randomimagecreator.ui.shared.BaseActivity
+import com.randomimagecreator.`interface`.shared.BaseActivity
 
 /**
  * Activity that shows a 2x2 grid list of images.
@@ -20,27 +15,13 @@ import com.randomimagecreator.ui.shared.BaseActivity
 class CreatedImagesActivity : BaseActivity() {
     private lateinit var adapter: CreatedImagesAdapter
     private lateinit var createdImageOptions: ImageCreatorOptions
-    private lateinit var actionModeHandler: ActionModeHandler
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createdImageOptions = intent.getParcelableExtra(INTENT_KEY_CREATED_IMAGE_OPTIONS)!!
         setContentView(R.layout.activity_created_images)
         setupRecyclerView()
-        setupSupportActionBar(R.string.created_images_title)
-        actionModeHandler = ActionModeHandler()
         setupTextFields()
-        startActionMode(actionModeHandler)
-        val actionBarContextView =
-            this@CreatedImagesActivity.window.decorView.findViewById<View>(R.id.action_context_bar) as ActionBarContextView?
-                ?: return
-        val actionMenuView =
-            actionBarContextView.children.firstOrNull { child -> child is ActionMenuView } ?: return
-        for (child in (actionMenuView as ActionMenuView).children) {
-            if (child is ActionMenuItemView) {
-                child.setTextColor(resources.getColor(R.color.primary))
-            }
-        }
     }
 
     /**
@@ -72,11 +53,6 @@ class CreatedImagesActivity : BaseActivity() {
             R.string.created_images_location,
             createdImageOptions.storageDirectory
         )
-        findViewById<TextView>(R.id.textfield_created_images_location).setOnClickListener {
-            val decorView =
-                this@CreatedImagesActivity.window.decorView.findViewById<View>(R.id.action_mode_bar)
-            val a = ""
-        }
     }
 
     companion object {
@@ -94,24 +70,5 @@ class CreatedImagesActivity : BaseActivity() {
          * Amount of images to display on a single grid row.
          */
         private const val GRID_SPAN_COUNT = 2
-    }
-
-    private inner class ActionModeHandler : ActionMode.Callback {
-        override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-            MenuInflater(this@CreatedImagesActivity).inflate(R.menu.menu_created_images, menu)
-            return true
-        }
-
-        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-            val decorView =
-                this@CreatedImagesActivity.window.decorView.findViewById<View>(R.id.action_mode_bar)
-            return false
-        }
-
-        override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?) = true
-
-        override fun onDestroyActionMode(mode: ActionMode?) {
-        }
-
     }
 }

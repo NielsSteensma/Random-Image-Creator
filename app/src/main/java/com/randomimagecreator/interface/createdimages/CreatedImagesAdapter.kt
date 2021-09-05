@@ -1,17 +1,18 @@
-package com.randomimagecreator.ui.createdimages
+package com.randomimagecreator.`interface`.createdimages
 
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.randomimagecreator.R
-import com.randomimagecreator.ui.shared.ImageViewHolder
+import com.randomimagecreator.`interface`.shared.ImageViewHolder
 
 /**
  * Adapter for showing a list of generated images.
  */
 class CreatedImagesAdapter(private val createdImageUris: ArrayList<Uri>) :
     RecyclerView.Adapter<ImageViewHolder>() {
+
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ImageViewHolder {
         val view = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.viewholder_image, viewGroup, false)

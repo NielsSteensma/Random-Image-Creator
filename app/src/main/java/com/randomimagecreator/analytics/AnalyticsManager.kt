@@ -7,11 +7,10 @@ import com.google.firebase.ktx.Firebase
 import com.randomimagecreator.ImageCreatorOptions
 
 /**
- * Manager for analytics
+ * Manager for analytics.
  */
 object AnalyticsManager {
     private lateinit var analytics: FirebaseAnalytics
-
     private const val IMAGE_CREATION_EVENT = "image_creation_event"
     private const val IMAGE_CREATION_EVENT_PARAM_AMOUNT = "amount"
     private const val IMAGE_CREATION_EVENT_PARAM_WIDTH = "width"
@@ -22,7 +21,7 @@ object AnalyticsManager {
      *
      * Note: Make sure to call this in the main activity
      */
-    fun setup(){
+    fun setup() {
         analytics = Firebase.analytics
     }
 
