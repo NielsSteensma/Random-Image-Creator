@@ -9,25 +9,6 @@ import com.randomimagecreator.ImageCreatorOptions
 import com.randomimagecreator.R
 import com.randomimagecreator.ui.shared.BaseActivity
 
-/**
- * Key for passing the list of created image uris to this activity.
- */
-private const val INTENT_KEY_CREATED_IMAGE_URIS = "createdImageUris"
-
-/**
- * Key for passing the list of image creation options to this activity.
- */
-private const val INTENT_KEY_CREATED_IMAGE_OPTIONS = "createdImageOptions"
-
-/**
- * Key for passing the image save directory to this activity.
- */
-private const val INTENT_KEY_CREATED_IMAGES_DIRECTORY = "createdImagesDirectory"
-
-/**
- * Amount of images to display on a single grid row.
- */
-private const val GRID_SPAN_COUNT = 2
 
 /**
  * Activity that shows a 2x2 grid list of images.
@@ -75,5 +56,27 @@ internal class CreatedImagesActivity : BaseActivity() {
             R.string.created_images_location,
             createdImagesDirectory
         )
+    }
+    
+    companion object {
+        /**
+         * Key for passing the list of created image uris to this activity.
+         */
+        const val INTENT_KEY_CREATED_IMAGE_URIS = "createdImageUris"
+
+        /**
+         * Key for passing the list of image creation options to this activity.
+         */
+        const val INTENT_KEY_CREATED_IMAGE_OPTIONS = "createdImageOptions"
+
+        /**
+         * Key for passing the image save directory to this activity.
+         */
+        const val INTENT_KEY_CREATED_IMAGES_DIRECTORY = "createdImagesDirectory"
+
+        /**
+         * Amount of images to display on a single grid row.
+         */
+        const val GRID_SPAN_COUNT = 2
     }
 }
