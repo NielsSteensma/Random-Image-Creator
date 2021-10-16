@@ -57,7 +57,7 @@ internal class CreatedImagesActivity : BaseActivity() {
             createdImagesDirectory
         )
     }
-    
+
     companion object {
         /**
          * Key for passing the list of created image uris to this activity.
