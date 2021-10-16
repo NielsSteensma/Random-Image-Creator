@@ -5,7 +5,6 @@ android:
     - tools
     - platform-tools
     - build-tools-30.0.2
-    - android-30
     - extra-google-google_play_services
     - extra-google-m2repository
     - extra-android-m2repository
@@ -14,4 +13,5 @@ android:
     - sys-img-x86-android-30
 
 before_install:
+    - yes | sdkmanager "platforms;android-30"
     - chmod +x gradlew
