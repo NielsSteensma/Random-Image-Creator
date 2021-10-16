@@ -15,9 +15,9 @@ import java.lang.reflect.Field
  * Helper class that allows to wait until the provided view appears.
  *
  * @param viewMatcher The view to wait for.
- * @param idleMatcher The condition when the view becomes idle ( appeared ).
+ * @param idleMatcher The condition when the view becomes idle.
  */
-private class ViewIdlingResource (
+private class ViewIdlingResource(
     private val viewMatcher: Matcher<View?>?,
     private val idleMatcher: Matcher<View?>?
 ) : IdlingResource {
@@ -52,14 +52,14 @@ private class ViewIdlingResource (
 }
 
 /**
- * Waits for 30 seconds until the given view to be displayed.
+ * Waits for 30 seconds until the given view is displayed.
  * If it takes any longer an [androidx.test.espresso.IdlingResourceTimeoutException] will be thrown.
  *
  * @param matcher The matcher to wait for.
  */
 fun waitForViewToBeDisplayed(matcher: Matcher<View?>) {
     val idlingResource = ViewIdlingResource(matcher, isDisplayed())
-    try{
+    try {
         IdlingRegistry.getInstance().register(idlingResource)
         // This way we can trigger the idler.
         onView(withId(0)).check(doesNotExist())

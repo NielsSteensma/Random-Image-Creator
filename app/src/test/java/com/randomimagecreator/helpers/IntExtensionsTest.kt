@@ -21,6 +21,6 @@ class IntExtensionsTest {
 
     @Test
     fun parse_givenACharacterSequenceOfAnyNumber_ShouldReturnTheNumber() {
-        assertEquals(Int.parse("8"), 8)
+        assertEquals(Int.parse("7"), 7)
     }
 }

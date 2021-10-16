@@ -1,7 +1,8 @@
 package com.randomimagecreator.helpers
 
 /**
- * Converts a string to an int, in case the given string is null or empty, 0 is returned.
+ * Converts a [CharSequence] to an [Int],
+ * in case the given [CharSequence] is null or empty, 0 is returned.
  *
  * @param   value  The value to convert to an [Int].
  * @return The result of the conversion.

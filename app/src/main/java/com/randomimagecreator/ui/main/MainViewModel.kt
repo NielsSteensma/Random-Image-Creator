@@ -14,7 +14,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
-class MainViewModel : ViewModel() {
+/**
+ * ViewModel used by [MainActivity].
+ * Responsible for handling of any interaction with the image creation form.
+ * */
+internal class MainViewModel : ViewModel() {
     val imageCreatorOptions = MutableLiveData(ImageCreatorOptions())
     val state = MutableLiveData<State>()
     var createdImageUris = ArrayList<Uri>()
