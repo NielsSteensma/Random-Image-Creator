@@ -1,5 +1,7 @@
 package com.randomimagecreator.ui.main
 
+import androidx.lifecycle.Lifecycle
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
@@ -14,11 +16,11 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class MainActivityTests {
-    @get:Rule
-    var activityRule = ActivityScenarioRule(MainActivity::class.java)
-
     @Test
     fun imageCreation_GivenValidImageCreationOptions_CreatesImages() {
+        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
+        activityScenario.moveToState(Lifecycle.State.RESUMED)
+
         val amount = 5
         val width = 5
         val height = 5
@@ -28,7 +30,6 @@ class MainActivityTests {
         onView(withId(R.id.image_creator_option_height)).perform(typeText(height.toString()), closeSoftKeyboard())
         onView(withId(R.id.image_creator_button_create)).perform(click())
 
-        withId(R.id.image_creator_button_create).matches(isDisplayed())
-// waitForViewToBeDisplayed(withId(R.id.recyclerview_created_images))
+        waitForViewToBeDisplayed(withId(R.id.recyclerview_created_images))
     }
 }
