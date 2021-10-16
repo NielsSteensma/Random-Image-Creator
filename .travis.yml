@@ -1,8 +1,5 @@
 language: android
 dist: trusty
-env:
-  global:
-    - ADB_INSTALL_TIMEOUT=10
 android:
   components:
     - tools
@@ -13,8 +10,8 @@ android:
     - extra-android-m2repository
 
     # Emulator image
-    - android-30
-    - sys-img-arm64-v8a-android-30
+    - android-24
+    - sys-img-armeabi-v7a-android-24
 
 before_install:
   # Lets not expose the google-service.json
@@ -24,7 +21,7 @@ before_install:
 
 before_script:
   # Create and start emulator
-  - echo no | android create avd --force -n test -t android-30 --abi arm64-v8a
+  - echo no | android create avd --force -n test -t android-24 --abi armeabi-v7a
   - emulator -avd test -no-audio -no-window &
   - android-wait-for-emulator
   # Get passed android lock screen by sending key event
