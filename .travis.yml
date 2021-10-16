@@ -10,7 +10,7 @@ android:
     - extra-android-m2repository
 
     # Emulator image
-    - sys-img-x86-android-29
+    - sys-img-x86-android-30
 
 before_install:
   - openssl aes-256-cbc -K $encrypted_f761570c4ae9_key -iv $encrypted_f761570c4ae9_iv -in app/google-services.json.enc -out app/google-services.json -d
@@ -18,6 +18,6 @@ before_install:
   - chmod +x gradlew
 
 before_script:
-  - echo no | android create avd --force -n test -t android-29
+  - echo no | android create avd --force -n test -t android-30
   - emulator -avd test -no-audio -no-window &
   - android-wait-for-emulator
