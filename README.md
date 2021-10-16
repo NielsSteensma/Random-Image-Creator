@@ -6,4 +6,4 @@ An Android application that creates a configurable amount of random images.
 
 Useful if you quickly need a big set of images on your Android device for testing purpose.
 
-test
+testtrigger
