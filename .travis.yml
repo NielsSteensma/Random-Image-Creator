@@ -10,8 +10,8 @@ android:
     - extra-android-m2repository
 
     # Emulator image
-    - android-24
-    - sys-img-armeabi-v7a-android-24
+    - android-22
+    - sys-img-armeabi-v7a-android-22
 
 before_install:
   # Lets not expose the google-service.json
@@ -21,8 +21,12 @@ before_install:
 
 before_script:
   # Create and start emulator
-  - echo no | android create avd --force -n test -t android-24 --abi armeabi-v7a
+  - echo no | android create avd --force -n test -t android-22 --abi armeabi-v7a
   - emulator -avd test -no-audio -no-window &
   - android-wait-for-emulator
-  # Get passed android lock screen by sending key event
+  # Get pass lock screen by sending a key event
   - adb shell input keyevent 82 &
+
+script:
+  - ./gradlew test
+  - ./gradlew connectedAndroidTest
