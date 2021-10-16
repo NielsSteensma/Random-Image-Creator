@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId "com.randomimagecreator"
-        minSdkVersion 29
+        minSdkVersion 22
         targetSdkVersion 30
         versionCode 1
         versionName "0.1"
