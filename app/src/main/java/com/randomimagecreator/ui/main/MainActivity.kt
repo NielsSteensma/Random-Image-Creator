@@ -1,4 +1,4 @@
-package com.randomimagecreator.`interface`.main
+package com.randomimagecreator.ui.main
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,8 +8,8 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import com.google.android.material.textfield.TextInputEditText
 import com.randomimagecreator.R
-import com.randomimagecreator.`interface`.createdimages.CreatedImagesActivity
-import com.randomimagecreator.`interface`.shared.BaseActivity
+import com.randomimagecreator.ui.createdimages.CreatedImagesActivity
+import com.randomimagecreator.ui.shared.BaseActivity
 import com.randomimagecreator.analytics.AnalyticsManager
 import com.randomimagecreator.helpers.parse
 

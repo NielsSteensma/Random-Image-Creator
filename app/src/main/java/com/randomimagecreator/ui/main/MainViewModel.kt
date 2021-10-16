@@ -1,4 +1,4 @@
-package com.randomimagecreator.`interface`.main
+package com.randomimagecreator.ui.main
 
 import android.content.ContentResolver
 import android.net.Uri

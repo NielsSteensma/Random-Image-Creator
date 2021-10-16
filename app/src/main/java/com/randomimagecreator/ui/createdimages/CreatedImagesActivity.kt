@@ -1,4 +1,4 @@
-package com.randomimagecreator.`interface`.createdimages
+package com.randomimagecreator.ui.createdimages
 
 import android.net.Uri
 import android.os.Bundle
@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.randomimagecreator.ImageCreatorOptions
 import com.randomimagecreator.R
-import com.randomimagecreator.`interface`.shared.BaseActivity
+import com.randomimagecreator.ui.shared.BaseActivity
 
 /**
  * Activity that shows a 2x2 grid list of images.

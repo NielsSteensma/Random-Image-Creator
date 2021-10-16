@@ -1,4 +1,4 @@
-package com.randomimagecreator.`interface`.shared
+package com.randomimagecreator.ui.shared
 
 import androidx.appcompat.app.AppCompatActivity
 
