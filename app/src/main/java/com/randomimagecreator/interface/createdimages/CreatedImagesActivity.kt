@@ -15,10 +15,12 @@ import com.randomimagecreator.`interface`.shared.BaseActivity
 class CreatedImagesActivity : BaseActivity() {
     private lateinit var adapter: CreatedImagesAdapter
     private lateinit var createdImageOptions: ImageCreatorOptions
+    private lateinit var createdImagesDirectory: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createdImageOptions = intent.getParcelableExtra(INTENT_KEY_CREATED_IMAGE_OPTIONS)!!
+        createdImagesDirectory = intent.getStringExtra(INTENT_KEY_CREATED_IMAGES_DIRECTORY)!!
         setContentView(R.layout.activity_created_images)
         setupRecyclerView()
         setupTextFields()
@@ -51,7 +53,7 @@ class CreatedImagesActivity : BaseActivity() {
         }
         findViewById<TextView>(R.id.textfield_created_images_location).text = resources.getString(
             R.string.created_images_location,
-            createdImageOptions.storageDirectory
+            createdImagesDirectory
         )
     }
 
@@ -65,6 +67,11 @@ class CreatedImagesActivity : BaseActivity() {
          * Key for passing the list of image creation options to this activity.
          */
         const val INTENT_KEY_CREATED_IMAGE_OPTIONS = "createdImageOptions"
+
+        /**
+         * Key for passing the directory where the images can be found to this activity.
+         */
+        const val INTENT_KEY_CREATED_IMAGES_DIRECTORY = "createdImagesDirectory"
 
         /**
          * Amount of images to display on a single grid row.

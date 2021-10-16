@@ -10,61 +10,30 @@ import com.randomimagecreator.analytics.AnalyticsManager
 import com.randomimagecreator.creators.SolidColorCreator
 import com.randomimagecreator.helpers.ImageSaver
 import com.randomimagecreator.helpers.toString
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
 class MainViewModel : ViewModel() {
-    val amount = MutableLiveData<Int>()
-    val width = MutableLiveData<Int>()
-    val height = MutableLiveData<Int>()
+    val imageCreatorOptions = MutableLiveData(ImageCreatorOptions())
     val state = MutableLiveData<State>()
     var createdImageUris = ArrayList<Uri>()
-
-    /**
-     * Returns an object of [ImageCreatorOptions].
-     *
-     * Make sure to validate the form before calling this method. Otherwise [NullPointerException]
-     * might be thrown.
-     */
-    val imageCreatorOptions
-        get() = ImageCreatorOptions(
-            amount.value!!,
-            width.value!!,
-            height.value!!,
-            Calendar.getInstance().time.toString("dd-MM-YY hhmmss")
-        )
-
-
-    /**
-     * Returns a [Boolean] that indicates if the image creation form is valid.
-     */
-    private fun isFormValid(): Boolean {
-        if (amount.value == null || amount.value == 0) {
-            return false
-        }
-        if (width.value == null || width.value == 0) {
-            return false
-        }
-        if (height.value == null || height.value == 0) {
-            return false
-        }
-        return true
-    }
+    lateinit var saveDirectory: String
 
     fun onUserWantsToCreateImages(contentResolver: ContentResolver) {
-        if (!isFormValid()) {
+        val options = imageCreatorOptions.value
+        if (options == null || !options.isValid()) {
             state.postValue(State.INVALID_FORM_FOUND)
             return
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             state.postValue(State.STARTED_CREATING_IMAGES)
 
-            val options = imageCreatorOptions
             AnalyticsManager.logImageCreationEvent(options)
             val bitmaps = SolidColorCreator().createBitmaps(options)
-            createdImageUris =
-                ImageSaver.saveBitmaps(bitmaps, contentResolver, options.storageDirectory)
+            saveDirectory = Calendar.getInstance().time.toString("dd-MM-YY hhmmss")
+            createdImageUris = ImageSaver.saveBitmaps(bitmaps, contentResolver, saveDirectory)
             state.postValue(State.FINISHED_CREATING_IMAGES)
         }
     }
