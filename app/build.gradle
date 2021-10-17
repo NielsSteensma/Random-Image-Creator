@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id("com.github.triplet.play") version "3.6.0"
     id 'kotlin-android'
 }
 
@@ -20,12 +21,26 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
+
+    def isBuildOnTravis = System.getenv("CI") == "true"
+    if (isBuildOnTravis) {
+        signingConfigs.release.storeFile = file("../key.jks")
+        signingConfigs.release.storePassword = System.getenv("keystore_password")
+        signingConfigs.release.keyAlias = System.getenv("keystore_alias")
+        signingConfigs.release.keyPassword = System.getenv("keystore_alias_password")
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -33,6 +48,10 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+}
+
+play {
+    serviceAccountCredentials.set(file("pc-api-6096031185577854460-416-6617465a8421.json"))
 }
 
 dependencies {
