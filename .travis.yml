@@ -40,4 +40,4 @@ script:
   - ./gradlew test
   - ./gradlew connectedAndroidTest
   - ./gradlew assembleRelease
-  - if [ "$TRAVIS_BRANCH" = "travistest" ]; then ./gradlew publish; else ./gradlew build; fi
+  - if [ "$TRAVIS_BRANCH" = "travistest" ]; then ./gradlew publishApk; else ./gradlew build; fi
