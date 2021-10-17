@@ -12,8 +12,8 @@ android:
     # Emulator image
     - android-22
     - sys-img-armeabi-v7a-android-22
-    licenses:
-      - 'android-sdk-license-.+'
+  licenses:
+    - 'android-sdk-license-.+'
 jdk:
   - openjdk11
 before_install:
