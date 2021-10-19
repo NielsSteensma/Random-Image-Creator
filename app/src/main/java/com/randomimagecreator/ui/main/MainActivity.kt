@@ -15,6 +15,7 @@ import com.randomimagecreator.helpers.parse
 
 /**
  * Activity that shows to the user a form with the image creation options.
+ * CI Trigger
  */
 class MainActivity : BaseActivity() {
     private val viewModel = MainViewModel()
