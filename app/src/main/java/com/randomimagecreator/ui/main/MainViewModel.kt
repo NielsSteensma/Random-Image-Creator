@@ -1,6 +1,6 @@
 package com.randomimagecreator.ui.main
 
-import android.content.ContentResolver
+import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,7 +24,7 @@ internal class MainViewModel : ViewModel() {
     var createdImageUris = ArrayList<Uri>()
     lateinit var saveDirectory: String
 
-    fun onUserWantsToCreateImages(contentResolver: ContentResolver) {
+    fun onUserWantsToCreateImages(context: Context) {
         val options = imageCreatorOptions.value
         if (options == null || !options.isValid()) {
             state.postValue(State.INVALID_FORM_FOUND)
@@ -37,7 +37,7 @@ internal class MainViewModel : ViewModel() {
             AnalyticsManager.logImageCreationEvent(options)
             val bitmaps = SolidColorCreator().createBitmaps(options)
             saveDirectory = Calendar.getInstance().time.toString("dd-MM-YY hhmmss")
-            createdImageUris = ImageSaver.saveBitmaps(bitmaps, contentResolver, saveDirectory)
+            createdImageUris = ImageSaver.saveBitmaps(bitmaps, context, saveDirectory)
             state.postValue(State.FINISHED_CREATING_IMAGES)
         }
     }

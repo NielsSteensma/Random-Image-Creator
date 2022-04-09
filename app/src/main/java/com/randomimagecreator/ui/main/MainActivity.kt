@@ -62,7 +62,7 @@ class MainActivity : BaseActivity() {
         }
 
         createButton.setOnClickListener {
-            viewModel.onUserWantsToCreateImages(contentResolver)
+            viewModel.onUserWantsToCreateImages(baseContext)
         }
 
         amountTextField = findViewById<TextInputEditText>(R.id.image_creator_option_amount).apply {
