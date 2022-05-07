@@ -17,8 +17,10 @@ class SolidColorCreatorTests {
     @Test
     fun createBitmaps_ReturnsBitmapsWithSolidColors() {
         val bitmap = SolidColorCreator().createBitmaps(stubImageCreatorOptions())[0]
-        // Compare equality of random pixels here. It does not give 100% guarantee but is sufficient
-        Assert.assertEquals(bitmap.getPixel(0, 0), bitmap.getPixel(3, 3))
+        val colorOnPosition1 = bitmap.getPixel(0, 0)
+        val colorOnPosition2 = bitmap.getPixel(3, 3)
+        // Compare if color of 2 random pixels are equal here. It's not 100% safe but sufficient.
+        Assert.assertEquals(colorOnPosition1, colorOnPosition2)
     }
 
     @Test

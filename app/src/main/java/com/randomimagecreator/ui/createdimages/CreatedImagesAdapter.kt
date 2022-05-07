@@ -10,7 +10,7 @@ import com.randomimagecreator.ui.shared.ImageViewHolder
 /**
  * Adapter for showing a list of generated images.
  */
-internal class CreatedImagesAdapter(private val createdImageUris: ArrayList<Uri>) :
+internal class CreatedImagesAdapter(private val createdImageUris: List<Uri>) :
     RecyclerView.Adapter<ImageViewHolder>() {
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ImageViewHolder {

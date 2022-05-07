@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.createdimages.CreatedImagesActivity">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/wrapper_created_images"
@@ -23,6 +22,8 @@
             android:id="@+id/textfield_created_images_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="bold"
             tools:text="@string/created_images_amount_single" />
 
         <TextView
@@ -30,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:textSize="18sp"
             tools:text="@string/created_images_location" />
     </LinearLayout>
 
