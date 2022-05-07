@@ -1,11 +1,10 @@
 package com.randomimagecreator.helpers
 
 import android.content.ContentResolver
-import android.content.ContentValues
+import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
-import android.provider.MediaStore
-import java.util.*
+import androidx.documentfile.provider.DocumentFile
 
 /**
  * Helper class for saving images.
@@ -13,53 +12,46 @@ import java.util.*
 class ImageSaver {
     companion object {
         /**
-         * Saves the given array of bitmaps to the user his external storage.
+         * Saves the given array of bitmaps to the provided [directory].
          *
          * @param bitmaps           A list of all bitmaps to save.
-         * @param contentResolver  The contentResolver to use for saving.
-         * @param directory         Name of the directory to create inside
-         *                            "Pictures/RandomImageCreator" for saving.
+         * @param context           The context of the caller.
+         * @param directory         Directory selected by user for saving.
          */
         fun saveBitmaps(
             bitmaps: MutableList<Bitmap>,
-            contentResolver: ContentResolver,
-            directory: String
-        ): ArrayList<Uri> {
-            val savedBitmapUris = arrayListOf<Uri>()
+            context: Context,
+            directory: Uri
+        ): List<Uri> {
+            val rootDocumentFile = DocumentFile.fromTreeUri(context, directory)
+            assert(rootDocumentFile != null) { "root document file shouldn't be null" }
+
+            val bitmapUris = mutableListOf<Uri>()
+
             for (bitmap in bitmaps) {
-                savedBitmapUris.add(saveBitmap(bitmap, contentResolver, directory))
+                saveBitmap(bitmap, context.contentResolver, rootDocumentFile!!)?.let {
+                    bitmapUris.add(it)
+                }
             }
-            return savedBitmapUris;
+            return bitmapUris
         }
 
-        /**
-         * Saves the given bitmap to the user his external storage.
-         */
         private fun saveBitmap(
             bitmap: Bitmap,
             contentResolver: ContentResolver,
-            directory: String
-        ): Uri {
-            val values = ContentValues().apply {
-                put(MediaStore.Images.Media.DISPLAY_NAME, createUniqueFileName())
-                put(
-                    MediaStore.Images.Media.RELATIVE_PATH,
-                    "Pictures/RandomImageCreator/${directory}"
-                )
-                put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+            rootDocumentFile: DocumentFile
+        ): Uri? {
+            val fileName = createUniqueFileName().toString()
+            val createdFile = rootDocumentFile.createFile("image/jpeg", fileName) ?: return null
+            contentResolver.openOutputStream(createdFile.uri).use { stream ->
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
             }
-            val contentUri =
-                MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
-            val uri = contentResolver.insert(contentUri, values)
-            contentResolver.openOutputStream(uri!!)
-                .use { stream -> bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream) }
-            return uri
+            return createdFile.uri
         }
 
         /**
          * Creates a 'unique' name based on the current epoch time in milliseconds.
          */
-        private fun createUniqueFileName() =
-            System.currentTimeMillis()
+        private fun createUniqueFileName() = System.currentTimeMillis()
     }
 }

@@ -1,4 +1,4 @@
-<resources xmlns:app="http://schemas.android.com/apk/res-auto">
+<resources>
     <!-- Base application theme. -->
     <style name="Theme.RandomImageCreator" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
@@ -10,37 +10,12 @@
         <item name="android:statusBarColor">?attr/colorPrimary</item>
     </style>
 
-    <style name="Theme.RandomImageCreator.WithActionBar" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="colorPrimary">@color/primary</item>
-        <item name="colorPrimaryVariant">@color/primary</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <item name="colorSecondary">@color/primary</item>
-        <item name="colorSecondaryVariant">@color/primary</item>
-        <item name="colorOnSecondary">@color/primary</item>
-        <item name="android:statusBarColor">?attr/colorPrimary</item>
-        <!--<item name="android:itemTextAppearance">@style/optionMenuTextApearance2</item>-->
-    </style>
-
     <style name="TextAppearance">
         <item name="android:textColor">@color/primary</item>
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="ActionBarAppearance" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <item name="android:titleTextStyle">@style/optionMenuTextApearance</item>
-    </style>
+    <style name="Theme.RandomImageCreator.InputField" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"/>
 
-    <style name="optionMenuTextApearance" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
-        <item name="android:textColor">@color/primary</item>
-        <item name="android:textColorLink">@color/primary</item>
-    </style>
-
-    <style name="optionMenuTextApearance2" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
-        <item name="android:textColor">@color/primary</item>
-        <item name="android:textColorLink">@color/primary</item>
-    </style>
-
-    <style name="Theme.RandomImageCreator.InputField" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"></style>
-
-    <style name="Theme.RandomImageCreator.Button" parent="@style/Widget.MaterialComponents.Button"></style>
+    <style name="Theme.RandomImageCreator.Button" parent="@style/Widget.MaterialComponents.Button"/>
 </resources>
