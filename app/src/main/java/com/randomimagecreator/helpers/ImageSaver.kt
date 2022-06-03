@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
+import com.randomimagecreator.common.ImageFileFormat
 
 /**
  * Helper class for saving images.
@@ -17,11 +18,13 @@ class ImageSaver {
          * @param bitmaps           A list of all bitmaps to save.
          * @param context           The context of the caller.
          * @param directory         Directory selected by user for saving.
+         * @param format            Format to save the bitmap in.
          */
         fun saveBitmaps(
             bitmaps: MutableList<Bitmap>,
             context: Context,
-            directory: Uri
+            directory: Uri,
+            format: ImageFileFormat
         ): List<Uri> {
             val rootDocumentFile = DocumentFile.fromTreeUri(context, directory)
             assert(rootDocumentFile != null) { "root document file shouldn't be null" }
@@ -29,7 +32,7 @@ class ImageSaver {
             val bitmapUris = mutableListOf<Uri>()
 
             for (bitmap in bitmaps) {
-                saveBitmap(bitmap, context.contentResolver, rootDocumentFile!!)?.let {
+                saveBitmap(bitmap, context.contentResolver, rootDocumentFile!!, format)?.let {
                     bitmapUris.add(it)
                 }
             }
@@ -39,12 +42,13 @@ class ImageSaver {
         private fun saveBitmap(
             bitmap: Bitmap,
             contentResolver: ContentResolver,
-            rootDocumentFile: DocumentFile
+            rootDocumentFile: DocumentFile,
+            format: ImageFileFormat
         ): Uri? {
             val fileName = createUniqueFileName().toString()
-            val createdFile = rootDocumentFile.createFile("image/jpeg", fileName) ?: return null
+            val createdFile = rootDocumentFile.createFile(format.mimeType, fileName) ?: return null
             contentResolver.openOutputStream(createdFile.uri).use { stream ->
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+                bitmap.compress(format.compressFormat, 100, stream)
             }
             return createdFile.uri
         }

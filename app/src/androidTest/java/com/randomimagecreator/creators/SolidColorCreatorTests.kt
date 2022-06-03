@@ -1,7 +1,7 @@
 package com.randomimagecreator.creators
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.randomimagecreator.ImageCreatorOptions
+import com.randomimagecreator.common.ImageCreatorOptions
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith

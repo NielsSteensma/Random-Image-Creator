@@ -1,4 +1,4 @@
-package com.randomimagecreator
+package com.randomimagecreator.common
 
 /**
  * Holds all user-selectable options of the image creator screen.
@@ -7,6 +7,7 @@ data class ImageCreatorOptions(
     var amount: Int = 0,
     var width: Int = 0,
     var height: Int = 0,
+    var format: ImageFileFormat = ImageFileFormat.JPEG
 ) {
     /**
      * Returns a boolean indicating if the given set of options is valid.

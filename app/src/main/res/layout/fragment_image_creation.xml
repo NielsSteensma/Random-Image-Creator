@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="@string/image_creator_option_amount">
+            android:hint="@string/image_creator_option_amount_hint">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/image_creator_option_amount"
@@ -34,7 +34,7 @@
                 android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Options: width -->
+        <!-- Option: width -->
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Theme.RandomImageCreator.InputField"
             android:layout_width="match_parent"
@@ -49,11 +49,12 @@
                 android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Options: height -->
+        <!-- Option: height -->
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Theme.RandomImageCreator.InputField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:hint="@string/image_creator_option_height_hint">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -63,6 +64,20 @@
                 android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Option: format -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Theme.RandomImageCreator.DropDownField"
+            android:hint="@string/image_creator_option_image_file_format_hint">
+
+            <AutoCompleteTextView
+                android:id="@+id/image_creator_option_image_file_format"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton

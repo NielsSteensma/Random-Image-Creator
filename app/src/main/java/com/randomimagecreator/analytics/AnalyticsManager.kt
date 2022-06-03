@@ -4,7 +4,7 @@ import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
-import com.randomimagecreator.ImageCreatorOptions
+import com.randomimagecreator.common.ImageCreatorOptions
 
 /**
  * Manager for analytics.
@@ -15,6 +15,7 @@ object AnalyticsManager {
     private const val IMAGE_CREATION_EVENT_PARAM_AMOUNT = "amount"
     private const val IMAGE_CREATION_EVENT_PARAM_WIDTH = "width"
     private const val IMAGE_CREATION_EVENT_PARAM_HEIGHT = "height"
+    private const val IMAGE_CREATION_EVENT_PARAM_FORMAT = "format"
 
     /**
      * Sets up the analytics manager
@@ -33,6 +34,7 @@ object AnalyticsManager {
             putInt(IMAGE_CREATION_EVENT_PARAM_AMOUNT, imageCreatorOptions.amount)
             putInt(IMAGE_CREATION_EVENT_PARAM_WIDTH, imageCreatorOptions.width)
             putInt(IMAGE_CREATION_EVENT_PARAM_HEIGHT, imageCreatorOptions.height)
+            putString(IMAGE_CREATION_EVENT_PARAM_FORMAT, imageCreatorOptions.format.name)
         })
     }
 }
