@@ -2,7 +2,7 @@ package com.randomimagecreator.creators
 
 import android.graphics.Bitmap
 import android.graphics.Color
-import com.randomimagecreator.ImageCreatorOptions
+import com.randomimagecreator.common.ImageCreatorOptions
 import kotlin.random.Random
 
 /**

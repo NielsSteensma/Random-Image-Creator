@@ -1,7 +1,7 @@
 package com.randomimagecreator.creators
 
 import android.graphics.Bitmap
-import com.randomimagecreator.ImageCreatorOptions
+import com.randomimagecreator.common.ImageCreatorOptions
 
 /**
  *  Base class for generating images.
