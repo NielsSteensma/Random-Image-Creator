@@ -6,7 +6,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
 import com.randomimagecreator.common.ImageFileFormat
-import java.io.FileOutputStream
 
 /**
  * Helper class for saving images.
