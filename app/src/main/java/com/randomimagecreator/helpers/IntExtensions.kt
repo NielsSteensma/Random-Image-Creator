@@ -32,12 +32,3 @@ fun Int.to24BitPixel() = ByteArray(3).also {
     it[1] = (this and 0x0000FF00 shr 8).toByte()
     it[2] = (this and 0x00FF0000 shr 16).toByte()
 }
-
-/**
- * Write integer pixel to little-endian byte array
- */
-fun Short.toLittleEndian(): ByteArray =
-    ByteBuffer.allocate(2).apply {
-        order(ByteOrder.LITTLE_ENDIAN)
-        putShort(this@toLittleEndian)
-    }.array()
