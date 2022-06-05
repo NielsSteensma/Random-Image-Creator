@@ -49,8 +49,7 @@ class ImageSaver {
             val fileName = createUniqueFileName().toString()
             val createdFile = rootDocumentFile.createFile(format.mimeType, fileName) ?: return null
 
-            // TODO: Make more generic
-            if (format.compressFormat == null) {
+            if (format == ImageFileFormat.BMP) {
                 val byteArray = BitmapToBMPConverter().convert(bitmap)
                 contentResolver.openOutputStream(createdFile.uri).use { stream ->
                     stream!!.write(byteArray)
