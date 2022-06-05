@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
 import com.randomimagecreator.common.ImageFileFormat
+import java.io.FileOutputStream
 
 /**
  * Helper class for saving images.
@@ -47,8 +48,17 @@ class ImageSaver {
         ): Uri? {
             val fileName = createUniqueFileName().toString()
             val createdFile = rootDocumentFile.createFile(format.mimeType, fileName) ?: return null
-            contentResolver.openOutputStream(createdFile.uri).use { stream ->
-                bitmap.compress(format.compressFormat, 100, stream)
+
+            // TODO: Make more generic
+            if (format.compressFormat == null) {
+                val byteArray = BitmapToBMPConverter().convert(bitmap)
+                contentResolver.openOutputStream(createdFile.uri).use { stream ->
+                    stream!!.write(byteArray)
+                }
+            } else {
+                contentResolver.openOutputStream(createdFile.uri).use { stream ->
+                    bitmap.compress(format.compressFormat, 100, stream)
+                }
             }
             return createdFile.uri
         }
