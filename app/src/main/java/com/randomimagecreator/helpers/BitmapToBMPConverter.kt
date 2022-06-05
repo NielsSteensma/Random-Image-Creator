@@ -33,34 +33,32 @@ class BitmapToBMPConverter {
      * Converts the [bitmap] to a [ByteArray] of BMP format.
      */
     fun convert(bitmap: Bitmap): ByteArray {
-        val imageSizeBytes = calculateImageSize(bitmap)
+        val dummyBytesNr = calculateDummyBytes(bitmap) ?: 0
+        val imageSizeBytes = calculateImageSize(bitmap, dummyBytesNr)
         val fileSizeBytes = calculateFileSize(imageSizeBytes)
         val buffer = ByteBuffer.allocate(fileSizeBytes)
         writeFileHeader(buffer, fileSizeBytes)
-        writeDIBHeader(buffer, bitmap, imageSizeBytes)
-        writeImageData(buffer, bitmap)
+        writeDIBHeader(buffer, bitmap, imageSizeBytes, dummyBytesNr)
+        writeImageData(buffer, bitmap, dummyBytesNr)
         return buffer.array()
     }
 
     /**
-     * Returns a [Boolean] indicating if the BMP requires padding at the end. This is the case when
-     * the bitmap can't be divided by 4.
-     *
      * BMP requires bitmap lines to be dividable by 4 so operations on the BMP can be faster.
+     * If the bitmap width in bytes is not dividable by 4, the amount of required dummy bytes
+     * to add up to 4 is returned. If dividable by 4, null is returned.
      */
-    private fun requiresPadding(bitmap: Bitmap) = bitmap.width % BMP_CONSTRAINT != 0
-
-    /**
-     * Returns an [Int] with the amount of dummy bytes to append at the end of each row as padding.
-     */
-    private fun calculateDummyBytes(bitmap: Bitmap) =
-        (BMP_CONSTRAINT - (bitmap.width % BMP_CONSTRAINT))
+    private fun calculateDummyBytes(bitmap: Bitmap): Int? {
+        val widthInBytes = bitmap.width * BYTE_PER_PIXEL
+        val requiresPadding = (widthInBytes % BMP_CONSTRAINT) != 0
+        if (!requiresPadding) return null
+        return (BMP_CONSTRAINT - (widthInBytes % BMP_CONSTRAINT))
+    }
 
     /**
      * Returns an [Int] with the amount of bytes for storing the image data.
      */
-    private fun calculateImageSize(bitmap: Bitmap): Int {
-        val dummyBytes = if (requiresPadding(bitmap)) calculateDummyBytes(bitmap) else 0
+    private fun calculateImageSize(bitmap: Bitmap, dummyBytes: Int): Int {
         val widthBytes = (bitmap.width + dummyBytes) * BYTE_PER_PIXEL
         return widthBytes * bitmap.height
     }
@@ -95,13 +93,19 @@ class BitmapToBMPConverter {
     /**
      * Writes the DIB header to the [ByteBuffer].
      */
-    private fun writeDIBHeader(buffer: ByteBuffer, bitmap: Bitmap, imageSizeBytes: Int) {
+    private fun writeDIBHeader(
+        buffer: ByteBuffer,
+        bitmap: Bitmap,
+        imageSizeBytes: Int,
+        dummyBytes: Int
+    ) {
         buffer.apply {
             // Number of bytes in the header
             put(0x28.toLittleEndian())
 
-            // Width of BMP
-            put(bitmap.width.toLittleEndian())
+            // Width of BMP ( consider dummy bytes of 3 being additional pixel )
+            val additionalPixel = if (dummyBytes == 3) 1 else 0
+            put((bitmap.width + additionalPixel).toLittleEndian())
 
             // Height of BMP
             put(bitmap.height.toLittleEndian())
@@ -136,7 +140,13 @@ class BitmapToBMPConverter {
      * Writes the image data to the [ByteBuffer] and, if necessarily, adds
      * the required dummy bytes for each row.
      */
-    private fun writeImageData(buffer: ByteBuffer, bitmap: Bitmap) {
+    private fun writeImageData(buffer: ByteBuffer, bitmap: Bitmap, dummyBytesNr: Int) {
+        val dummyBytes = ByteArray(dummyBytesNr)
+
+        for (i in dummyBytes.indices) {
+            dummyBytes[i] = 0xFF.toByte()
+        }
+
         val column = bitmap.width
         var row = bitmap.height
         val pixels = IntArray(bitmap.width * bitmap.height)
@@ -149,6 +159,8 @@ class BitmapToBMPConverter {
             for (i in startPosition until endPosition) {
                 buffer.put(pixels[i].to24BitPixel())
             }
+
+            buffer.put(dummyBytes)
 
             row--
         }
