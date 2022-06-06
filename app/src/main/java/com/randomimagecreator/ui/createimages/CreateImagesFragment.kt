@@ -1,7 +1,6 @@
 package com.randomimagecreator.ui.createimages
 
 import android.os.Bundle
-import android.text.InputType
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
@@ -13,6 +12,8 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.textfield.TextInputEditText
 import com.randomimagecreator.R
 import com.randomimagecreator.common.ImageFileFormat
+import com.randomimagecreator.common.ImagePattern
+import com.randomimagecreator.helpers.capitalizedValuesOf
 import com.randomimagecreator.helpers.parse
 import com.randomimagecreator.ui.shared.MainViewModel
 import com.randomimagecreator.ui.shared.State
@@ -51,6 +52,23 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
                 it.findViewById<TextInputEditText>(R.id.image_creator_option_height).apply {
                     doOnTextChanged { text, _, _, _ ->
                         viewModel.imageCreatorOptions.value?.height = Int.parse(text)
+                    }
+                }
+
+            it.findViewById<AutoCompleteTextView>(R.id.image_creator_option_pattern)
+                .apply {
+                    this.setAdapter(
+                        ArrayAdapter(
+                            this@CreateImagesFragment.requireContext(),
+                            R.layout.dropdown_item,
+                            capitalizedValuesOf<ImagePattern>()
+                        )
+                    )
+
+                    this.setText(capitalizedValuesOf<ImagePattern>()[0], false)
+                    doOnTextChanged { text, _, _, _ ->
+                        viewModel.imageCreatorOptions.value?.pattern =
+                            ImagePattern.valueOf(text!!.toString().uppercase())
                     }
                 }
 
