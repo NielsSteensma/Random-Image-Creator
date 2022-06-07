@@ -18,9 +18,9 @@ class PixelatedCreatorTests {
     @Test
     fun createBitmaps_ReturnsBitmapsWithPixelatedColors() {
         val bitmap = PixelatedCreator().createBitmaps(stubImageCreatorOptions())[0]
-        val colorOnPixel1 = bitmap.getPixel(0, 0)
-        val colorOnPixel2 = bitmap.getPixel(1, 1)
-        Assert.assertNotEquals(colorOnPixel1, colorOnPixel2)
+        val colorPixel1 = bitmap.getPixel(0, 0)
+        val colorPixel2 = bitmap.getPixel(0, 1)
+        Assert.assertNotEquals(colorPixel1, colorPixel2)
     }
 
     @Test
