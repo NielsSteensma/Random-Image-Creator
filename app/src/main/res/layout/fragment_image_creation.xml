@@ -64,6 +64,22 @@
                 android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <!-- Option: pattern -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            style="@style/Theme.RandomImageCreator.DropDownField"
+            android:hint="@string/image_creator_option_pattern_hint">
+
+            <AutoCompleteTextView
+                android:id="@+id/image_creator_option_pattern"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
         <!-- Option: format -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"

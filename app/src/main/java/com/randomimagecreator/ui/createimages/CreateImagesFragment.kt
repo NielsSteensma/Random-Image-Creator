@@ -1,10 +1,7 @@
 package com.randomimagecreator.ui.createimages
 
 import android.os.Bundle
-import android.text.InputType
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.widget.ArrayAdapter
+import android.view.View
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import androidx.core.widget.doOnTextChanged
@@ -13,9 +10,13 @@ import androidx.fragment.app.activityViewModels
 import com.google.android.material.textfield.TextInputEditText
 import com.randomimagecreator.R
 import com.randomimagecreator.common.ImageFileFormat
+import com.randomimagecreator.common.ImagePattern
+import com.randomimagecreator.helpers.capitalized
+import com.randomimagecreator.helpers.capitalizedValuesOf
 import com.randomimagecreator.helpers.parse
 import com.randomimagecreator.ui.shared.MainViewModel
 import com.randomimagecreator.ui.shared.State
+
 
 /**
  * Shows the image creation options.
@@ -27,56 +28,71 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
     private lateinit var heightTextField: TextInputEditText
     private val viewModel: MainViewModel by activityViewModels()
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ) =
-        super.onCreateView(inflater, container, savedInstanceState)?.also {
-            createButton = it.findViewById(R.id.image_creator_button_create)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        createButton = view.findViewById(R.id.image_creator_button_create)
 
-            amountTextField =
-                it.findViewById<TextInputEditText>(R.id.image_creator_option_amount).apply {
-                    doOnTextChanged { text, _, _, _ ->
-                        viewModel.imageCreatorOptions.value?.amount = Int.parse(text)
-                    }
+        amountTextField =
+            view.findViewById<TextInputEditText>(R.id.image_creator_option_amount).apply {
+                doOnTextChanged { text, _, _, _ ->
+                    viewModel.imageCreatorOptions.value?.amount = Int.parse(text)
                 }
-            widthTextField =
-                it.findViewById<TextInputEditText>(R.id.image_creator_option_width).apply {
-                    doOnTextChanged { text, _, _, _ ->
-                        viewModel.imageCreatorOptions.value?.width = Int.parse(text)
-                    }
-                }
-            heightTextField =
-                it.findViewById<TextInputEditText>(R.id.image_creator_option_height).apply {
-                    doOnTextChanged { text, _, _, _ ->
-                        viewModel.imageCreatorOptions.value?.height = Int.parse(text)
-                    }
-                }
-
-            it.findViewById<AutoCompleteTextView>(R.id.image_creator_option_image_file_format)
-                .apply {
-                    this.setAdapter(
-                        ArrayAdapter(
-                            this@CreateImagesFragment.requireContext(),
-                            R.layout.dropdown_item,
-                            ImageFileFormat.values()
-                        )
-                    )
-
-                    this.setText(ImageFileFormat.JPEG.name, false)
-                    doOnTextChanged { text, _, _, _ ->
-                        viewModel.imageCreatorOptions.value?.format =
-                            ImageFileFormat.valueOf(text!!.toString())
-                    }
-                }
-
-            viewModel.state.observe(viewLifecycleOwner, ::maybeShowValidationErrors)
-
-            createButton.setOnClickListener {
-                viewModel.onUserSubmitsConfig()
             }
+        widthTextField =
+            view.findViewById<TextInputEditText>(R.id.image_creator_option_width).apply {
+                doOnTextChanged { text, _, _, _ ->
+                    viewModel.imageCreatorOptions.value?.width = Int.parse(text)
+                }
+            }
+        heightTextField =
+            view.findViewById<TextInputEditText>(R.id.image_creator_option_height).apply {
+                doOnTextChanged { text, _, _, _ ->
+                    viewModel.imageCreatorOptions.value?.height = Int.parse(text)
+                }
+            }
+
+        view.findViewById<AutoCompleteTextView>(R.id.image_creator_option_pattern)
+            .apply {
+                setAdapter(
+                    NoFilterArrayAdapter(
+                        this@CreateImagesFragment.requireContext(),
+                        R.layout.dropdown_item,
+                        capitalizedValuesOf<ImagePattern>()
+                    )
+                )
+
+                setText(viewModel.imageCreatorOptions.value!!.pattern.capitalized(), false)
+
+                doOnTextChanged { text, _, _, _ ->
+                    viewModel.imageCreatorOptions.value?.pattern =
+                        ImagePattern.valueOf(text!!.toString().uppercase())
+                }
+            }
+
+        view.findViewById<AutoCompleteTextView>(R.id.image_creator_option_image_file_format)
+            .apply {
+                setAdapter(
+                    NoFilterArrayAdapter(
+                        this@CreateImagesFragment.requireContext(),
+                        R.layout.dropdown_item,
+                        ImageFileFormat.values()
+                    )
+                )
+
+                setText(viewModel.imageCreatorOptions.value?.format.toString(), false)
+
+                doOnTextChanged { text, _, _, _ ->
+                    viewModel.imageCreatorOptions.value?.format =
+                        ImageFileFormat.valueOf(text!!.toString())
+                }
+            }
+
+        viewModel.state.observe(viewLifecycleOwner, ::maybeShowValidationErrors)
+
+        createButton.setOnClickListener {
+            viewModel.onUserSubmitsConfig()
         }
+    }
 
     private fun maybeShowValidationErrors(state: State) {
         if (state != State.SUBMIT_CONFIG_INVALID) {
@@ -99,3 +115,4 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
         }
     }
 }
+

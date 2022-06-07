@@ -8,9 +8,8 @@ import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.randomimagecreator.common.ImageCreatorOptions
 import com.randomimagecreator.analytics.AnalyticsManager
-import com.randomimagecreator.creators.SolidColorCreator
+import com.randomimagecreator.common.ImageCreatorOptions
 import com.randomimagecreator.helpers.ImageSaver
 import com.randomimagecreator.helpers.query
 import kotlinx.coroutines.Dispatchers
@@ -49,8 +48,9 @@ class MainViewModel : ViewModel() {
             if (saveDirectory == null) return@launch
 
             AnalyticsManager.logImageCreationEvent(options)
-            val bitmaps = SolidColorCreator().createBitmaps(options)
-            createdImageUris = ImageSaver.saveBitmaps(bitmaps, context, saveDirectory!!, options.format)
+            val bitmaps = options.pattern.imageCreator.createBitmaps(options)
+            createdImageUris =
+                ImageSaver.saveBitmaps(bitmaps, context, saveDirectory!!, options.format)
             state.postValue(State.FINISHED_CREATING_IMAGES)
         }
     }

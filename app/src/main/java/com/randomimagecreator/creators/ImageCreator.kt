@@ -2,11 +2,18 @@ package com.randomimagecreator.creators
 
 import android.graphics.Bitmap
 import com.randomimagecreator.common.ImageCreatorOptions
+import kotlin.random.Random
 
 /**
- *  Base class for generating images.
+ *  Base class for derived image generation classes.
+ *
+ *  Derived classes can call [generateRandomHexColorValue] to create a random hexadecimal color code.
  */
 abstract class ImageCreator {
+    private val random = Random(System.currentTimeMillis())
+    private val possibleHexadecimalCharacters =
+        charArrayOf('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F')
+
     /**
      * Returns an array of randomly created bitmaps with the generation algorithm of the derived class.
      *
@@ -18,6 +25,20 @@ abstract class ImageCreator {
             createdBitmaps.add(createBitmap(options))
         }
         return createdBitmaps
+    }
+
+    /**
+     * Returns a randomly generated hexadecimal color code as [String].
+     *
+     * This method works by selecting 6 times a random character of the list of random hexadecimal
+     * color codes to create the final value.
+     */
+    protected fun generateRandomHexColorValue(): String {
+        var color = "#"
+        for (i in 0..5) {
+            color += possibleHexadecimalCharacters[random.nextInt(0, 15)]
+        }
+        return color
     }
 
     /**

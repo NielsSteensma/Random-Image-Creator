@@ -7,6 +7,7 @@ data class ImageCreatorOptions(
     var amount: Int = 0,
     var width: Int = 0,
     var height: Int = 0,
+    var pattern: ImagePattern = ImagePattern.SOLID,
     var format: ImageFileFormat = ImageFileFormat.JPEG
 ) {
     /**
