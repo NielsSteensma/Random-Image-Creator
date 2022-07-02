@@ -13,6 +13,7 @@ import com.randomimagecreator.common.ImageCreatorOptions
 import com.randomimagecreator.helpers.ImageSaver
 import com.randomimagecreator.helpers.query
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -22,6 +23,7 @@ class MainViewModel : ViewModel() {
     val imageCreatorOptions = MutableLiveData(ImageCreatorOptions())
     val state = MutableLiveData(State.INITIAL)
     var createdImageUris = listOf<Uri>()
+    var bitmapSaveNotifier: MutableSharedFlow<Nothing?> = MutableSharedFlow()
     private var saveDirectory: Uri? = null
 
     fun onUserSubmitsConfig() {
@@ -50,7 +52,14 @@ class MainViewModel : ViewModel() {
             AnalyticsManager.logImageCreationEvent(options)
             val bitmaps = options.pattern.imageCreator.createBitmaps(options)
             createdImageUris =
-                ImageSaver.saveBitmaps(bitmaps, context, saveDirectory!!, options.format)
+                ImageSaver.saveBitmaps(
+                    viewModelScope,
+                    bitmaps,
+                    context,
+                    saveDirectory!!,
+                    options.format,
+                    bitmapSaveNotifier
+                )
             state.postValue(State.FINISHED_CREATING_IMAGES)
         }
     }

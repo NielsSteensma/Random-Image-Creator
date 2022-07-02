@@ -10,9 +10,14 @@
     <string name="image_creator_option_invalid">Value missing</string>
     <string name="image_creator_button_create">Create</string>
 
+    <!-- Creating images -->
+    <string name="creating_images_saved_amount">Saved %d of %d images to your device</string>
+
     <!-- Created images  -->
-    <string name="created_images_amount_single">Created 1 image</string>
-    <string name="created_images_amount_multiple">Created %1$d images</string>
+    <plurals name="created_images_amount">
+        <item quantity="one">Created 1 image</item>
+        <item quantity="other">Created %d images</item>
+    </plurals>
     <string name="created_images_location">The created images can be found in the directory \"%1$s\"</string>
 
     <!-- Choose save directory -->

@@ -15,8 +15,8 @@ android {
         applicationId "com.randomimagecreator"
         minSdkVersion 22
         targetSdkVersion 31
-        versionCode 8
-        versionName "0.5.0"
+        versionCode 9
+        versionName "0.5.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

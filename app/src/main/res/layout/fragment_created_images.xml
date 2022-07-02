@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textStyle="bold"
-            tools:text="@string/created_images_amount_single" />
+            tools:text="@plurals/created_images_amount" />
 
         <TextView
             android:id="@+id/textfield_created_images_location"
@@ -32,9 +32,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textSize="18sp"
+            android:textAlignment="center"
             tools:text="@string/created_images_location" />
     </LinearLayout>
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_created_images"
@@ -45,6 +45,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/wrapper_created_images" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>
