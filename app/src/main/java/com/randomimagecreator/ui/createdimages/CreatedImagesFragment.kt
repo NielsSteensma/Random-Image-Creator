@@ -42,14 +42,11 @@ internal class CreatedImagesFragment : Fragment(R.layout.fragment_created_images
 
     private fun setupTextFields(rootView: View) {
         rootView.findViewById<TextView>(R.id.textfield_created_images_amount).apply {
-            text = if (viewModel.createdImageUris.size == 1) {
-                resources.getString(R.string.created_images_amount_single)
-            } else {
-                resources.getString(
-                    R.string.created_images_amount_multiple,
-                    viewModel.createdImageUris.size
-                )
-            }
+            text = resources.getQuantityString(
+                R.plurals.created_images_amount,
+                viewModel.createdImageUris.size,
+                viewModel.createdImageUris.size
+            )
         }
         rootView.findViewById<TextView>(R.id.textfield_created_images_location).text =
             resources.getString(

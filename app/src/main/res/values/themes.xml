@@ -10,11 +10,6 @@
         <item name="android:statusBarColor">?attr/colorPrimary</item>
     </style>
 
-    <style name="TextAppearance">
-        <item name="android:textColor">@color/primary</item>
-        <item name="android:textSize">14sp</item>
-    </style>
-
     <style name="Theme.RandomImageCreator.InputField" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"/>
     <style name="Theme.RandomImageCreator.DropDownField" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"/>
 
