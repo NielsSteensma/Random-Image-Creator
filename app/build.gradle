@@ -5,7 +5,6 @@ plugins {
 }
 
 apply plugin: 'kotlin-parcelize'
-apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 31
@@ -38,6 +37,8 @@ android {
         signingConfigs.release.storePassword = System.getenv("keystore_password")
         signingConfigs.release.keyAlias = System.getenv("keystore_alias")
         signingConfigs.release.keyPassword = System.getenv("keystore_alias_password")
+
+        apply plugin: 'com.google.gms.google-services'
     }
 
     compileOptions {
