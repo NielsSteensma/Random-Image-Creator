@@ -41,4 +41,4 @@ script:
   - ./gradlew test
   - ./gradlew connectedAndroidTest
   - ./gradlew assembleRelease
-  - if [ "$TRAVIS_BRANCH" = "master" ]; then ./gradlew publishApk; else ./gradlew build; fi
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then ./gradlew publishApk; fi
