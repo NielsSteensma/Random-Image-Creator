@@ -15,4 +15,4 @@ jobs:
           java-version: "11"
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug
+        run: ./gradlew buildDebug
