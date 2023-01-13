@@ -1,4 +1,3 @@
 #!/bin/sh
-pwd
 gpg --quiet --batch --yes --decrypt --passphrase="$GOOGLE_SERVICES_PASSPHRASE" \
---output ./app/google_services.json ./app/google_services.json.gpg
+--output ./app/google-services.json ./app/google-services.json.gpg
