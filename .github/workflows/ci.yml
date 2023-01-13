@@ -16,7 +16,7 @@ jobs:
           java-version: "11"
 
       - name: Decrypt services.json
-        run: ./decrypt_google_services.sh
+        run: ./bin/decrypt_google_services.sh
         env:
           LARGE_SECRET_PASSPHRASE: ${{ secrets.GOOGLE_SERVICES_PASSPHRASE }}
 
