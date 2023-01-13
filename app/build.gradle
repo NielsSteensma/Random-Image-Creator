@@ -6,6 +6,8 @@ plugins {
 
 apply plugin: 'kotlin-parcelize'
 
+def isCIBuild = System.getenv("CI") == "true"
+
 android {
     compileSdkVersion 33
 
@@ -30,8 +32,7 @@ android {
         }
     }
 
-    def isBuildOnTravis = System.getenv("CI") == "true"
-    if (isBuildOnTravis) {
+    if (isCIBuild) {
         signingConfigs.release.storeFile = file("../keystore.jks")
         signingConfigs.release.storePassword = System.getenv("keystore_password")
         signingConfigs.release.keyAlias = System.getenv("keystore_alias")
@@ -49,8 +50,10 @@ android {
     }
 }
 
-play {
-    serviceAccountCredentials.set(file("pc-api-6096031185577854460-416-6617465a8421.json"))
+if (isCIBuild) {
+    play {
+        serviceAccountCredentials.set(file("google-services.json"))
+    }
 }
 
 dependencies {

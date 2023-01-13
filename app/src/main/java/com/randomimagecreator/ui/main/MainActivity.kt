@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.randomimagecreator.R
-import com.randomimagecreator.analytics.AnalyticsManager
+import com.randomimagecreator.analytics.Analytics
 import com.randomimagecreator.ui.choosesavedirectory.ChooseSaveDirectoryFragment
 import com.randomimagecreator.ui.createdimages.CreatedImagesFragment
 import com.randomimagecreator.ui.createimages.CreateImagesFragment
@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AnalyticsManager.setup()
+        Analytics.setup()
         replaceFragment(CreateImagesFragment(), true)
         viewModel.state.observe(this, ::updateNavigation)
     }
