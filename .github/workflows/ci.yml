@@ -16,9 +16,9 @@ jobs:
           java-version: "11"
 
       - name: Decrypt services.json
-          run: ./decrypt_google_services.sh
-          env:
-            LARGE_SECRET_PASSPHRASE: ${{ secrets.GOOGLE_SERVICES_PASSPHRASE }}
+        run: ./decrypt_google_services.sh
+        env:
+          LARGE_SECRET_PASSPHRASE: ${{ secrets.GOOGLE_SERVICES_PASSPHRASE }}
 
       - name: Build Debug APK
         run: ./gradlew buildDebug
