@@ -23,3 +23,13 @@ jobs:
       - name: Build Debug APK
         run: ./gradlew buildDebug
 
+      - name: Test
+        run: ./gradlew test
+
+      - name: Test
+        run: ./gradlew publishApk
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEYSTORE_ALIAS: ${{ secrets.KEYSTORE_ALIAS }}
+          KEYSTORE_ALIAS_PASSWORD: ${{ secrets.KEYSTORE_ALIAS_PASSWORD }}
+          GOOGLE_SERVICES_PASSPHRASE: ${{ secrets.GOOGLE_SERVICES_PASSPHRASE }}
