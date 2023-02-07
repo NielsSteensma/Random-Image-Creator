@@ -18,7 +18,7 @@ jobs:
       - name: Decrypt services.json
         run: ./bin/decrypt_google_services.sh
         env:
-          LARGE_SECRET_PASSPHRASE: ${{ secrets.GOOGLE_SERVICES_PASSPHRASE }}
+          GOOGLE_SERVICES_PASSPHRASE: ${{ secrets.GOOGLE_SERVICES_PASSPHRASE }}
 
       - name: Build Debug APK
         run: ./gradlew buildDebug
