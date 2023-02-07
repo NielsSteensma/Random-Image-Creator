@@ -15,8 +15,8 @@ android {
         applicationId "com.randomimagecreator"
         minSdkVersion 22
         targetSdkVersion 31
-        versionCode 9
-        versionName "0.5.1"
+        versionCode 10
+        versionName "0.5.1-test"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -34,9 +34,9 @@ android {
 
     if (isCIBuild) {
         signingConfigs.release.storeFile = file("../keystore.jks")
-        signingConfigs.release.storePassword = System.getenv("keystore_password")
-        signingConfigs.release.keyAlias = System.getenv("keystore_alias")
-        signingConfigs.release.keyPassword = System.getenv("keystore_alias_password")
+        signingConfigs.release.storePassword = System.getenv("KEYSTORE_PASSWORD")
+        signingConfigs.release.keyAlias = System.getenv("KEYSTORE_ALIAS")
+        signingConfigs.release.keyPassword = System.getenv("KEYSTORE_ALIAS_PASSWORD")
 
         apply plugin: 'com.google.gms.google-services'
     }
