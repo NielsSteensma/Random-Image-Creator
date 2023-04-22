@@ -25,3 +25,8 @@ jobs:
 
       - name: Test
         run: ./gradlew test
+
+      - name: Decrypt keystore.jks
+        run: ./bin/decrypt_keystore.sh
+        env:
+          KEYSTORE_PASSPHRASE: ${{ secrets.KEYSTORE_PASSPHRASE }}
