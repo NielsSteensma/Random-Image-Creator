@@ -9,14 +9,14 @@ apply plugin: 'kotlin-parcelize'
 def isCIBuild = System.getenv("CI") == "true"
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 31
 
     defaultConfig {
         applicationId "com.randomimagecreator"
         minSdkVersion 22
         targetSdkVersion 31
         versionCode 10
-        versionName "0.5.1-test"
+        versionName "0.5.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
