@@ -34,13 +34,13 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     private fun updateNavigation(state: State) {
         when (state) {
-            State.SUBMIT_CONFIG_VALID -> {
+            is State.SubmitConfigValid -> {
                 replaceFragment(ChooseSaveDirectoryFragment())
             }
-            State.SUBMIT_SAVE_DIRECTORY -> {
+            is State.SubmitSaveDirectory -> {
                 replaceFragment(CreatingImagesFragment())
             }
-            State.FINISHED_CREATING_IMAGES -> {
+            is State.FinishedCreatingImages -> {
                 replaceFragment(CreatedImagesFragment())
             }
             else -> {

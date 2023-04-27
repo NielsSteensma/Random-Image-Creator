@@ -15,13 +15,14 @@
     <string name="creating_images_saved_amount">Saved %d of %d images to your device</string>
 
     <!-- Created images  -->
-    <plurals name="created_images_amount">
-        <item quantity="one">Created 1 image</item>
-        <item quantity="other">Created %d images</item>
-    </plurals>
     <string name="created_images_location">The created images can be found in the directory \"%1$s\"</string>
 
     <!-- Choose save directory -->
     <string name="choose_save_directory_message">Please choose the directory to store the images in</string>
     <string name="choose_save_directory_button">Choose directory</string>
+    <string name="created_images_amount">Amount</string>
+    <string name="created_images_pattern">Pattern</string>
+    <string name="created_images_duration">Duration ( seconds )</string>
+    <string name="created_images_title">Image creation finished</string>
+    <string name="created_images_directory">Directory</string>
 </resources>

@@ -138,7 +138,7 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
     }
 
     private fun maybeShowValidationErrors(state: State) {
-        if (state != State.SUBMIT_CONFIG_INVALID) {
+        if (state != State.SubmitConfigInvalid) {
             return
         }
 

@@ -15,34 +15,35 @@ import com.randomimagecreator.helpers.query
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.launch
+import kotlin.system.measureTimeMillis
 
 /**
  * ViewModel used throughout the app.
  * */
 class MainViewModel : ViewModel() {
     val imageCreatorOptions = MutableLiveData(ImageCreatorOptions())
-    val state = MutableLiveData(State.INITIAL)
+    val state = MutableLiveData<State>(State.Initial)
     var createdImageUris = listOf<Uri>()
     var bitmapSaveNotifier: MutableSharedFlow<Nothing?> = MutableSharedFlow()
     private var saveDirectory: Uri? = null
 
     fun onUserSubmitsConfig() {
         if (imageCreatorOptions.value?.isValid() == true) {
-            state.postValue(State.SUBMIT_CONFIG_VALID)
+            state.postValue(State.SubmitConfigValid)
         } else {
-            state.postValue(State.SUBMIT_CONFIG_INVALID)
+            state.postValue(State.SubmitConfigInvalid)
         }
     }
 
     fun onSaveDirectoryChosen(uri: Uri) {
         saveDirectory = uri
-        state.postValue(State.SUBMIT_SAVE_DIRECTORY)
+        state.postValue(State.SubmitSaveDirectory)
     }
 
     fun createImages(context: Context) {
         val options = imageCreatorOptions.value
         if (options == null || !options.isValid()) {
-            state.postValue(State.SUBMIT_CONFIG_INVALID)
+            state.postValue(State.SubmitConfigValid)
             return
         }
 
@@ -50,17 +51,19 @@ class MainViewModel : ViewModel() {
             if (saveDirectory == null) return@launch
 
             Analytics.imageCreationEvent(options)
-            val bitmaps = options.pattern.imageCreator.createBitmaps(options)
-            createdImageUris =
-                ImageSaver.saveBitmaps(
-                    viewModelScope,
-                    bitmaps,
-                    context,
-                    saveDirectory!!,
-                    options.format,
-                    bitmapSaveNotifier
-                )
-            state.postValue(State.FINISHED_CREATING_IMAGES)
+            val durationMillis = measureTimeMillis {
+                val bitmaps = options.pattern.imageCreator.createBitmaps(options)
+                createdImageUris =
+                    ImageSaver.saveBitmaps(
+                        viewModelScope,
+                        bitmaps,
+                        context,
+                        saveDirectory!!,
+                        options.format,
+                        bitmapSaveNotifier
+                    )
+            }
+            state.postValue(State.FinishedCreatingImages(durationMillis))
         }
     }
 
