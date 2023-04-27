@@ -7,6 +7,7 @@
     <string name="image_creator_option_height_hint">Height</string>
     <string name="image_creator_option_pattern_hint">Pattern</string>
     <string name="image_creator_option_image_file_format_hint">Format</string>
+    <string name="image_creator_option_iterations_hint">Iterations</string>
     <string name="image_creator_option_invalid">Value missing</string>
     <string name="image_creator_button_create">Create</string>
 

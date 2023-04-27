@@ -2,15 +2,8 @@ package com.randomimagecreator.creators
 
 import android.graphics.Bitmap
 import android.graphics.Color
+import com.randomimagecreator.common.Complex
 import com.randomimagecreator.common.ImageCreatorOptions
-import kotlin.math.sqrt
-
-/**
- * Amount of iterations to perform to check if complex number is in Mandelbrot set.
- *
- * Value is tradeoff between quality ( higher ) and performance ( lower ).
- */
-private const val ITERATIONS = 200
 
 /**
  * Max range complex number can be from origin to be part of Mandelbrot set.
@@ -21,10 +14,7 @@ private const val ESCAPE_RADIUS = 2
  * Creates [Bitmap] based on Mandelbrot algorithm.
  */
 class MandelbrotCreator : ImageCreator() {
-    private val plotXMin: Double = -2.0
-    private val plotXMax: Double = 1.0
-    private val plotYMin: Double = -1.0
-    private val plotYMax: Double = 1.0
+    private val plot = Plot()
 
     override fun createBitmap(options: ImageCreatorOptions): Bitmap {
         val bitmap =
@@ -35,8 +25,8 @@ class MandelbrotCreator : ImageCreator() {
         for (x in 0 until bitmap.width) {
             for (y in 0 until bitmap.height) {
                 val complex = pixelCoordinatesToComplexCoordinates(options, x, y)
-                val iterations = mandelbrot(complex)
-                val color = if (iterations == ITERATIONS) Color.BLACK else Color.WHITE
+                val iterations = mandelbrot(options.iterations, complex)
+                val color = color(options.iterations, iterations)
                 bitmap.setPixel(x, y, color)
             }
         }
@@ -45,15 +35,33 @@ class MandelbrotCreator : ImageCreator() {
     }
 
     /**
+     * Returns color based on provided [performedIterations].
+     * If [performedIterations] matches [maxIterations], black will be returned.
+     * If not matching color is based on max reached iterations.
+     */
+    private fun color(maxIterations: Int, performedIterations: Int): Int {
+        if (performedIterations == maxIterations) {
+            return Color.BLACK
+        }
+
+        val hue = 255f * performedIterations / maxIterations
+        val saturation = 1f
+        val value = 1f
+        val floatArray = floatArrayOf(hue, saturation, value)
+        return Color.HSVToColor(floatArray)
+    }
+
+    /**
      * Converts pixel coordinates to complex number taking into account scale factor.
+     * @return [Complex] with coordinates.
      */
     private fun pixelCoordinatesToComplexCoordinates(
         options: ImageCreatorOptions,
         pixelX: Int,
         pixelY: Int
     ): Complex {
-        val complexX = plotXMin + (plotXMax - plotXMin) * pixelX / options.width
-        val complexY = plotYMin + (plotYMax - plotYMin) * pixelY / options.height
+        val complexX = plot.xMin + (plot.xMax - plot.xMin) * pixelX / options.width
+        val complexY = plot.yMin + (plot.yMax - plot.yMin) * pixelY / options.height
         return Complex(complexX, complexY)
     }
 
@@ -62,10 +70,10 @@ class MandelbrotCreator : ImageCreator() {
      *
      * @return [Int] with number of performed iterations.
      */
-    private fun mandelbrot(complex: Complex): Int {
+    private fun mandelbrot(maxIterations: Int, complex: Complex): Int {
         var iteratedValue = Complex(0.0, 0.0)
         // Add iteratedValue to itself and perform Mandelbrot calculation on it
-        for (i in 0..ITERATIONS) {
+        for (i in 0..maxIterations) {
             // if iteration made iteratedValue go outside escape radius we argue complex number is
             // infinite, thus no part of Mandelbrot set.
             if (iteratedValue.abs() > ESCAPE_RADIUS) {
@@ -73,37 +81,17 @@ class MandelbrotCreator : ImageCreator() {
             }
             iteratedValue = iteratedValue * iteratedValue + complex
         }
-        return ITERATIONS
+        return maxIterations
     }
 }
 
 /**
- * Represents a complex number with a real and imaginary component.
- *
- * @param real real component of complex number.
- * @param imaginary imaginary component of complex number.
+ * Represents a plot for [MandelbrotCreator].
+ * Increasing/decreasing values changes zoom level.
  */
-private data class Complex(val real: Double, val imaginary: Double) {
-    /**
-     * Calculates distance between origin(0,0) and [Complex] number.
-     * @return [Double] with distance between origin and [Complex] number.
-     */
-    fun abs() = sqrt((real * real) + (imaginary * imaginary))
-
-    /**
-     * Sum two [Complex] numbers.
-     * @return [Complex] with result of sum.
-     */
-    operator fun plus(complex: Complex) =
-        Complex(real + complex.real, imaginary + complex.imaginary)
-
-    /**
-     * Multiplies two [Complex] numbers
-     * @return [Complex] with result of multiplication.
-     */
-    operator fun times(complex: Complex) =
-        Complex(
-            real * complex.real - imaginary * complex.imaginary,
-            real * complex.imaginary + imaginary * complex.real
-        )
-}
+private data class Plot(
+    val xMin: Double = -2.0,
+    val xMax: Double = 1.0,
+    val yMin: Double = -1.0,
+    val yMax: Double = 1.0
+)

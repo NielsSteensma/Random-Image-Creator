@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AutoCompleteTextView
 import android.widget.Button
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.randomimagecreator.R
 import com.randomimagecreator.common.ImageFileFormat
 import com.randomimagecreator.common.ImagePattern
@@ -26,6 +28,8 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
     private lateinit var amountTextField: TextInputEditText
     private lateinit var widthTextField: TextInputEditText
     private lateinit var heightTextField: TextInputEditText
+    private lateinit var iterationsTextField: TextInputEditText
+    private lateinit var iterationsTextFieldLayout: TextInputLayout
     private val viewModel: MainViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,16 +42,27 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
                     viewModel.imageCreatorOptions.value?.amount = Int.parse(text)
                 }
             }
+
         widthTextField =
             view.findViewById<TextInputEditText>(R.id.image_creator_option_width).apply {
                 doOnTextChanged { text, _, _, _ ->
                     viewModel.imageCreatorOptions.value?.width = Int.parse(text)
                 }
             }
+
         heightTextField =
             view.findViewById<TextInputEditText>(R.id.image_creator_option_height).apply {
                 doOnTextChanged { text, _, _, _ ->
                     viewModel.imageCreatorOptions.value?.height = Int.parse(text)
+                }
+            }
+
+        iterationsTextFieldLayout = view.findViewById(R.id.image_creator_option_iterations_layout)
+        iterationsTextField =
+            view.findViewById<TextInputEditText>(R.id.image_creator_option_iterations).apply {
+                viewModel.imageCreatorOptions.value?.iterations?.let { this.setText(it.toString()) }
+                doOnTextChanged { text, _, _, _ ->
+                    viewModel.imageCreatorOptions.value?.iterations = Int.parse(text)
                 }
             }
 
@@ -64,8 +79,9 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
                 setText(viewModel.imageCreatorOptions.value!!.pattern.capitalized(), false)
 
                 doOnTextChanged { text, _, _, _ ->
-                    viewModel.imageCreatorOptions.value?.pattern =
-                        ImagePattern.valueOf(text!!.toString().uppercase())
+                    val imagePattern = ImagePattern.valueOf(text!!.toString().uppercase())
+                    viewModel.imageCreatorOptions.value?.pattern = imagePattern
+                    iterationsTextFieldLayout.isVisible = imagePattern == ImagePattern.MANDELBROT
                 }
             }
 
@@ -112,6 +128,14 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
         val height = viewModel.imageCreatorOptions.value?.height
         if (height == null || height == 0) {
             heightTextField.error = resources.getString(R.string.image_creator_option_invalid)
+        }
+
+        if (iterationsTextFieldLayout.isVisible) {
+            val iterations = viewModel.imageCreatorOptions.value?.iterations
+            if (iterations == null || iterations == 0) {
+                iterationsTextField.error =
+                    resources.getString(R.string.image_creator_option_invalid)
+            }
         }
     }
 }
