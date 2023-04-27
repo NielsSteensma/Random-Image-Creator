@@ -10,7 +10,7 @@ data class ImageCreatorOptions(
     /**
      * Amount of iterations to perform to check if complex number is in Mandelbrot set.
      *
-     * Value is tradeoff between quality ( higher ) and performance ( lower ).
+     * Default value is tradeoff between quality ( higher ) and performance ( lower ).
      */
     var iterations: Int = 100,
     var pattern: ImagePattern = ImagePattern.SOLID,

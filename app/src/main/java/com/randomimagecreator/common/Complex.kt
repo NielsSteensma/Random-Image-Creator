@@ -16,14 +16,14 @@ data class Complex(val real: Double, val imaginary: Double) {
     fun abs() = sqrt((real * real) + (imaginary * imaginary))
 
     /**
-     * Sum two [Complex] numbers.
+     * Sums two [Complex] numbers.
      * @return [Complex] with result of sum.
      */
     operator fun plus(complex: Complex) =
         Complex(real + complex.real, imaginary + complex.imaginary)
 
     /**
-     * Multiplies two [Complex] numbers
+     * Multiplies two [Complex] numbers.
      * @return [Complex] with result of multiplication.
      */
     operator fun times(complex: Complex) =

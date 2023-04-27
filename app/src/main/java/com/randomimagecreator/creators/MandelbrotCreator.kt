@@ -24,9 +24,10 @@ class MandelbrotCreator : ImageCreator() {
 
         for (x in 0 until bitmap.width) {
             for (y in 0 until bitmap.height) {
+                val maxIterations = options.iterations
                 val complex = pixelCoordinatesToComplexCoordinates(options, x, y)
-                val iterations = mandelbrot(options.iterations, complex)
-                val color = color(options.iterations, iterations)
+                val iterations = mandelbrot(maxIterations, complex)
+                val color = color(maxIterations, iterations)
                 bitmap.setPixel(x, y, color)
             }
         }
@@ -37,7 +38,7 @@ class MandelbrotCreator : ImageCreator() {
     /**
      * Returns color based on provided [performedIterations].
      * If [performedIterations] matches [maxIterations], black will be returned.
-     * If not matching color is based on max reached iterations.
+     * If not matching, color will be based on max reached iterations.
      */
     private fun color(maxIterations: Int, performedIterations: Int): Int {
         if (performedIterations == maxIterations) {
@@ -72,10 +73,9 @@ class MandelbrotCreator : ImageCreator() {
      */
     private fun mandelbrot(maxIterations: Int, complex: Complex): Int {
         var iteratedValue = Complex(0.0, 0.0)
-        // Add iteratedValue to itself and perform Mandelbrot calculation on it
         for (i in 0..maxIterations) {
-            // if iteration made iteratedValue go outside escape radius we argue complex number is
-            // infinite, thus no part of Mandelbrot set.
+            // if new iteration causes iteratedValue to go outside escape radius we argue
+            // complex number is infinite, thus no part of Mandelbrot set.
             if (iteratedValue.abs() > ESCAPE_RADIUS) {
                 return i
             }
