@@ -15,10 +15,9 @@ import com.randomimagecreator.common.ImageFileFormat
 import com.randomimagecreator.common.ImagePattern
 import com.randomimagecreator.helpers.capitalized
 import com.randomimagecreator.helpers.capitalizedValuesOf
-import com.randomimagecreator.helpers.parse
+import com.randomimagecreator.helpers.toInt
 import com.randomimagecreator.ui.shared.MainViewModel
 import com.randomimagecreator.ui.shared.State
-
 
 /**
  * Shows the image creation options.
@@ -36,24 +35,33 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
         super.onViewCreated(view, savedInstanceState)
         createButton = view.findViewById(R.id.image_creator_button_create)
 
-        amountTextField =
+        amountTextInput =
             view.findViewById<TextInputEditText>(R.id.image_creator_option_amount).apply {
-                doOnTextChanged { text, _, _, _ ->
-                    viewModel.imageCreatorOptions.value?.amount = Int.parse(text)
+                isLongClickable = false
+                doOnTextChanged { amount, _, _, _ ->
+                    amount?.toInt()?.let {
+                        viewModel.imageCreatorOptions.value?.amount = it
+                    }
                 }
             }
 
-        widthTextField =
+        widthTextInput =
             view.findViewById<TextInputEditText>(R.id.image_creator_option_width).apply {
-                doOnTextChanged { text, _, _, _ ->
-                    viewModel.imageCreatorOptions.value?.width = Int.parse(text)
+                isLongClickable = false
+                doOnTextChanged { width, _, _, _ ->
+                    width?.toInt()?.let {
+                        viewModel.imageCreatorOptions.value?.width = it
+                    }
                 }
             }
 
-        heightTextField =
+        heightTextInput =
             view.findViewById<TextInputEditText>(R.id.image_creator_option_height).apply {
-                doOnTextChanged { text, _, _, _ ->
-                    viewModel.imageCreatorOptions.value?.height = Int.parse(text)
+                isLongClickable = false
+                doOnTextChanged { height, _, _, _ ->
+                    height?.toInt()?.let {
+                        viewModel.imageCreatorOptions.value?.height = it
+                    }
                 }
             }
 
@@ -74,34 +82,46 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
                         R.layout.dropdown_item,
                         capitalizedValuesOf<ImagePattern>()
                     )
+                    
+        view.findViewById<AutoCompleteTextView>(R.id.image_creator_option_pattern).apply {
+            setAdapter(
+                NoFilterArrayAdapter(
+                    this@CreateImagesFragment.requireContext(),
+                    R.layout.dropdown_item,
+                    capitalizedValuesOf<ImagePattern>()
                 )
+            )
 
-                setText(viewModel.imageCreatorOptions.value!!.pattern.capitalized(), false)
+            setText(viewModel.imageCreatorOptions.value!!.pattern.capitalized(), false)
 
                 doOnTextChanged { text, _, _, _ ->
                     val imagePattern = ImagePattern.valueOf(text!!.toString().uppercase())
                     viewModel.imageCreatorOptions.value?.pattern = imagePattern
                     iterationsTextFieldLayout.isVisible = imagePattern == ImagePattern.MANDELBROT
                 }
+                
+            doOnTextChanged { pattern, _, _, _ ->
+                viewModel.imageCreatorOptions.value?.pattern =
+                    ImagePattern.valueOf(pattern!!.toString().uppercase())
             }
+        }
 
-        view.findViewById<AutoCompleteTextView>(R.id.image_creator_option_image_file_format)
-            .apply {
-                setAdapter(
-                    NoFilterArrayAdapter(
-                        this@CreateImagesFragment.requireContext(),
-                        R.layout.dropdown_item,
-                        ImageFileFormat.values()
-                    )
+        view.findViewById<AutoCompleteTextView>(R.id.image_creator_option_image_file_format).apply {
+            setAdapter(
+                NoFilterArrayAdapter(
+                    this@CreateImagesFragment.requireContext(),
+                    R.layout.dropdown_item,
+                    ImageFileFormat.values()
                 )
+            )
 
-                setText(viewModel.imageCreatorOptions.value?.format.toString(), false)
+            setText(viewModel.imageCreatorOptions.value?.format.toString(), false)
 
-                doOnTextChanged { text, _, _, _ ->
-                    viewModel.imageCreatorOptions.value?.format =
-                        ImageFileFormat.valueOf(text!!.toString())
-                }
+            doOnTextChanged { format, _, _, _ ->
+                viewModel.imageCreatorOptions.value?.format =
+                    ImageFileFormat.valueOf(format!!.toString())
             }
+        }
 
         viewModel.state.observe(viewLifecycleOwner, ::maybeShowValidationErrors)
 
@@ -117,17 +137,17 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
 
         val amount = viewModel.imageCreatorOptions.value?.amount
         if (amount == null || amount == 0) {
-            amountTextField.error = resources.getString(R.string.image_creator_option_invalid)
+            amountTextInput.error = resources.getString(R.string.image_creator_option_invalid)
         }
 
         val width = viewModel.imageCreatorOptions.value?.width
         if (width == null || width == 0) {
-            widthTextField.error = resources.getString(R.string.image_creator_option_invalid)
+            widthTextInput.error = resources.getString(R.string.image_creator_option_invalid)
         }
 
         val height = viewModel.imageCreatorOptions.value?.height
         if (height == null || height == 0) {
-            heightTextField.error = resources.getString(R.string.image_creator_option_invalid)
+            heightTextInput.error = resources.getString(R.string.image_creator_option_invalid)
         }
 
         if (iterationsTextFieldLayout.isVisible) {
