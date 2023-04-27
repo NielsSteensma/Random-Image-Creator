@@ -84,6 +84,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             style="@style/Theme.RandomImageCreator.DropDownField"
             android:hint="@string/image_creator_option_image_file_format_hint">
 
@@ -93,6 +94,23 @@
                 android:layout_height="wrap_content"
                 android:inputType="none"
                 tools:ignore="LabelFor" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Option: iterations -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/image_creator_option_iterations_layout"
+            style="@style/Theme.RandomImageCreator.InputField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:visibility="gone"
+            android:hint="@string/image_creator_option_iterations_hint">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/image_creator_option_iterations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 

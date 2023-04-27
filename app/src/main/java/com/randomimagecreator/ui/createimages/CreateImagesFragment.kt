@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AutoCompleteTextView
 import android.widget.Button
+import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.randomimagecreator.R
 import com.randomimagecreator.common.ImageFileFormat
 import com.randomimagecreator.common.ImagePattern
@@ -25,6 +27,8 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
     private lateinit var amountTextInput: TextInputEditText
     private lateinit var widthTextInput: TextInputEditText
     private lateinit var heightTextInput: TextInputEditText
+    private lateinit var iterationsTextInput: TextInputEditText
+    private lateinit var iterationsTextInputLayout: TextInputLayout
     private val viewModel: MainViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,6 +44,7 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
                     }
                 }
             }
+
 
         widthTextInput =
             view.findViewById<TextInputEditText>(R.id.image_creator_option_width).apply {
@@ -61,6 +66,28 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
                 }
             }
 
+        iterationsTextInputLayout = view.findViewById(R.id.image_creator_option_iterations_layout)
+        iterationsTextInput =
+            view.findViewById<TextInputEditText>(R.id.image_creator_option_iterations).apply {
+                viewModel.imageCreatorOptions.value?.iterations?.let { this.setText(it.toString()) }
+                doOnTextChanged { iterations, _, _, _ ->
+                    iterations?.toInt()?.let {
+                        viewModel.imageCreatorOptions.value?.iterations = it
+                    }
+                }
+            }
+
+        view.findViewById<AutoCompleteTextView>(R.id.image_creator_option_pattern)
+            .apply {
+                setAdapter(
+                    NoFilterArrayAdapter(
+                        this@CreateImagesFragment.requireContext(),
+                        R.layout.dropdown_item,
+                        capitalizedValuesOf<ImagePattern>()
+                    )
+                )
+            }
+
         view.findViewById<AutoCompleteTextView>(R.id.image_creator_option_pattern).apply {
             setAdapter(
                 NoFilterArrayAdapter(
@@ -72,28 +99,36 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
 
             setText(viewModel.imageCreatorOptions.value!!.pattern.capitalized(), false)
 
+            doOnTextChanged { text, _, _, _ ->
+                val imagePattern = ImagePattern.valueOf(text!!.toString().uppercase())
+                viewModel.imageCreatorOptions.value?.pattern = imagePattern
+                iterationsTextInputLayout.isVisible =
+                    imagePattern == ImagePattern.MANDELBROT
+            }
+
             doOnTextChanged { pattern, _, _, _ ->
                 viewModel.imageCreatorOptions.value?.pattern =
                     ImagePattern.valueOf(pattern!!.toString().uppercase())
             }
         }
 
-        view.findViewById<AutoCompleteTextView>(R.id.image_creator_option_image_file_format).apply {
-            setAdapter(
-                NoFilterArrayAdapter(
-                    this@CreateImagesFragment.requireContext(),
-                    R.layout.dropdown_item,
-                    ImageFileFormat.values()
+        view.findViewById<AutoCompleteTextView>(R.id.image_creator_option_image_file_format)
+            .apply {
+                setAdapter(
+                    NoFilterArrayAdapter(
+                        this@CreateImagesFragment.requireContext(),
+                        R.layout.dropdown_item,
+                        ImageFileFormat.values()
+                    )
                 )
-            )
 
-            setText(viewModel.imageCreatorOptions.value?.format.toString(), false)
+                setText(viewModel.imageCreatorOptions.value?.format.toString(), false)
 
-            doOnTextChanged { format, _, _, _ ->
-                viewModel.imageCreatorOptions.value?.format =
-                    ImageFileFormat.valueOf(format!!.toString())
+                doOnTextChanged { format, _, _, _ ->
+                    viewModel.imageCreatorOptions.value?.format =
+                        ImageFileFormat.valueOf(format!!.toString())
+                }
             }
-        }
 
         viewModel.state.observe(viewLifecycleOwner, ::maybeShowValidationErrors)
 
@@ -120,6 +155,14 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
         val height = viewModel.imageCreatorOptions.value?.height
         if (height == null || height == 0) {
             heightTextInput.error = resources.getString(R.string.image_creator_option_invalid)
+        }
+
+        if (iterationsTextInputLayout.isVisible) {
+            val iterations = viewModel.imageCreatorOptions.value?.iterations
+            if (iterations == null || iterations == 0) {
+                iterationsTextInput.error =
+                    resources.getString(R.string.image_creator_option_invalid)
+            }
         }
     }
 }
