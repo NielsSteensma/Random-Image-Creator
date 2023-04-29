@@ -15,7 +15,6 @@ import com.randomimagecreator.ui.shared.MainViewModel
 import com.randomimagecreator.ui.shared.State
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.util.concurrent.TimeUnit
 
 /**
  * Amount of images to display on a single grid row.
@@ -66,7 +65,8 @@ internal class CreatedImagesFragment : Fragment(R.layout.fragment_created_images
             lifecycleScope.launch {
                 viewModel.state.collectLatest {
                     if (it !is State.FinishedCreatingImages) return@collectLatest
-                    text = TimeUnit.MILLISECONDS.toSeconds(it.duration).toString()
+                    text =
+                        ImageCreationDurationFormatter.seconds(it.durationMilliseconds).toString()
                 }
             }
         }

@@ -28,5 +28,5 @@ sealed class State {
     /**
      * Images were created.
      */
-    data class FinishedCreatingImages(val duration: Long) : State()
+    data class FinishedCreatingImages(val durationMilliseconds: Long) : State()
 }
