@@ -36,7 +36,7 @@ class CreatingImagesFragment : Fragment(R.layout.fragment_creating_images) {
         numberOfSavedImagesTextField.text = getString(
             R.string.creating_images_saved_amount,
             numberOfSavedImages,
-            mainViewModel.imageCreatorOptions.value!!.amount
+            mainViewModel.imageCreatorOptions.value.amount
         )
     }
 }

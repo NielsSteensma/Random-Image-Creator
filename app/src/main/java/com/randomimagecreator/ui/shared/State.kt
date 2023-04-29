@@ -16,10 +16,15 @@ sealed class State {
      * User clicked on create button and image creation configuration was found valid.
      */
     object SubmitConfigValid : State()
+
     /**
      * User choose the directory to save the images in.
      */
     object SubmitSaveDirectory : State()
+    /**
+     * Image creation is in progress.
+     */
+    object CreatingImages : State()
     /**
      * Images were created.
      */

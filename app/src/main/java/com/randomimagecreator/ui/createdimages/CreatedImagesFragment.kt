@@ -7,11 +7,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.randomimagecreator.R
 import com.randomimagecreator.ui.shared.MainViewModel
 import com.randomimagecreator.ui.shared.State
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 /**
@@ -52,7 +55,7 @@ internal class CreatedImagesFragment : Fragment(R.layout.fragment_created_images
         }
 
         rootView.findViewById<TextView>(R.id.created_images_pattern).apply {
-            text = viewModel.imageCreatorOptions.value!!.pattern.toString()
+            text = viewModel.imageCreatorOptions.value.pattern.toString()
         }
 
         rootView.findViewById<TextView>(R.id.created_images_directory).apply {
@@ -60,9 +63,11 @@ internal class CreatedImagesFragment : Fragment(R.layout.fragment_created_images
         }
 
         rootView.findViewById<TextView>(R.id.created_images_duration).apply {
-            val state = viewModel.state.value
-            if (state != null && state is State.FinishedCreatingImages) {
-                text = TimeUnit.MILLISECONDS.toSeconds(state.duration).toString()
+            lifecycleScope.launch {
+                viewModel.state.collectLatest {
+                    if (it !is State.FinishedCreatingImages) return@collectLatest
+                    text = TimeUnit.MILLISECONDS.toSeconds(it.duration).toString()
+                }
             }
         }
     }

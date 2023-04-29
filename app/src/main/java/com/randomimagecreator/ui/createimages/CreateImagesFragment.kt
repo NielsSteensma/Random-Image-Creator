@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.randomimagecreator.R
@@ -18,6 +19,7 @@ import com.randomimagecreator.helpers.capitalizedValuesOf
 import com.randomimagecreator.helpers.toInt
 import com.randomimagecreator.ui.shared.MainViewModel
 import com.randomimagecreator.ui.shared.State
+import kotlinx.coroutines.launch
 
 /**
  * Shows the image creation options.
@@ -40,18 +42,17 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
                 isLongClickable = false
                 doOnTextChanged { amount, _, _, _ ->
                     amount?.toInt()?.let {
-                        viewModel.imageCreatorOptions.value?.amount = it
+                        viewModel.imageCreatorOptions.value.amount = it
                     }
                 }
             }
-
 
         widthTextInput =
             view.findViewById<TextInputEditText>(R.id.image_creator_option_width).apply {
                 isLongClickable = false
                 doOnTextChanged { width, _, _, _ ->
                     width?.toInt()?.let {
-                        viewModel.imageCreatorOptions.value?.width = it
+                        viewModel.imageCreatorOptions.value.width = it
                     }
                 }
             }
@@ -61,7 +62,7 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
                 isLongClickable = false
                 doOnTextChanged { height, _, _, _ ->
                     height?.toInt()?.let {
-                        viewModel.imageCreatorOptions.value?.height = it
+                        viewModel.imageCreatorOptions.value.height = it
                     }
                 }
             }
@@ -69,10 +70,10 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
         iterationsTextInputLayout = view.findViewById(R.id.image_creator_option_iterations_layout)
         iterationsTextInput =
             view.findViewById<TextInputEditText>(R.id.image_creator_option_iterations).apply {
-                viewModel.imageCreatorOptions.value?.iterations?.let { this.setText(it.toString()) }
+                this.setText(viewModel.imageCreatorOptions.value.iterations.toString())
                 doOnTextChanged { iterations, _, _, _ ->
                     iterations?.toInt()?.let {
-                        viewModel.imageCreatorOptions.value?.iterations = it
+                        viewModel.imageCreatorOptions.value.iterations = it
                     }
                 }
             }
@@ -97,17 +98,17 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
                 )
             )
 
-            setText(viewModel.imageCreatorOptions.value!!.pattern.capitalized(), false)
+            setText(viewModel.imageCreatorOptions.value.pattern.capitalized(), false)
 
             doOnTextChanged { text, _, _, _ ->
                 val imagePattern = ImagePattern.valueOf(text!!.toString().uppercase())
-                viewModel.imageCreatorOptions.value?.pattern = imagePattern
+                viewModel.imageCreatorOptions.value.pattern = imagePattern
                 iterationsTextInputLayout.isVisible =
                     imagePattern == ImagePattern.MANDELBROT
             }
 
             doOnTextChanged { pattern, _, _, _ ->
-                viewModel.imageCreatorOptions.value?.pattern =
+                viewModel.imageCreatorOptions.value.pattern =
                     ImagePattern.valueOf(pattern!!.toString().uppercase())
             }
         }
@@ -122,15 +123,18 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
                     )
                 )
 
-                setText(viewModel.imageCreatorOptions.value?.format.toString(), false)
+                setText(viewModel.imageCreatorOptions.value.format.toString(), false)
 
                 doOnTextChanged { format, _, _, _ ->
-                    viewModel.imageCreatorOptions.value?.format =
+                    viewModel.imageCreatorOptions.value.format =
                         ImageFileFormat.valueOf(format!!.toString())
                 }
             }
 
-        viewModel.state.observe(viewLifecycleOwner, ::maybeShowValidationErrors)
+        lifecycleScope.launch {
+            viewModel.state
+                .collect(::maybeShowValidationErrors)
+        }
 
         createButton.setOnClickListener {
             viewModel.onUserSubmitsConfig()
@@ -142,24 +146,24 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
             return
         }
 
-        val amount = viewModel.imageCreatorOptions.value?.amount
-        if (amount == null || amount == 0) {
+        val amount = viewModel.imageCreatorOptions.value.amount
+        if (amount == 0) {
             amountTextInput.error = resources.getString(R.string.image_creator_option_invalid)
         }
 
-        val width = viewModel.imageCreatorOptions.value?.width
-        if (width == null || width == 0) {
+        val width = viewModel.imageCreatorOptions.value.width
+        if (width == 0) {
             widthTextInput.error = resources.getString(R.string.image_creator_option_invalid)
         }
 
-        val height = viewModel.imageCreatorOptions.value?.height
-        if (height == null || height == 0) {
+        val height = viewModel.imageCreatorOptions.value.height
+        if (height == 0) {
             heightTextInput.error = resources.getString(R.string.image_creator_option_invalid)
         }
 
         if (iterationsTextInputLayout.isVisible) {
-            val iterations = viewModel.imageCreatorOptions.value?.iterations
-            if (iterations == null || iterations == 0) {
+            val iterations = viewModel.imageCreatorOptions.value.iterations
+            if (iterations == 0) {
                 iterationsTextInput.error =
                     resources.getString(R.string.image_creator_option_invalid)
             }
