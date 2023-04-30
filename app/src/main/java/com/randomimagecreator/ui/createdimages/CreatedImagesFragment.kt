@@ -66,7 +66,8 @@ internal class CreatedImagesFragment : Fragment(R.layout.fragment_created_images
                 viewModel.state.collectLatest {
                     if (it !is State.FinishedCreatingImages) return@collectLatest
                     text =
-                        ImageCreationDurationFormatter.seconds(it.durationMilliseconds).toString()
+                        ImageCreationDurationFormatter.seconds(it.durationMilliseconds)
+                            .toString()
                 }
             }
         }
