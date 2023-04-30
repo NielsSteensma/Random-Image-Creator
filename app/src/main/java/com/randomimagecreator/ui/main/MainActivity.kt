@@ -5,6 +5,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.lifecycleScope
 import com.randomimagecreator.R
 import com.randomimagecreator.analytics.Analytics
 import com.randomimagecreator.ui.choosesavedirectory.ChooseSaveDirectoryFragment
@@ -13,6 +14,7 @@ import com.randomimagecreator.ui.createimages.CreateImagesFragment
 import com.randomimagecreator.ui.creatingimages.CreatingImagesFragment
 import com.randomimagecreator.ui.shared.MainViewModel
 import com.randomimagecreator.ui.shared.State
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
     private val viewModel: MainViewModel by viewModels()
@@ -21,7 +23,9 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         super.onCreate(savedInstanceState)
         Analytics.setup()
         replaceFragment(CreateImagesFragment(), true)
-        viewModel.state.observe(this, ::updateNavigation)
+        lifecycleScope.launch {
+            viewModel.state.collect(::updateNavigation)
+        }
     }
 
     override fun onBackPressed() {
@@ -34,13 +38,13 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     private fun updateNavigation(state: State) {
         when (state) {
-            State.SUBMIT_CONFIG_VALID -> {
+            is State.SubmitConfigValid -> {
                 replaceFragment(ChooseSaveDirectoryFragment())
             }
-            State.SUBMIT_SAVE_DIRECTORY -> {
+            is State.SubmitSaveDirectory -> {
                 replaceFragment(CreatingImagesFragment())
             }
-            State.FINISHED_CREATING_IMAGES -> {
+            is State.FinishedCreatingImages -> {
                 replaceFragment(CreatedImagesFragment())
             }
             else -> {

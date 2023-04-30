@@ -7,11 +7,19 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.randomimagecreator.R
 import com.randomimagecreator.ui.shared.MainViewModel
+import com.randomimagecreator.ui.shared.State
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
+/**
+ * Amount of images to display on a single grid row.
+ */
+private const val GRID_SPAN_COUNT = 2
 
 /**
  * Shows a 2x2 grid list of images.
@@ -41,24 +49,27 @@ internal class CreatedImagesFragment : Fragment(R.layout.fragment_created_images
     }
 
     private fun setupTextFields(rootView: View) {
-        rootView.findViewById<TextView>(R.id.textfield_created_images_amount).apply {
-            text = resources.getQuantityString(
-                R.plurals.created_images_amount,
-                viewModel.createdImageUris.size,
-                viewModel.createdImageUris.size
-            )
+        rootView.findViewById<TextView>(R.id.created_images_amount).apply {
+            text = viewModel.createdImageUris.size.toString()
         }
-        rootView.findViewById<TextView>(R.id.textfield_created_images_location).text =
-            resources.getString(
-                R.string.created_images_location,
-                viewModel.getSaveDirectoryName(requireContext()) ?: ""
-            )
-    }
 
-    companion object {
-        /**
-         * Amount of images to display on a single grid row.
-         */
-        const val GRID_SPAN_COUNT = 2
+        rootView.findViewById<TextView>(R.id.created_images_pattern).apply {
+            text = viewModel.imageCreatorOptions.value.pattern.toString()
+        }
+
+        rootView.findViewById<TextView>(R.id.created_images_directory).apply {
+            text = viewModel.getSaveDirectoryName(requireContext()) ?: ""
+        }
+
+        rootView.findViewById<TextView>(R.id.created_images_duration).apply {
+            lifecycleScope.launch {
+                viewModel.state.collectLatest {
+                    if (it !is State.FinishedCreatingImages) return@collectLatest
+                    text =
+                        ImageCreationDurationFormatter.seconds(it.durationMilliseconds)
+                            .toString()
+                }
+            }
+        }
     }
 }

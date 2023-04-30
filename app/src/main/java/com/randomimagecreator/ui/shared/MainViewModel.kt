@@ -5,7 +5,6 @@ import android.net.Uri
 import android.provider.OpenableColumns
 import androidx.core.database.getStringOrNull
 import androidx.documentfile.provider.DocumentFile
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.randomimagecreator.analytics.Analytics
@@ -14,61 +13,72 @@ import com.randomimagecreator.helpers.ImageSaver
 import com.randomimagecreator.helpers.query
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlin.system.measureTimeMillis
 
 /**
  * ViewModel used throughout the app.
  * */
 class MainViewModel : ViewModel() {
-    val imageCreatorOptions = MutableLiveData(ImageCreatorOptions())
-    val state = MutableLiveData(State.INITIAL)
+    val imageCreatorOptions = MutableStateFlow(ImageCreatorOptions())
+    val state: StateFlow<State> get() = _state
+    private val _state = MutableStateFlow<State>(State.Initial)
     var createdImageUris = listOf<Uri>()
     var bitmapSaveNotifier: MutableSharedFlow<Nothing?> = MutableSharedFlow()
-    private var saveDirectory: Uri? = null
 
     fun onUserSubmitsConfig() {
-        if (imageCreatorOptions.value?.isValid() == true) {
-            state.postValue(State.SUBMIT_CONFIG_VALID)
+        if (imageCreatorOptions.value.isValid()) {
+            _state.value = State.SubmitConfigValid
         } else {
-            state.postValue(State.SUBMIT_CONFIG_INVALID)
+            _state.value = State.SubmitConfigInvalid
         }
     }
 
     fun onSaveDirectoryChosen(uri: Uri) {
-        saveDirectory = uri
-        state.postValue(State.SUBMIT_SAVE_DIRECTORY)
+        imageCreatorOptions.value.saveDirectory = uri
+        _state.value = State.SubmitSaveDirectory
     }
 
     fun createImages(context: Context) {
         val options = imageCreatorOptions.value
-        if (options == null || !options.isValid()) {
-            state.postValue(State.SUBMIT_CONFIG_INVALID)
+        if (!options.isValid()) {
+            _state.value = State.SubmitConfigInvalid
             return
         }
 
-        viewModelScope.launch(Dispatchers.IO) {
-            if (saveDirectory == null) return@launch
+        val saveDirectory = imageCreatorOptions.value.saveDirectory ?: run {
+            throw IllegalStateException("Image creation attempted without save directory ")
+        }
 
+        _state.value = State.CreatingImages
+
+        viewModelScope.launch(Dispatchers.IO) {
             Analytics.imageCreationEvent(options)
-            val bitmaps = options.pattern.imageCreator.createBitmaps(options)
-            createdImageUris =
-                ImageSaver.saveBitmaps(
-                    viewModelScope,
-                    bitmaps,
-                    context,
-                    saveDirectory!!,
-                    options.format,
-                    bitmapSaveNotifier
-                )
-            state.postValue(State.FINISHED_CREATING_IMAGES)
+            val durationMillis = measureTimeMillis {
+                val bitmaps = options.pattern.imageCreator.createBitmaps(options)
+                createdImageUris =
+                    ImageSaver.saveBitmaps(
+                        viewModelScope,
+                        bitmaps,
+                        context,
+                        saveDirectory,
+                        options.format,
+                        bitmapSaveNotifier
+                    )
+            }
+            _state.value = State.FinishedCreatingImages(durationMillis)
         }
     }
 
     fun getSaveDirectoryName(context: Context): String? {
-        if (saveDirectory == null) return null
+        val saveDirectory = imageCreatorOptions.value.saveDirectory ?: run {
+            return null
+        }
 
         val saveDirectoryUri =
-            DocumentFile.fromTreeUri(context, saveDirectory!!)?.uri ?: return null
+            DocumentFile.fromTreeUri(context, saveDirectory)?.uri ?: return null
 
         return context.contentResolver.query(saveDirectoryUri)?.use { cursor ->
             cursor.moveToFirst()
