@@ -57,7 +57,7 @@ class MainViewModel : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             Analytics.imageCreationEvent(options)
             val durationMillis = measureTimeMillis {
-                val bitmaps = options.pattern.imageCreator.createBitmaps(options)
+                val bitmaps = options.pattern.getImageCreator().createBitmaps(options)
                 createdImageUris =
                     ImageSaver.saveBitmaps(
                         viewModelScope,

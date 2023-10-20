@@ -12,10 +12,9 @@ private const val MAX_DEPTH = 4
  */
 class SierpinskiCarpetCreator : ImageCreator() {
     private lateinit var bitmap: Bitmap
-    private var color: Int? = null
+    private val color = Color.parseColor(generateRandomHexColorValue())
 
     override fun createBitmap(options: ImageCreatorOptions): Bitmap {
-        color = Color.parseColor(generateRandomHexColorValue())
         bitmap =
             Bitmap.createBitmap(options.width, options.height, Bitmap.Config.ARGB_8888).apply {
                 setHasAlpha(false)

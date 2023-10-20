@@ -54,7 +54,7 @@ internal class CreatedImagesFragment : Fragment(R.layout.fragment_created_images
         }
 
         rootView.findViewById<TextView>(R.id.created_images_pattern).apply {
-            text = viewModel.imageCreatorOptions.value.pattern.toString()
+            text = resources.getString(viewModel.imageCreatorOptions.value.pattern.localizationResourceId)
         }
 
         rootView.findViewById<TextView>(R.id.created_images_directory).apply {
