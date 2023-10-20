@@ -5,7 +5,7 @@ import android.graphics.Color
 import android.graphics.Rect
 import com.randomimagecreator.common.ImageCreatorOptions
 
-private const val MAX_DEPTH = 4
+private const val DEPTH = 4
 
 /**
  * Creates a [Bitmap] based on Sierpinski carpet algorithm.
@@ -15,10 +15,9 @@ class SierpinskiCarpetCreator : ImageCreator() {
     private val color = Color.parseColor(generateRandomHexColorValue())
 
     override fun createBitmap(options: ImageCreatorOptions): Bitmap {
-        bitmap =
-            Bitmap.createBitmap(options.width, options.height, Bitmap.Config.ARGB_8888).apply {
-                setHasAlpha(false)
-            }
+        bitmap = Bitmap.createBitmap(options.width, options.height, Bitmap.Config.ARGB_8888).apply {
+            setHasAlpha(false)
+        }
 
         val initialSquare = SierpinskiSquare(Rect(0, 0, 600, 600))
         performAlgorithm(initialSquare, 0)
@@ -29,29 +28,29 @@ class SierpinskiCarpetCreator : ImageCreator() {
         val subSquares = square.divideInNineSubSquares()
         bitmap.applyColors(subSquares)
         for (subSquare in subSquares.filter { !it.isMiddle }) {
-            if (n < MAX_DEPTH) {
+            if (n < DEPTH) {
                 performAlgorithm(subSquare, n + 1)
             }
         }
     }
 
     private fun Bitmap.applyColors(squares: Set<SierpinskiSquare>) {
-       squares.forEach {
-           for (x in it.left until it.right) {
-             for (y in it.top until it.bottom) {
-               setPixel(x, y, if(it.isMiddle) Color.WHITE else color!!)
-             }
-           }
-       }
+        squares.forEach {
+            for (x in it.left until it.right) {
+                for (y in it.top until it.bottom) {
+                    setPixel(x, y, if (it.isMiddle) Color.WHITE else color!!)
+                }
+            }
+        }
     }
 }
 
 
-private data class SierpinskiSquare(val rect: Rect, val isMiddle: Boolean = false) {
-    val left: Int get() { return rect.left }
-    val right: Int get() { return rect.right }
-    val top: Int get() { return rect.top }
-    val bottom: Int get() { return rect.bottom }
+private class SierpinskiSquare(rect: Rect, val isMiddle: Boolean = false) {
+    val left = rect.left
+    val right = rect.right
+    val top = rect.top
+    val bottom = rect.bottom
 
     /**
      * Divides current square in nine sub squares.
@@ -68,7 +67,7 @@ private data class SierpinskiSquare(val rect: Rect, val isMiddle: Boolean = fals
                     left + (sideLength * (x + 1)),
                     top + (sideLength * (y + 1))
                 )
-                squares.add(SierpinskiSquare(rect, x == 1 && y == 1 ))
+                squares.add(SierpinskiSquare(rect, x == 1 && y == 1))
             }
         }
         return squares

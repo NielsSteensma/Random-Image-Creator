@@ -82,7 +82,8 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
                     NoFilterArrayAdapter(
                         this@CreateImagesFragment.requireContext(),
                         R.layout.dropdown_item,
-                        ImagePattern.values().map { requireContext().getString(it.localizationResourceId) }
+                        ImagePattern.values()
+                            .map { requireContext().getString(it.localizationResourceId) }
                     )
                 )
             }
@@ -92,19 +93,27 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
                 NoFilterArrayAdapter(
                     this@CreateImagesFragment.requireContext(),
                     R.layout.dropdown_item,
-                    ImagePattern.values().map { requireContext().getString(it.localizationResourceId) }
+                    ImagePattern.values()
+                        .map { requireContext().getString(it.localizationResourceId) }
                 )
             )
 
-            setText(requireContext().getString(viewModel.imageCreatorOptions.value.pattern.localizationResourceId, false))
+            setText(
+                requireContext().getString(
+                    viewModel.imageCreatorOptions.value.pattern.localizationResourceId,
+                    false
+                )
+            )
 
             doOnTextChanged { charSequence, _, _, _ ->
-                val imagePattern = when(charSequence.toString()) {
+                val imagePattern = when (charSequence.toString()) {
                     requireContext().getString(R.string.image_creator_solid) -> ImagePattern.SOLID
                     requireContext().getString(R.string.image_creator_pixelated) -> ImagePattern.PIXELATED
                     requireContext().getString(R.string.image_creator_mandelbrot) -> ImagePattern.MANDELBROT
                     requireContext().getString(R.string.image_creator_sierpinski) -> ImagePattern.SIERPINSKI_CARPET
-                    else -> { ImagePattern.SOLID }
+                    else -> {
+                        ImagePattern.SOLID
+                    }
                 }
                 viewModel.imageCreatorOptions.value.pattern = imagePattern
                 iterationsTextInputLayout.isVisible =
@@ -112,12 +121,14 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
             }
 
             doOnTextChanged { charSequence, _, _, _ ->
-                val imagePattern = when(charSequence.toString()) {
+                val imagePattern = when (charSequence.toString()) {
                     requireContext().getString(R.string.image_creator_solid) -> ImagePattern.SOLID
                     requireContext().getString(R.string.image_creator_pixelated) -> ImagePattern.PIXELATED
                     requireContext().getString(R.string.image_creator_mandelbrot) -> ImagePattern.MANDELBROT
                     requireContext().getString(R.string.image_creator_sierpinski) -> ImagePattern.SIERPINSKI_CARPET
-                    else -> { ImagePattern.SOLID }
+                    else -> {
+                        ImagePattern.SOLID
+                    }
                 }
                 viewModel.imageCreatorOptions.value.pattern = imagePattern
             }
