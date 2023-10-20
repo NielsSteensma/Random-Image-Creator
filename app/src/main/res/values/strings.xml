@@ -25,4 +25,10 @@
     <string name="created_images_duration">Duration ( seconds )</string>
     <string name="created_images_title">Image creation finished</string>
     <string name="created_images_directory">Directory</string>
+
+    <!-- Creators -->
+    <string name="image_creator_solid">Solid</string>
+    <string name="image_creator_pixelated">Pixelated</string>
+    <string name="image_creator_mandelbrot">Mandelbrot</string>
+    <string name="image_creator_sierpinski">Sierpinski carpet</string>
 </resources>

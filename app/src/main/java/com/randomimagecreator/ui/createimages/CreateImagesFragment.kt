@@ -14,8 +14,6 @@ import com.google.android.material.textfield.TextInputLayout
 import com.randomimagecreator.R
 import com.randomimagecreator.common.ImageFileFormat
 import com.randomimagecreator.common.ImagePattern
-import com.randomimagecreator.helpers.capitalized
-import com.randomimagecreator.helpers.capitalizedValuesOf
 import com.randomimagecreator.helpers.toInt
 import com.randomimagecreator.ui.shared.MainViewModel
 import com.randomimagecreator.ui.shared.State
@@ -84,7 +82,7 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
                     NoFilterArrayAdapter(
                         this@CreateImagesFragment.requireContext(),
                         R.layout.dropdown_item,
-                        capitalizedValuesOf<ImagePattern>()
+                        ImagePattern.values().map { requireContext().getString(it.localizationResourceId) }
                     )
                 )
             }
@@ -94,22 +92,34 @@ class CreateImagesFragment : Fragment(R.layout.fragment_image_creation) {
                 NoFilterArrayAdapter(
                     this@CreateImagesFragment.requireContext(),
                     R.layout.dropdown_item,
-                    capitalizedValuesOf<ImagePattern>()
+                    ImagePattern.values().map { requireContext().getString(it.localizationResourceId) }
                 )
             )
 
-            setText(viewModel.imageCreatorOptions.value.pattern.capitalized(), false)
+            setText(requireContext().getString(viewModel.imageCreatorOptions.value.pattern.localizationResourceId, false))
 
-            doOnTextChanged { text, _, _, _ ->
-                val imagePattern = ImagePattern.valueOf(text!!.toString().uppercase())
+            doOnTextChanged { charSequence, _, _, _ ->
+                val imagePattern = when(charSequence.toString()) {
+                    requireContext().getString(R.string.image_creator_solid) -> ImagePattern.SOLID
+                    requireContext().getString(R.string.image_creator_pixelated) -> ImagePattern.PIXELATED
+                    requireContext().getString(R.string.image_creator_mandelbrot) -> ImagePattern.MANDELBROT
+                    requireContext().getString(R.string.image_creator_sierpinski) -> ImagePattern.SIERPINSKI_CARPET
+                    else -> { ImagePattern.SOLID }
+                }
                 viewModel.imageCreatorOptions.value.pattern = imagePattern
                 iterationsTextInputLayout.isVisible =
                     imagePattern == ImagePattern.MANDELBROT
             }
 
-            doOnTextChanged { pattern, _, _, _ ->
-                viewModel.imageCreatorOptions.value.pattern =
-                    ImagePattern.valueOf(pattern!!.toString().uppercase())
+            doOnTextChanged { charSequence, _, _, _ ->
+                val imagePattern = when(charSequence.toString()) {
+                    requireContext().getString(R.string.image_creator_solid) -> ImagePattern.SOLID
+                    requireContext().getString(R.string.image_creator_pixelated) -> ImagePattern.PIXELATED
+                    requireContext().getString(R.string.image_creator_mandelbrot) -> ImagePattern.MANDELBROT
+                    requireContext().getString(R.string.image_creator_sierpinski) -> ImagePattern.SIERPINSKI_CARPET
+                    else -> { ImagePattern.SOLID }
+                }
+                viewModel.imageCreatorOptions.value.pattern = imagePattern
             }
         }
 
