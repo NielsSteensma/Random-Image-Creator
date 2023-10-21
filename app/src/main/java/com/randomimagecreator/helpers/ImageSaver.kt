@@ -41,7 +41,6 @@ object ImageSaver {
             saveBitmap(bitmap, context.contentResolver, rootDocumentFile!!, format)?.let {
                 bitmapUris.add(it)
                 scope.launch {
-                    println("ERRROR: emit")
                     notifier.emit(null)
                 }
             }
@@ -64,8 +63,8 @@ object ImageSaver {
                 stream!!.write(byteArray)
             }
         } else {
-            contentResolver.openOutputStream(createdFile.uri).use { stream ->
-                bitmap.compress(format.compressFormat, 100, stream)
+            contentResolver.openOutputStream(createdFile.uri)?.use { stream ->
+                bitmap.compress(format.compressFormat!!, 100, stream)
             }
         }
         return createdFile.uri
