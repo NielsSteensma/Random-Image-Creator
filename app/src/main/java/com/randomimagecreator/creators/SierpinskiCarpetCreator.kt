@@ -38,7 +38,7 @@ class SierpinskiCarpetCreator : ImageCreator() {
         squares.forEach {
             for (x in it.left until it.right) {
                 for (y in it.top until it.bottom) {
-                    setPixel(x, y, if (it.isMiddle) Color.WHITE else color!!)
+                    setPixel(x, y, if (it.isMiddle) Color.WHITE else color)
                 }
             }
         }
