@@ -109,7 +109,7 @@ class ConfigurationValidatorForSpecificImagePatternsTest {
     @Test
     fun `validator for Sierpinski, when height and width are not equal, returns validation warning`() {
         val configuration =
-            defaultConfiguration.copy(height = 133, pattern = ImagePattern.SIERPINSKI_CARPET)
+            defaultConfiguration.copy(height = 300, pattern = ImagePattern.SIERPINSKI_CARPET)
         val validator = ConfigurationValidator(configuration)
         assertEquals(
             R.string.image_creator_option_invalid_not_equal,
@@ -120,7 +120,7 @@ class ConfigurationValidatorForSpecificImagePatternsTest {
     @Test
     fun `validator for Sierpinski, when width and height are not equal, returns validation warning`() {
         val configuration =
-            defaultConfiguration.copy(width = 133, pattern = ImagePattern.SIERPINSKI_CARPET)
+            defaultConfiguration.copy(width = 300, pattern = ImagePattern.SIERPINSKI_CARPET)
         val validator = ConfigurationValidator(configuration)
         assertEquals(
             R.string.image_creator_option_invalid_not_equal,
