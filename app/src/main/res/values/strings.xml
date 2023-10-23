@@ -9,10 +9,12 @@
     <string name="image_creator_option_image_file_format_hint">Format</string>
     <string name="image_creator_option_iterations_hint">Iterations</string>
     <string name="image_creator_option_invalid">Value missing</string>
+    <string name="image_creator_option_invalid_not_dividable_by_3">Value not dividable by 3</string>
+    <string name="image_creator_option_invalid_not_equal">Width and height should be equal values</string>
     <string name="image_creator_button_create">Create</string>
 
     <!-- Creating images -->
-    <string name="creating_images_saved_amount">Saved %d of %d images to your device</string>
+    <string name="loading_saved_amount">Saved %d of %d images to your device</string>
 
     <!-- Created images  -->
     <string name="created_images_location">The created images can be found in the directory \"%1$s\"</string>
