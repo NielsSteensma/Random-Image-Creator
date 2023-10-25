@@ -7,11 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
-import com.randomimagecreator.common.Analytics
 import com.randomimagecreator.choosesavedirectory.ChooseSaveDirectoryFragment
-import com.randomimagecreator.result.ResultFragment
+import com.randomimagecreator.common.Analytics
 import com.randomimagecreator.configuration.ConfigurationFragment
 import com.randomimagecreator.loading.LoadingFragment
+import com.randomimagecreator.result.ResultFragment
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(R.layout.activity_main) {
@@ -22,12 +22,16 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         Analytics.setup()
         replaceFragment(ConfigurationFragment(), true)
         lifecycleScope.launch {
-            viewModel.state.collect(::updateNavigation)
+            viewModel.screen.collect(::onScreenChange)
         }
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (supportFragmentManager.backStackEntryCount > 0) {
-                    supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    supportFragmentManager.popBackStack(
+                        null,
+                        FragmentManager.POP_BACK_STACK_INCLUSIVE
+                    )
+                    viewModel.onUserNavigatedBackToConfiguration()
                 } else {
                     finish()
                 }
@@ -35,18 +39,22 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         })
     }
 
-    private fun updateNavigation(state: State) {
-        when (state) {
-            is State.SubmittedConfigurationValid -> {
+    private fun onScreenChange(screen: Screen) {
+        when (screen) {
+            is Screen.Configuration -> {
+                // Don't do anything. This only can happen in case of back navigation
+            }
+
+            is Screen.ChooseSaveDirectory -> {
                 replaceFragment(ChooseSaveDirectoryFragment())
             }
-            is State.SubmitSaveDirectory -> {
+
+            is Screen.Loading -> {
                 replaceFragment(LoadingFragment())
             }
-            is State.FinishedCreatingImages -> {
+
+            is Screen.Result -> {
                 replaceFragment(ResultFragment())
-            }
-            else -> {
             }
         }
     }

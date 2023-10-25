@@ -21,16 +21,6 @@ data class Configuration(
 ) {
     val validator: ConfigurationValidator
         get() {
-        return ConfigurationValidator(this)
-    }
-    /**
-     * Returns a boolean indicating if the given set of options is valid.
-     */
-    fun isValid(): Boolean {
-        return if (pattern == ImagePattern.MANDELBROT) {
-            amount != 0 && width != 0 && height != 0 && iterations != 0
-        } else {
-            amount != 0 && width != 0 && height != 0
+            return ConfigurationValidator(this)
         }
-    }
 }

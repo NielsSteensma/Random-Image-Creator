@@ -11,10 +11,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.randomimagecreator.MainViewModel
 import com.randomimagecreator.R
 import com.randomimagecreator.common.extensions.toInt
-import com.randomimagecreator.MainViewModel
-import com.randomimagecreator.State
 import kotlinx.coroutines.launch
 
 /**
@@ -151,30 +150,35 @@ class ConfigurationFragment : Fragment(R.layout.fragment_configuration) {
             }
 
         lifecycleScope.launch {
-            viewModel.state.collect(::maybeShowValidationErrors)
+            viewModel.validationResult.collect(::onValidationResult)
         }
 
         createButton.setOnClickListener {
-            viewModel.onUserSubmitsConfiguration()
+            lifecycleScope.launch {
+                viewModel.onUserSubmitsConfiguration()
+            }
         }
     }
 
-    private fun maybeShowValidationErrors(state: State) {
-        if (state != State.SubmittedConfigurationInvalid) {
-            return
-        }
-
-        viewModel.configuration.validator.amountValidationMessage()?.let {
-            amountTextInput.error = resources.getString(it)
-        }
-        viewModel.configuration.validator.widthValidationMessage()?.let {
-            widthTextInput.error = resources.getString(it)
-        }
-        viewModel.configuration.validator.heightValidationMessage()?.let {
-            heightTextInput.error = resources.getString(it)
-        }
-        viewModel.configuration.validator.iterationsValidationMessage()?.let {
-            iterationsTextInput.error = resources.getString(it)
+    private fun onValidationResult(isValid: Boolean) {
+        if (isValid) {
+            amountTextInput.error = null
+            widthTextInput.error = null
+            heightTextInput.error = null
+            iterationsTextInput.error = null
+        } else {
+            viewModel.configuration.validator.amountValidationMessage()?.let {
+                amountTextInput.error = resources.getString(it)
+            }
+            viewModel.configuration.validator.widthValidationMessage()?.let {
+                widthTextInput.error = resources.getString(it)
+            }
+            viewModel.configuration.validator.heightValidationMessage()?.let {
+                heightTextInput.error = resources.getString(it)
+            }
+            viewModel.configuration.validator.iterationsValidationMessage()?.let {
+                iterationsTextInput.error = resources.getString(it)
+            }
         }
     }
 }

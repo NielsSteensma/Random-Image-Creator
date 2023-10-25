@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.randomimagecreator.R
 import com.randomimagecreator.MainViewModel
-import com.randomimagecreator.State
+import com.randomimagecreator.Screen
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -63,8 +63,8 @@ internal class ResultFragment : Fragment(R.layout.fragment_result) {
 
         rootView.findViewById<TextView>(R.id.created_images_duration).apply {
             lifecycleScope.launch {
-                viewModel.state.collectLatest {
-                    if (it !is State.FinishedCreatingImages) return@collectLatest
+                viewModel.screen.collectLatest {
+                    if (it !is Screen.Result) return@collectLatest
                     text =
                         ImageCreationDurationFormatter.seconds(it.durationMilliseconds)
                             .toString()

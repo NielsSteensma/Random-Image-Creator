@@ -8,13 +8,15 @@ import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.randomimagecreator.common.Analytics
-import com.randomimagecreator.configuration.Configuration
 import com.randomimagecreator.common.ImageSaver
 import com.randomimagecreator.common.extensions.query
+import com.randomimagecreator.configuration.Configuration
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import kotlin.system.measureTimeMillis
 
@@ -23,35 +25,37 @@ import kotlin.system.measureTimeMillis
  * */
 class MainViewModel : ViewModel() {
     val configuration = Configuration()
-    val state: StateFlow<State> get() = _state
-    private val _state = MutableStateFlow<State>(State.Initial)
+    val screen: StateFlow<Screen> get() = _screen
+    private val _screen = MutableStateFlow<Screen>(Screen.Configuration)
+    val validationResult: Flow<Boolean> get() = _validationResult.filterNotNull()
+    private val _validationResult = MutableStateFlow<Boolean?>(null)
     var createdImageUris = listOf<Uri>()
     var bitmapSaveNotifier: MutableSharedFlow<Nothing?> = MutableSharedFlow()
 
-    fun onUserSubmitsConfiguration() {
-        if (configuration.isValid()) {
-            _state.value = State.SubmittedConfigurationValid
-        } else {
-            _state.value = State.SubmittedConfigurationInvalid
+    fun onUserNavigatedBackToConfiguration() {
+        _screen.value = Screen.Configuration
+        _validationResult.value = null
+    }
+
+    suspend fun onUserSubmitsConfiguration() {
+        val isValid = configuration.validator.isValid
+        _validationResult.emit(isValid)
+        if (isValid) {
+            _screen.value = Screen.ChooseSaveDirectory
         }
     }
 
     fun onSaveDirectoryChosen(uri: Uri) {
         configuration.saveDirectory = uri
-        _state.value = State.SubmitSaveDirectory
+        _screen.value = Screen.ChooseSaveDirectory
     }
 
     fun createImages(context: Context) {
-        if (!configuration.isValid()) {
-            _state.value = State.SubmittedConfigurationInvalid
-            return
-        }
-
         val saveDirectory = configuration.saveDirectory ?: run {
             throw IllegalStateException("Image creation attempted without save directory ")
         }
 
-        _state.value = State.CreatingImages
+        _screen.value = Screen.Loading
 
         viewModelScope.launch(Dispatchers.IO) {
             Analytics.imageCreationEvent(configuration)
@@ -68,7 +72,7 @@ class MainViewModel : ViewModel() {
                         bitmapSaveNotifier
                     )
             }
-            _state.value = State.FinishedCreatingImages(durationMillis)
+            _screen.value = Screen.Result(durationMillis)
         }
     }
 
