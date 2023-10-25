@@ -1,5 +1,6 @@
 package com.randomimagecreator.helpers
 
+import com.randomimagecreator.common.extensions.toInt
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test

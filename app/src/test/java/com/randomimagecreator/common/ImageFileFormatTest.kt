@@ -1,6 +1,7 @@
 package com.randomimagecreator.common
 
 import android.graphics.Bitmap
+import com.randomimagecreator.configuration.ImageFileFormat
 import org.junit.Assert
 import org.junit.Test
 
