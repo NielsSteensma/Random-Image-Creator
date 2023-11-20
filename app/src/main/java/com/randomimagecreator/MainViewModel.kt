@@ -1,88 +1,74 @@
 package com.randomimagecreator
 
-import android.content.Context
+import android.app.Application
 import android.net.Uri
 import android.provider.OpenableColumns
+import androidx.compose.runtime.mutableStateOf
 import androidx.core.database.getStringOrNull
 import androidx.documentfile.provider.DocumentFile
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.randomimagecreator.common.Analytics
 import com.randomimagecreator.common.ImageSaver
 import com.randomimagecreator.common.extensions.query
 import com.randomimagecreator.configuration.Configuration
+import com.randomimagecreator.result.Result
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import kotlin.system.measureTimeMillis
 
 /**
  * ViewModel used throughout the app.
  * */
-class MainViewModel : ViewModel() {
-    val configuration = Configuration()
-    val screen: StateFlow<Screen> get() = _screen
-    private val _screen = MutableStateFlow<Screen>(Screen.Configuration)
-    val validationResult: Flow<Boolean> get() = _validationResult.filterNotNull()
-    private val _validationResult = MutableStateFlow<Boolean?>(null)
-    var createdImageUris = listOf<Uri>()
-    var bitmapSaveNotifier: MutableSharedFlow<Nothing?> = MutableSharedFlow()
+class MainViewModel(application: Application) : AndroidViewModel(application) {
+    var configuration = Configuration()
+    var result: Result? = null
+        private set
+    val nrOfCreatedImages = MutableStateFlow(0)
 
-    fun onUserNavigatedBackToConfiguration() {
-        _screen.value = Screen.Configuration
-        _validationResult.value = null
-    }
-
-    suspend fun onUserSubmitsConfiguration() {
-        val isValid = configuration.validator.isValid
-        _validationResult.emit(isValid)
-        if (isValid) {
-            _screen.value = Screen.ChooseSaveDirectory
-        }
-    }
-
-    fun onSaveDirectoryChosen(uri: Uri) {
-        configuration.saveDirectory = uri
-        _screen.value = Screen.ChooseSaveDirectory
-    }
-
-    fun createImages(context: Context) {
+    fun generateImages(onFinish: () -> Unit) {
         val saveDirectory = configuration.saveDirectory ?: run {
-            throw IllegalStateException("Image creation attempted without save directory ")
+            throw IllegalStateException("Image creation attempted without save directory")
         }
-
-        _screen.value = Screen.Loading
 
         viewModelScope.launch(Dispatchers.IO) {
             Analytics.imageCreationEvent(configuration)
-            val durationMillis = measureTimeMillis {
+
+            var createdImages: List<Uri>
+            val durationInMillis = measureTimeMillis {
                 val bitmaps =
                     configuration.pattern.getImageGenerator().createBitmaps(configuration)
-                createdImageUris =
+                createdImages =
                     ImageSaver.saveBitmaps(
-                        viewModelScope,
                         bitmaps,
-                        context,
+                        nrOfCreatedImages,
+                        getApplication<Application>().applicationContext,
                         saveDirectory,
                         configuration.format,
-                        bitmapSaveNotifier
                     )
             }
-            _screen.value = Screen.Result(durationMillis)
+            result = Result(
+                configuration.amount,
+                configuration.pattern,
+                getSaveDirectoryName() ?: "",
+                durationInMillis,
+                createdImages
+            )
+            MainScope().launch {
+                onFinish()
+            }
         }
     }
 
-    fun getSaveDirectoryName(context: Context): String? {
+    private fun getSaveDirectoryName(): String? {
         val saveDirectory = configuration.saveDirectory ?: run {
             return null
         }
-
-        val saveDirectoryUri =
-            DocumentFile.fromTreeUri(context, saveDirectory)?.uri ?: return null
+        val context = getApplication<Application>().applicationContext
+        val saveDirectoryUri = DocumentFile.fromTreeUri(context, saveDirectory)?.uri ?: return null
 
         return context.contentResolver.query(saveDirectoryUri)?.use { cursor ->
             cursor.moveToFirst()

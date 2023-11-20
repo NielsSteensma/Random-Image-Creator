@@ -6,9 +6,9 @@ import android.graphics.Bitmap
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
 import com.randomimagecreator.configuration.ImageFileFormat
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 /**
  * Helper class for saving images.
@@ -18,30 +18,29 @@ object ImageSaver {
      * Saves the given array of bitmaps to the provided [directory].
      *
      * @param bitmaps           A list of all bitmaps to save.
+     * @param flow              Notifier that emits the amount of saved bitmaps.
      * @param context           The context of the caller.
      * @param directory         Directory selected by user for saving.
      * @param format            Format to save the bitmap in.
-     * @param notifier          Notifier that emits the amount of saved bitmaps.
      */
-    fun saveBitmaps(
-        scope: CoroutineScope,
+    suspend fun saveBitmaps(
         bitmaps: MutableList<Bitmap>,
+        flow: MutableStateFlow<Int>,
         context: Context,
         directory: Uri,
-        format: ImageFileFormat,
-        notifier: MutableSharedFlow<Nothing?>
+        format: ImageFileFormat
     ): List<Uri> {
         val rootDocumentFile = DocumentFile.fromTreeUri(context, directory)
         assert(rootDocumentFile != null) { "root document file shouldn't be null" }
 
         val bitmapUris = mutableListOf<Uri>()
 
+        var i = 0
         for (bitmap in bitmaps) {
             saveBitmap(bitmap, context.contentResolver, rootDocumentFile!!, format)?.let {
+                i++
                 bitmapUris.add(it)
-                scope.launch {
-                    notifier.emit(null)
-                }
+                flow.emit(i)
             }
         }
         return bitmapUris
