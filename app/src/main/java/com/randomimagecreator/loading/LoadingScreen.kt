@@ -47,7 +47,6 @@ fun LoadingScreen(numberOfSavedImagesFlow: StateFlow<Int>, numberOfImages: Int) 
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            HeaderScreen()
             Spacer(Modifier.weight(1.0f))
             CircularProgressIndicator(
                 modifier = Modifier

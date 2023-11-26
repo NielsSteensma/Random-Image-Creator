@@ -2,6 +2,7 @@ package com.randomimagecreator
 
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -13,6 +14,7 @@ import com.randomimagecreator.Destinations.CONFIGURATION_ROUTE
 import com.randomimagecreator.Destinations.LOADING_ROUTE
 import com.randomimagecreator.Destinations.RESULT_ROUTE
 import com.randomimagecreator.choosesavedirectory.ChooseSaveDirectoryRoute
+import com.randomimagecreator.common.HeaderScreen
 import com.randomimagecreator.configuration.ConfigurationRoute
 import com.randomimagecreator.loading.LoadingRoute
 import com.randomimagecreator.result.ResultRoute
@@ -27,40 +29,38 @@ object Destinations {
 @Composable
 fun RandomImageCreatorNavHost(navController: NavHostController = rememberNavController()) {
     val viewModel = viewModel<MainViewModel>()
-    NavHost(
-        navController = navController,
-        startDestination = CONFIGURATION_ROUTE
-    ) {
-        composable(
-            CONFIGURATION_ROUTE,
+    Column {
+        HeaderScreen()
+        NavHost(
+            navController = navController,
+            startDestination = CONFIGURATION_ROUTE,
             enterTransition = { fadeIn() },
-            exitTransition = { fadeOut() }) {
-            ConfigurationRoute(onValidConfigurationSubmit = {
-                viewModel.configuration = it
-                navController.navigate(CHOOSE_SAVE_DIRECTORY_ROUTE)
-            })
-        }
-        composable(CHOOSE_SAVE_DIRECTORY_ROUTE,
-            enterTransition = { fadeIn() },
-            exitTransition = { fadeOut() }) {
-            ChooseSaveDirectoryRoute(onSaveDirectorySubmit = {
-                viewModel.configuration.saveDirectory = it
-                navController.navigate(LOADING_ROUTE)
-            })
-        }
-        composable(LOADING_ROUTE,
-            enterTransition = { fadeIn() },
-            exitTransition = { fadeOut() }) {
-            LoadingRoute(viewModel, onLoadingFinished = {
-                navController.navigate(RESULT_ROUTE)
-            })
-        }
-        composable(RESULT_ROUTE,
-            enterTransition = { fadeIn() },
-            exitTransition = { fadeOut() }) {
-            ResultRoute(viewModel.result!!, onBackPress = {
-                navController.popBackStack(CONFIGURATION_ROUTE, false)
-            })
+            exitTransition = { fadeOut() }
+        ) {
+            composable(
+                CONFIGURATION_ROUTE,
+            ) {
+                ConfigurationRoute(onValidConfigurationSubmit = {
+                    viewModel.configuration = it
+                    navController.navigate(CHOOSE_SAVE_DIRECTORY_ROUTE)
+                })
+            }
+            composable(CHOOSE_SAVE_DIRECTORY_ROUTE) {
+                ChooseSaveDirectoryRoute(onSaveDirectorySubmit = {
+                    viewModel.configuration.saveDirectory = it
+                    navController.navigate(LOADING_ROUTE)
+                })
+            }
+            composable(LOADING_ROUTE) {
+                LoadingRoute(viewModel, onLoadingFinished = {
+                    navController.navigate(RESULT_ROUTE)
+                })
+            }
+            composable(RESULT_ROUTE) {
+                ResultRoute(viewModel.result!!, onBackPress = {
+                    navController.popBackStack(CONFIGURATION_ROUTE, false)
+                })
+            }
         }
     }
 }

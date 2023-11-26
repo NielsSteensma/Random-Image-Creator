@@ -15,13 +15,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.randomimagecreator.R
-import com.randomimagecreator.common.HeaderScreen
 import com.randomimagecreator.configuration.ImagePattern
 
 @Composable
 fun ResultScreen(result: Result) {
     Column {
-        HeaderScreen()
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(horizontal = 32.dp)

@@ -21,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.randomimagecreator.R
-import com.randomimagecreator.common.HeaderScreen
 
 @Composable
 fun ChooseSaveDirectoryScreen(onSaveDirectorySubmit: (uri: Uri) -> Unit) {
@@ -35,7 +34,6 @@ fun ChooseSaveDirectoryScreen(onSaveDirectorySubmit: (uri: Uri) -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        HeaderScreen()
         Spacer(Modifier.weight(1.0f))
         Row(
             verticalAlignment = Alignment.CenterVertically,

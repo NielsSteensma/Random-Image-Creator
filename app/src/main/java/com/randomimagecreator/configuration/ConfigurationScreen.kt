@@ -22,20 +22,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.randomimagecreator.R
-import com.randomimagecreator.common.HeaderScreen
 
 @Composable
-fun ConfigurationScreen(onValidConfigurationSubmit: (configuration: Configuration) -> Unit) {
-    val configuration by remember { mutableStateOf(Configuration(0, 0, 0)) }
-    val (isAmountValid, setIsAmountValid) = remember { mutableStateOf(false) }
+fun ConfigurationScreen(
+    _configuration: Configuration,
+    onValidConfigurationSubmit: (configuration: Configuration) -> Unit
+) {
+    val configuration by remember { mutableStateOf(_configuration) }
+    val (isAmountValid, setIsAmountValid) = remember { mutableStateOf(true) }
     val (amountErrorMessage, setAmountErrorMessage) = remember { mutableStateOf<Int?>(null) }
-    val (isWidthValid, setIsWidthValid) = remember { mutableStateOf(false) }
+    val (isWidthValid, setIsWidthValid) = remember { mutableStateOf(true) }
     val (widthErrorMessage, setWidthErrorMessage) = remember { mutableStateOf<Int?>(null) }
-    val (isHeightValid, setIsHeightValid) = remember { mutableStateOf(false) }
+    val (isHeightValid, setIsHeightValid) = remember { mutableStateOf(true) }
     val (heightErrorMessage, setHeightErrorMessage) = remember { mutableStateOf<Int?>(null) }
 
     Column {
-        HeaderScreen()
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(horizontal = 32.dp)
@@ -43,18 +44,24 @@ fun ConfigurationScreen(onValidConfigurationSubmit: (configuration: Configuratio
             Spacer(Modifier.weight(1.0f))
             IntTextField(
                 value = configuration.amount,
-                isError = isAmountValid,
+                isError = !isAmountValid,
                 label = {
                     var label = stringResource(R.string.image_creator_option_amount_hint)
                     amountErrorMessage?.let {
                         label = "$label (${stringResource(it).lowercase()})"
                     }
-                    Text(label, color = MaterialTheme.colors.primary)
+                    val labelColor = if (isAmountValid) {
+                        MaterialTheme.colors.primary
+                    } else {
+                        Color.Red
+                    }
+
+                    Text(label, color = labelColor)
                 },
                 onValueChange = {
-                    if (isAmountValid) {
+                    if (!isAmountValid) {
                         setAmountErrorMessage(null)
-                        setIsAmountValid(false)
+                        setIsAmountValid(true)
                     }
                     configuration.amount = it
                 }
@@ -62,18 +69,23 @@ fun ConfigurationScreen(onValidConfigurationSubmit: (configuration: Configuratio
             Spacer(modifier = Modifier.height(10.dp))
             IntTextField(
                 value = configuration.width,
-                isError = isWidthValid,
+                isError = !isWidthValid,
                 label = {
                     var label = stringResource(R.string.image_creator_option_width_hint)
                     widthErrorMessage?.let {
                         label = "$label (${stringResource(it).lowercase()})"
                     }
-                    Text(label, color = MaterialTheme.colors.primary)
+                    val labelColor = if (isAmountValid) {
+                        MaterialTheme.colors.primary
+                    } else {
+                        Color.Red
+                    }
+                    Text(label, color = labelColor)
                 },
                 onValueChange = {
-                    if (isWidthValid) {
+                    if (!isWidthValid) {
                         setWidthErrorMessage(null)
-                        setIsWidthValid(false)
+                        setIsWidthValid(true)
                     }
                     configuration.width = it
                 }
@@ -81,18 +93,23 @@ fun ConfigurationScreen(onValidConfigurationSubmit: (configuration: Configuratio
             Spacer(modifier = Modifier.height(10.dp))
             IntTextField(
                 value = configuration.height,
-                isError = isHeightValid,
+                isError = !isHeightValid,
                 label = {
                     var label = stringResource(R.string.image_creator_option_height_hint)
                     heightErrorMessage?.let {
                         label = "$label (${stringResource(it).lowercase()})"
                     }
-                    Text(label, color = MaterialTheme.colors.primary)
+                    val labelColor = if (isAmountValid) {
+                        MaterialTheme.colors.primary
+                    } else {
+                        Color.Red
+                    }
+                    Text(label, color = labelColor)
                 },
                 onValueChange = {
-                    if (isHeightValid) {
+                    if (!isHeightValid) {
                         setHeightErrorMessage(null)
-                        setIsHeightValid(false)
+                        setIsHeightValid(true)
                     }
                     configuration.height = it
                 }
@@ -129,11 +146,11 @@ fun ConfigurationScreen(onValidConfigurationSubmit: (configuration: Configuratio
                     if (configuration.validator.isValid) {
                         onValidConfigurationSubmit(configuration)
                     } else {
-                        setIsAmountValid(configuration.validator.amountValidationMessage() != null)
+                        setIsAmountValid(configuration.validator.amountValidationMessage() == null)
                         setAmountErrorMessage(configuration.validator.amountValidationMessage())
-                        setIsWidthValid(configuration.validator.widthValidationMessage() != null)
+                        setIsWidthValid(configuration.validator.widthValidationMessage() == null)
                         setWidthErrorMessage(configuration.validator.widthValidationMessage())
-                        setIsHeightValid(configuration.validator.heightValidationMessage() != null)
+                        setIsHeightValid(configuration.validator.heightValidationMessage() == null)
                         setHeightErrorMessage(configuration.validator.heightValidationMessage())
                     }
                 }
@@ -152,5 +169,5 @@ fun ConfigurationScreen(onValidConfigurationSubmit: (configuration: Configuratio
 @Preview(showSystemUi = true)
 @Composable
 fun ConfigurationScreenPreview() {
-    ConfigurationScreen {}
+    ConfigurationScreen(Configuration()) {}
 }

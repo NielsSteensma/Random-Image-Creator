@@ -6,5 +6,5 @@ import androidx.compose.runtime.Composable
 fun ConfigurationRoute(
     onValidConfigurationSubmit: (configuration: Configuration) -> Unit
 ) {
-    ConfigurationScreen(onValidConfigurationSubmit)
+    ConfigurationScreen(Configuration(), onValidConfigurationSubmit)
 }
