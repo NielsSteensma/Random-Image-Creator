@@ -1,7 +1,7 @@
 package com.randomimagecreator
 
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -33,30 +33,34 @@ fun RandomImageCreatorNavHost(navController: NavHostController = rememberNavCont
     ) {
         composable(
             CONFIGURATION_ROUTE,
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None }) {
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() }) {
             ConfigurationRoute(onValidConfigurationSubmit = {
                 viewModel.configuration = it
                 navController.navigate(CHOOSE_SAVE_DIRECTORY_ROUTE)
             })
         }
         composable(CHOOSE_SAVE_DIRECTORY_ROUTE,
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None }) {
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() }) {
             ChooseSaveDirectoryRoute(onSaveDirectorySubmit = {
                 viewModel.configuration.saveDirectory = it
                 navController.navigate(LOADING_ROUTE)
             })
         }
         composable(LOADING_ROUTE,
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None }) {
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() }) {
             LoadingRoute(viewModel, onLoadingFinished = {
                 navController.navigate(RESULT_ROUTE)
             })
         }
-        composable(RESULT_ROUTE) {
-            ResultRoute(viewModel.result!!)
+        composable(RESULT_ROUTE,
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() }) {
+            ResultRoute(viewModel.result!!, onBackPress = {
+                navController.popBackStack(CONFIGURATION_ROUTE, false)
+            })
         }
     }
 }

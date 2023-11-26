@@ -3,7 +3,6 @@ package com.randomimagecreator
 import android.app.Application
 import android.net.Uri
 import android.provider.OpenableColumns
-import androidx.compose.runtime.mutableStateOf
 import androidx.core.database.getStringOrNull
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.AndroidViewModel
@@ -16,7 +15,6 @@ import com.randomimagecreator.result.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlin.system.measureTimeMillis
 

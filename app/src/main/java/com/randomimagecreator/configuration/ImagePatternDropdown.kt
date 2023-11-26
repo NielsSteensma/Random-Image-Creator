@@ -6,27 +6,29 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import com.randomimagecreator.configuration.ImageFileFormat
+import androidx.compose.ui.res.stringResource
+import com.randomimagecreator.configuration.ImagePattern
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ImageFileFormatDropdown(
-    value: ImageFileFormat,
+fun ImagePatternDropdown(
+    value: ImagePattern,
     label: @Composable (() -> Unit)?,
-    onValueChange: (ImageFileFormat) -> Unit
+    onValueChange: (ImagePattern) -> Unit
 ) {
-    var text by remember(value) { mutableStateOf(value.toString()) }
+    var resourceId by remember(value) { mutableIntStateOf(value.localizationResourceId) }
     var isExpanded by remember { mutableStateOf(false) }
     ExposedDropdownMenuBox(
         expanded = isExpanded,
         onExpandedChange = { isExpanded = !isExpanded },
     ) {
         OutlinedTextField(
-            value = text,
+            value = stringResource(resourceId),
             onValueChange = { },
             enabled = false,
             label = label,
@@ -36,13 +38,13 @@ fun ImageFileFormatDropdown(
             expanded = isExpanded,
             onDismissRequest = { isExpanded = false }
         ) {
-            ImageFileFormat.values().forEach {
+            ImagePattern.values().forEach {
                 DropdownMenuItem(onClick = {
                     isExpanded = false
-                    text = it.name
+                    resourceId = it.localizationResourceId
                     onValueChange(it)
                 }) {
-                    Text(it.name)
+                    Text(stringResource(it.localizationResourceId))
                 }
             }
         }

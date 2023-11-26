@@ -1,12 +1,14 @@
 package com.randomimagecreator.configuration
 
-import CpumarketImageFileFormatDropdown
-import CpumarketImagePatternDropdown
-import CpumarketIntTextField
+import ImageFileFormatDropdown
+import ImagePatternDropdown
+import IntTextField
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -23,60 +25,127 @@ import com.randomimagecreator.R
 import com.randomimagecreator.common.HeaderScreen
 
 @Composable
-fun ConfigurationScreen(
-    onValidConfigurationSubmit: (configuration: Configuration) -> Unit,
-) {
+fun ConfigurationScreen(onValidConfigurationSubmit: (configuration: Configuration) -> Unit) {
     val configuration by remember { mutableStateOf(Configuration(0, 0, 0)) }
+    val (isAmountValid, setIsAmountValid) = remember { mutableStateOf(false) }
+    val (amountErrorMessage, setAmountErrorMessage) = remember { mutableStateOf<Int?>(null) }
+    val (isWidthValid, setIsWidthValid) = remember { mutableStateOf(false) }
+    val (widthErrorMessage, setWidthErrorMessage) = remember { mutableStateOf<Int?>(null) }
+    val (isHeightValid, setIsHeightValid) = remember { mutableStateOf(false) }
+    val (heightErrorMessage, setHeightErrorMessage) = remember { mutableStateOf<Int?>(null) }
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
+    Column {
         HeaderScreen()
-        Spacer(Modifier.weight(1.0f))
-        CpumarketIntTextField(
-            value = configuration.amount,
-            label = { Text(stringResource(R.string.image_creator_option_amount_hint)) },
-            onValueChange = {
-                configuration.amount = it
-            })
-        Spacer(modifier = Modifier.height(10.dp))
-        CpumarketIntTextField(
-            value = configuration.width,
-            label = { Text(stringResource(R.string.image_creator_option_width_hint)) },
-            onValueChange = {
-                configuration.width = it
-            })
-        Spacer(modifier = Modifier.height(10.dp))
-        CpumarketIntTextField(
-            value = configuration.height,
-            label = { Text(stringResource(R.string.image_creator_option_height_hint)) },
-            onValueChange = {
-                configuration.height = it
-            })
-        Spacer(modifier = Modifier.height(10.dp))
-        CpumarketImageFileFormatDropdown(
-            value = configuration.format,
-            label = { Text(stringResource(R.string.image_creator_option_image_file_format_hint)) },
-            onValueChange = {
-                configuration.format = it
-            })
-        Spacer(modifier = Modifier.height(10.dp))
-        CpumarketImagePatternDropdown(
-            value = configuration.pattern,
-            label = { Text(stringResource(R.string.image_creator_option_pattern_hint)) },
-            onValueChange = {
-                configuration.pattern = it
-            })
-        Button(
-            onClick = { onValidConfigurationSubmit(configuration) }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(horizontal = 32.dp)
         ) {
-            Text(
-                stringResource(R.string.image_creator_button_create),
-                fontSize = 18.sp,
-                color = Color.White
+            Spacer(Modifier.weight(1.0f))
+            IntTextField(
+                value = configuration.amount,
+                isError = isAmountValid,
+                label = {
+                    var label = stringResource(R.string.image_creator_option_amount_hint)
+                    amountErrorMessage?.let {
+                        label = "$label (${stringResource(it).lowercase()})"
+                    }
+                    Text(label, color = MaterialTheme.colors.primary)
+                },
+                onValueChange = {
+                    if (isAmountValid) {
+                        setAmountErrorMessage(null)
+                        setIsAmountValid(false)
+                    }
+                    configuration.amount = it
+                }
             )
+            Spacer(modifier = Modifier.height(10.dp))
+            IntTextField(
+                value = configuration.width,
+                isError = isWidthValid,
+                label = {
+                    var label = stringResource(R.string.image_creator_option_width_hint)
+                    widthErrorMessage?.let {
+                        label = "$label (${stringResource(it).lowercase()})"
+                    }
+                    Text(label, color = MaterialTheme.colors.primary)
+                },
+                onValueChange = {
+                    if (isWidthValid) {
+                        setWidthErrorMessage(null)
+                        setIsWidthValid(false)
+                    }
+                    configuration.width = it
+                }
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            IntTextField(
+                value = configuration.height,
+                isError = isHeightValid,
+                label = {
+                    var label = stringResource(R.string.image_creator_option_height_hint)
+                    heightErrorMessage?.let {
+                        label = "$label (${stringResource(it).lowercase()})"
+                    }
+                    Text(label, color = MaterialTheme.colors.primary)
+                },
+                onValueChange = {
+                    if (isHeightValid) {
+                        setHeightErrorMessage(null)
+                        setIsHeightValid(false)
+                    }
+                    configuration.height = it
+                }
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            ImageFileFormatDropdown(
+                value = configuration.format,
+                label = {
+                    Text(
+                        stringResource(R.string.image_creator_option_image_file_format_hint),
+                        color = MaterialTheme.colors.primary
+                    )
+                },
+                onValueChange = {
+                    configuration.format = it
+                }
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            ImagePatternDropdown(
+                value = configuration.pattern,
+                label = {
+                    Text(
+                        stringResource(R.string.image_creator_option_pattern_hint),
+                        color = MaterialTheme.colors.primary
+                    )
+                },
+                onValueChange = {
+                    configuration.pattern = it
+                }
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Button(
+                onClick = {
+                    if (configuration.validator.isValid) {
+                        onValidConfigurationSubmit(configuration)
+                    } else {
+                        setIsAmountValid(configuration.validator.amountValidationMessage() != null)
+                        setAmountErrorMessage(configuration.validator.amountValidationMessage())
+                        setIsWidthValid(configuration.validator.widthValidationMessage() != null)
+                        setWidthErrorMessage(configuration.validator.widthValidationMessage())
+                        setIsHeightValid(configuration.validator.heightValidationMessage() != null)
+                        setHeightErrorMessage(configuration.validator.heightValidationMessage())
+                    }
+                }
+            ) {
+                Text(
+                    stringResource(R.string.image_creator_button_create),
+                    fontSize = 18.sp,
+                    color = Color.White
+                )
+            }
+            Spacer(Modifier.weight(1.0f))
         }
-        Spacer(Modifier.weight(1.0f))
     }
 }
 

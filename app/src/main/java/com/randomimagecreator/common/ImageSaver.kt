@@ -6,9 +6,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
 import com.randomimagecreator.configuration.ImageFileFormat
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 
 /**
  * Helper class for saving images.
