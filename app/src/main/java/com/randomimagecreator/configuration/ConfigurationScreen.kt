@@ -75,7 +75,7 @@ fun ConfigurationScreen(
                     widthErrorMessage?.let {
                         label = "$label (${stringResource(it).lowercase()})"
                     }
-                    val labelColor = if (isAmountValid) {
+                    val labelColor = if (isWidthValid) {
                         MaterialTheme.colors.primary
                     } else {
                         Color.Red
@@ -99,7 +99,7 @@ fun ConfigurationScreen(
                     heightErrorMessage?.let {
                         label = "$label (${stringResource(it).lowercase()})"
                     }
-                    val labelColor = if (isAmountValid) {
+                    val labelColor = if (isHeightValid) {
                         MaterialTheme.colors.primary
                     } else {
                         Color.Red
