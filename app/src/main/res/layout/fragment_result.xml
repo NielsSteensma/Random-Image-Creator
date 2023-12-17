@@ -5,72 +5,101 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_begin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="28dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="28dp" />
+
+    <include
+        android:id="@+id/shared_logo"
+        layout="@layout/shared_top_logo"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/created_images_title"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="24dp"
+        android:text="@string/created_images_title"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:text="@string/created_images_title"
-        android:layout_marginTop="8dp"
-        android:paddingHorizontal="8dp" />
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@id/guideline_end"
+        app:layout_constraintStart_toEndOf="@id/guideline_begin"
+        app:layout_constraintTop_toBottomOf="@id/shared_logo" />
 
     <TableLayout
         android:id="@+id/created_images_details"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/created_images_title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"
-        android:paddingHorizontal="8dp"
-        android:stretchColumns="1,2">
+        android:stretchColumns="1,2"
+        app:layout_constraintEnd_toStartOf="@id/guideline_end"
+        app:layout_constraintStart_toEndOf="@id/guideline_begin"
+        app:layout_constraintTop_toBottomOf="@id/created_images_title">
 
         <TableRow>
+
             <TextView
                 android:layout_column="1"
-                android:textStyle="bold"
+                android:text="@string/created_images_amount"
                 android:textSize="16sp"
-                android:text="@string/created_images_amount" />
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/created_images_amount"
                 android:layout_column="2"
                 android:textSize="16sp"
                 tools:text="5" />
         </TableRow>
+
         <TableRow>
+
             <TextView
                 android:layout_column="1"
-                android:textStyle="bold"
+                android:text="@string/created_images_pattern"
                 android:textSize="16sp"
-                android:text="@string/created_images_pattern" />
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/created_images_pattern"
                 android:layout_column="2"
                 android:textSize="16sp"
-                tools:text="Mandelbrot"/>
+                tools:text="Mandelbrot" />
         </TableRow>
+
         <TableRow>
+
             <TextView
                 android:layout_column="1"
-                android:textStyle="bold"
+                android:text="@string/created_images_directory"
                 android:textSize="16sp"
-                android:text="@string/created_images_directory" />
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/created_images_directory"
                 android:layout_column="2"
                 android:textSize="16sp"
-                tools:text="DCIM"/>
+                tools:text="DCIM" />
         </TableRow>
+
         <TableRow>
+
             <TextView
                 android:layout_column="1"
-                android:textStyle="bold"
+                android:text="@string/created_images_duration"
                 android:textSize="16sp"
-                android:text="@string/created_images_duration" />
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/created_images_duration"
                 android:layout_column="2"
@@ -81,11 +110,13 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_created_images"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/created_images_details" />
+        app:layout_constraintEnd_toStartOf="@id/guideline_end"
+        app:layout_constraintStart_toEndOf="@id/guideline_begin"
+        app:layout_constraintTop_toBottomOf="@id/created_images_details"
+        tools:itemCount="5"
+        tools:listitem="@layout/viewholder_image" />
 </androidx.constraintlayout.widget.ConstraintLayout>

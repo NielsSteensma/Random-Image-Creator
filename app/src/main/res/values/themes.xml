@@ -13,5 +13,7 @@
     <style name="Theme.RandomImageCreator.InputField" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"/>
     <style name="Theme.RandomImageCreator.DropDownField" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"/>
 
-    <style name="Theme.RandomImageCreator.Button" parent="@style/Widget.MaterialComponents.Button"/>
+    <style name="Theme.RandomImageCreator.Button" parent="@style/Widget.MaterialComponents.Button">
+        <item name="android:layout_height">60dp</item>
+    </style>/>
 </resources>

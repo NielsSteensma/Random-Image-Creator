@@ -25,7 +25,7 @@
     <string name="created_images_amount">Amount</string>
     <string name="created_images_pattern">Pattern</string>
     <string name="created_images_duration">Duration ( seconds )</string>
-    <string name="created_images_title">Image creation finished</string>
+    <string name="created_images_title">Finished!</string>
     <string name="created_images_directory">Directory</string>
 
     <!-- Creators -->
