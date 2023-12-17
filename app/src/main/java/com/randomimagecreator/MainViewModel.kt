@@ -15,6 +15,7 @@ import com.randomimagecreator.result.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import kotlin.system.measureTimeMillis
 
@@ -23,11 +24,13 @@ import kotlin.system.measureTimeMillis
  * */
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     var configuration = Configuration()
-    var result: Result? = null
+    lateinit var result: Result
         private set
+    private val _isLoadingFinished = MutableStateFlow(false)
+    val isLoadingFinished = _isLoadingFinished.filter { true }
     val nrOfCreatedImages = MutableStateFlow(0)
 
-    fun generateImages(onFinish: () -> Unit) {
+    fun generateImages() {
         val saveDirectory = configuration.saveDirectory ?: run {
             throw IllegalStateException("Image creation attempted without save directory")
         }
@@ -56,7 +59,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 createdImages
             )
             MainScope().launch {
-                onFinish()
+                _isLoadingFinished.emit(true)
             }
         }
     }

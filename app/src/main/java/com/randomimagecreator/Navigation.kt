@@ -19,7 +19,7 @@ import com.randomimagecreator.configuration.ConfigurationRoute
 import com.randomimagecreator.loading.LoadingRoute
 import com.randomimagecreator.result.ResultRoute
 
-object Destinations {
+private object Destinations {
     const val CONFIGURATION_ROUTE = "configuration"
     const val CHOOSE_SAVE_DIRECTORY_ROUTE = "choose_save_directory"
     const val LOADING_ROUTE = "loading"
@@ -37,10 +37,8 @@ fun RandomImageCreatorNavHost(navController: NavHostController = rememberNavCont
             enterTransition = { fadeIn() },
             exitTransition = { fadeOut() }
         ) {
-            composable(
-                CONFIGURATION_ROUTE,
-            ) {
-                ConfigurationRoute(onValidConfigurationSubmit = {
+            composable(CONFIGURATION_ROUTE) {
+                ConfigurationRoute(viewModel.configuration, onValidConfigurationSubmit = {
                     viewModel.configuration = it
                     navController.navigate(CHOOSE_SAVE_DIRECTORY_ROUTE)
                 })
@@ -48,6 +46,7 @@ fun RandomImageCreatorNavHost(navController: NavHostController = rememberNavCont
             composable(CHOOSE_SAVE_DIRECTORY_ROUTE) {
                 ChooseSaveDirectoryRoute(onSaveDirectorySubmit = {
                     viewModel.configuration.saveDirectory = it
+                    viewModel.generateImages()
                     navController.navigate(LOADING_ROUTE)
                 })
             }
@@ -57,7 +56,7 @@ fun RandomImageCreatorNavHost(navController: NavHostController = rememberNavCont
                 })
             }
             composable(RESULT_ROUTE) {
-                ResultRoute(viewModel.result!!, onBackPress = {
+                ResultRoute(viewModel.result, onBackPress = {
                     navController.popBackStack(CONFIGURATION_ROUTE, false)
                 })
             }

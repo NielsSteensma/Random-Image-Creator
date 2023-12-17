@@ -2,7 +2,6 @@ package com.randomimagecreator.loading
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,8 +12,6 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Snackbar
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -27,14 +24,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.randomimagecreator.R
-import com.randomimagecreator.common.HeaderScreen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @Composable
 fun LoadingScreen(numberOfSavedImagesFlow: StateFlow<Int>, numberOfImages: Int) {
-    val numberOfSavedImages by numberOfSavedImagesFlow.collectAsState()
+//    val numberOfSavedImages by numberOfSavedImagesFlow.collectAsState()
     val scope = rememberCoroutineScope()
     val (isSnackBarVisible, setSnackBarIsVisible) = remember { mutableStateOf(false) }
     BackHandler {
@@ -42,35 +38,33 @@ fun LoadingScreen(numberOfSavedImagesFlow: StateFlow<Int>, numberOfImages: Int) 
             setSnackBarIsVisible(true)
         }
     }
-    Box {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(Modifier.weight(1.0f))
+        CircularProgressIndicator(
+            modifier = Modifier
+                .width(32.dp)
+                .height(32.dp),
+            color = Color(0, 68, 85)
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
         ) {
-            Spacer(Modifier.weight(1.0f))
-            CircularProgressIndicator(
-                modifier = Modifier
-                    .width(32.dp)
-                    .height(32.dp),
-                color = Color(0, 68, 85)
+            Text(
+                stringResource(
+                    R.string.loading_saved_amount,
+                    0,
+                    numberOfImages
+                ), fontSize = 18.sp
             )
-            Spacer(modifier = Modifier.height(10.dp))
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    stringResource(
-                        R.string.loading_saved_amount,
-                        numberOfSavedImages,
-                        numberOfImages
-                    ), fontSize = 18.sp
-                )
-            }
-            Spacer(Modifier.weight(1.0f))
         }
+        Spacer(Modifier.weight(1.0f))
         if (isSnackBarVisible) {
-            Column(modifier = Modifier.align(Alignment.BottomCenter)) {
+            Column() {
                 GeneratingImagesSnackBar()
             }
         }
