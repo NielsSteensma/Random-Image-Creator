@@ -25,7 +25,7 @@ class ConfigurationValidatorForAllImagePatternsTest(imagePattern: ImagePattern) 
     @Test
     fun `when valid, returns no validation warning`() {
         val validator = ConfigurationValidator(defaultValidConfiguration)
-        assertNull(validator.amountValidationMessage())
+        assertNull(validator.isAmountValid())
     }
 
     @Test
@@ -34,7 +34,7 @@ class ConfigurationValidatorForAllImagePatternsTest(imagePattern: ImagePattern) 
         val validator = ConfigurationValidator(configuration)
         assertEquals(
             R.string.image_creator_option_invalid,
-            validator.amountValidationMessage()
+            validator.isAmountValid()
         )
     }
 
