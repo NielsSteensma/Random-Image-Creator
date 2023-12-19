@@ -11,11 +11,11 @@ import com.randomimagecreator.common.Analytics
 import com.randomimagecreator.common.ImageSaver
 import com.randomimagecreator.common.extensions.query
 import com.randomimagecreator.configuration.Configuration
+import com.randomimagecreator.result.ImageCreationResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 import kotlin.system.measureTimeMillis
@@ -25,29 +25,35 @@ import kotlin.system.measureTimeMillis
  * */
 class MainViewModel : ViewModel() {
     val configuration = Configuration()
-    val screen: StateFlow<Screen> get() = _screen
-    private val _screen = MutableStateFlow<Screen>(Screen.Configuration)
+    var navigationRequestBroadcaster: MutableSharedFlow<Screen> = MutableSharedFlow()
     val validationResult: Flow<Boolean> get() = _validationResult.filterNotNull()
     private val _validationResult = MutableStateFlow<Boolean?>(null)
-    var createdImageUris = listOf<Uri>()
     var bitmapSaveNotifier: MutableSharedFlow<Nothing?> = MutableSharedFlow()
+    lateinit var imageCreationResult: ImageCreationResult
+        private set
 
-    fun onUserNavigatedBackToConfiguration() {
-        _screen.value = Screen.Configuration
+    fun onUserWantsToGoBackToConfiguration() {
         _validationResult.value = null
+        viewModelScope.launch {
+            navigationRequestBroadcaster.emit(Screen.Configuration)
+        }
     }
 
     suspend fun onUserSubmitsConfiguration() {
         val isValid = configuration.validator.isValid
         _validationResult.emit(isValid)
         if (isValid) {
-            _screen.value = Screen.ChooseSaveDirectory
+            viewModelScope.launch {
+                navigationRequestBroadcaster.emit(Screen.ChooseSaveDirectory)
+            }
         }
     }
 
     fun onSaveDirectoryChosen(uri: Uri) {
         configuration.saveDirectory = uri
-        _screen.value = Screen.ChooseSaveDirectory
+        viewModelScope.launch {
+            navigationRequestBroadcaster.emit(Screen.Loading)
+        }
     }
 
     fun createImages(context: Context) {
@@ -55,24 +61,22 @@ class MainViewModel : ViewModel() {
             throw IllegalStateException("Image creation attempted without save directory ")
         }
 
-        _screen.value = Screen.Loading
-
         viewModelScope.launch(Dispatchers.IO) {
             Analytics.imageCreationEvent(configuration)
-            val durationMillis = measureTimeMillis {
-                val bitmaps =
-                    configuration.pattern.getImageGenerator().createBitmaps(configuration)
-                createdImageUris =
-                    ImageSaver.saveBitmaps(
-                        viewModelScope,
-                        bitmaps,
-                        context,
-                        saveDirectory,
-                        configuration.format,
-                        bitmapSaveNotifier
-                    )
+            val uris: List<Uri>
+            val durationInMilliseconds = measureTimeMillis {
+                val bitmaps = configuration.pattern.getImageGenerator().createBitmaps(configuration)
+                uris = ImageSaver.saveBitmaps(
+                    viewModelScope,
+                    bitmaps,
+                    context,
+                    saveDirectory,
+                    configuration.format,
+                    bitmapSaveNotifier
+                )
             }
-            _screen.value = Screen.Result(durationMillis)
+            navigationRequestBroadcaster.emit(Screen.Result)
+            imageCreationResult = ImageCreationResult(uris, durationInMilliseconds)
         }
     }
 
@@ -81,8 +85,7 @@ class MainViewModel : ViewModel() {
             return null
         }
 
-        val saveDirectoryUri =
-            DocumentFile.fromTreeUri(context, saveDirectory)?.uri ?: return null
+        val saveDirectoryUri = DocumentFile.fromTreeUri(context, saveDirectory)?.uri ?: return null
 
         return context.contentResolver.query(saveDirectoryUri)?.use { cursor ->
             cursor.moveToFirst()
@@ -90,5 +93,10 @@ class MainViewModel : ViewModel() {
             if (columnIndex == -1) return null
             return cursor.getStringOrNull(columnIndex)
         }
+    }
+
+    fun isImageCreationInProgress(): Boolean {
+        // TODO, don't use currentscreen as source of truth
+        return true
     }
 }
