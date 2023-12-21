@@ -39,6 +39,11 @@ internal class ResultFragment : Fragment(R.layout.fragment_result) {
         recyclerview.layoutManager = GridLayoutManager(requireContext(), GRID_SPAN_COUNT)
         adapter = ResultAdapter(viewModel.imageCreationResult.uris)
         recyclerview.adapter = adapter
+        val itemDecorator = GridLayoutSpacingItemDecorator(
+            GRID_SPAN_COUNT,
+            resources.getDimension(R.dimen.result_grid_spacing)
+        )
+        recyclerview.addItemDecoration(itemDecorator)
     }
 
     private fun setupTextFields(rootView: View) {
