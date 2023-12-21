@@ -15,6 +15,7 @@
 
     <!-- Creating images -->
     <string name="loading_saved_amount">Saved %d of %d images to your device</string>
+    <string name="back_press_warning">Image creation in progress</string>
 
     <!-- Created images  -->
     <string name="created_images_location">The created images can be found in the directory \"%1$s\"</string>
@@ -25,7 +26,7 @@
     <string name="created_images_amount">Amount</string>
     <string name="created_images_pattern">Pattern</string>
     <string name="created_images_duration">Duration ( seconds )</string>
-    <string name="created_images_title">Image creation finished</string>
+    <string name="created_images_title">Finished!</string>
     <string name="created_images_directory">Directory</string>
 
     <!-- Creators -->

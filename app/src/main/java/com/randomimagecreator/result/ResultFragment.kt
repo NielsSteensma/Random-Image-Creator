@@ -7,14 +7,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.randomimagecreator.R
 import com.randomimagecreator.MainViewModel
-import com.randomimagecreator.Screen
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import com.randomimagecreator.R
 
 /**
  * Amount of images to display on a single grid row.
@@ -37,20 +33,22 @@ internal class ResultFragment : Fragment(R.layout.fragment_result) {
         setupTextFields(it)
     }
 
-    /**
-     * Sets up the RecyclerView to show the 2x2 grid of images.
-     */
     private fun setupRecyclerView(rootView: View) {
         val recyclerview: RecyclerView = rootView.findViewById(R.id.recyclerview_created_images)
 
         recyclerview.layoutManager = GridLayoutManager(requireContext(), GRID_SPAN_COUNT)
-        adapter = ResultAdapter(viewModel.createdImageUris)
+        adapter = ResultAdapter(viewModel.imageCreationResult.uris)
         recyclerview.adapter = adapter
+        val itemDecorator = GridLayoutSpacingItemDecorator(
+            GRID_SPAN_COUNT,
+            resources.getDimension(R.dimen.result_grid_spacing)
+        )
+        recyclerview.addItemDecoration(itemDecorator)
     }
 
     private fun setupTextFields(rootView: View) {
         rootView.findViewById<TextView>(R.id.created_images_amount).apply {
-            text = viewModel.createdImageUris.size.toString()
+            text = viewModel.imageCreationResult.uris.size.toString()
         }
 
         rootView.findViewById<TextView>(R.id.created_images_pattern).apply {
@@ -62,14 +60,9 @@ internal class ResultFragment : Fragment(R.layout.fragment_result) {
         }
 
         rootView.findViewById<TextView>(R.id.created_images_duration).apply {
-            lifecycleScope.launch {
-                viewModel.screen.collectLatest {
-                    if (it !is Screen.Result) return@collectLatest
-                    text =
-                        ImageCreationDurationFormatter.seconds(it.durationMilliseconds)
-                            .toString()
-                }
-            }
+            text = DurationFormatter
+                .seconds(viewModel.imageCreationResult.durationInMilliseconds)
+                .toString()
         }
     }
 }

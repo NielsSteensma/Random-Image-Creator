@@ -22,5 +22,5 @@ sealed class Screen {
     /**
      * Screen showing images that got created.
      */
-    data class Result(val durationMilliseconds: Long) : Screen()
+    data object Result : Screen()
 }

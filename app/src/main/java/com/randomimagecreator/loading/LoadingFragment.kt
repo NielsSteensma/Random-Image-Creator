@@ -6,8 +6,8 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import com.randomimagecreator.R
 import com.randomimagecreator.MainViewModel
+import com.randomimagecreator.R
 import kotlinx.coroutines.launch
 
 /**
@@ -20,7 +20,6 @@ class LoadingFragment : Fragment(R.layout.fragment_loading) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         numberOfSavedImagesTextField = view.findViewById(R.id.loading_saved_amount)
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -37,5 +36,9 @@ class LoadingFragment : Fragment(R.layout.fragment_loading) {
             numberOfSavedImages,
             mainViewModel.configuration.amount
         )
+    }
+
+    companion object {
+        const val TAG = "LoadingFragment"
     }
 }
