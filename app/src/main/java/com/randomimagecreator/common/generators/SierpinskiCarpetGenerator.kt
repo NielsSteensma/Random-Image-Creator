@@ -19,7 +19,7 @@ class SierpinskiCarpetGenerator : ImageGenerator() {
             setHasAlpha(false)
         }
 
-        val initialSquare = SierpinskiSquare(Rect(0, 0, 600, 600))
+        val initialSquare = SierpinskiSquare(Rect(0, 0, options.width, options.height))
         performAlgorithm(initialSquare, 0)
         return bitmap
     }
