@@ -6,9 +6,6 @@ import android.graphics.Bitmap
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
 import com.randomimagecreator.configuration.ImageFileFormat
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.launch
 
 /**
  * Helper class for saving images.
@@ -24,12 +21,11 @@ object ImageSaver {
      * @param notifier          Notifier that emits the amount of saved bitmaps.
      */
     fun saveBitmaps(
-        scope: CoroutineScope,
-        bitmaps: MutableList<Bitmap>,
+        bitmaps: List<Bitmap>,
         context: Context,
         directory: Uri,
         format: ImageFileFormat,
-        notifier: MutableSharedFlow<Nothing?>
+//        notifier: MutableSharedFlow<Nothing?>
     ): List<Uri> {
         val rootDocumentFile = DocumentFile.fromTreeUri(context, directory)
         assert(rootDocumentFile != null) { "root document file shouldn't be null" }
@@ -39,22 +35,22 @@ object ImageSaver {
         for (bitmap in bitmaps) {
             saveBitmap(bitmap, context.contentResolver, rootDocumentFile!!, format)?.let {
                 bitmapUris.add(it)
-                scope.launch {
-                    notifier.emit(null)
-                }
+//                scope.launch {
+//                    notifier.emit(null)
+//                }
             }
         }
         return bitmapUris
     }
 
-    private fun saveBitmap(
+    fun saveBitmap(
         bitmap: Bitmap,
         contentResolver: ContentResolver,
-        rootDocumentFile: DocumentFile,
+        saveDirectory: DocumentFile,
         format: ImageFileFormat
     ): Uri? {
         val fileName = createUniqueFileName().toString()
-        val createdFile = rootDocumentFile.createFile(format.mimeType, fileName) ?: return null
+        val createdFile = saveDirectory.createFile(format.mimeType, fileName) ?: return null
 
         if (format == ImageFileFormat.BMP) {
             val byteArray = BitmapToBMPConverter().convert(bitmap)

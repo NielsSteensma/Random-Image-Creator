@@ -1,44 +1,48 @@
-package com.randomimagecreator.common.generators
+package algorithms
 
-import android.graphics.Bitmap
-import android.graphics.Color
-import android.graphics.Rect
-import com.randomimagecreator.configuration.Configuration
+import algorithms.common.Color
+import algorithms.common.Rect
+
 
 private const val DEPTH = 4
 
 /**
- * Generates a [Bitmap] based on Sierpinski carpet algorithm.
+ * Algorithm for creating an image based on Sierpinski carpet.
  */
-class SierpinskiCarpetGenerator : ImageGenerator() {
-    private lateinit var bitmap: Bitmap
-    private val color = Color.parseColor(generateRandomHexColorValue())
+class SierpinskiCarpet(val width: Int, val height: Int) : ImageCreating {
+    val color = Color.randomHex()
 
-    override fun createBitmap(options: Configuration): Bitmap {
-        bitmap = Bitmap.createBitmap(options.width, options.height, Bitmap.Config.ARGB_8888).apply {
-            setHasAlpha(false)
+    override fun createBitmap(): Array<Array<String>> {
+        if (width % 3 != 0) {
+            throw IllegalArgumentException("Width is not dividable by 3")
         }
-
-        val initialSquare = SierpinskiSquare(Rect(0, 0, 600, 600))
-        performAlgorithm(initialSquare, 0)
+        if (height % 3 != 0) {
+            throw IllegalArgumentException("Height is not dividable by 3")
+        }
+        if (width != height) {
+            throw IllegalArgumentException("Width and height are not equal")
+        }
+        val bitmap = Array(width) { Array(height) { "" } }
+        val initialSquare = SierpinskiSquare(Rect(0, 0, width, height))
+        performAlgorithm(bitmap, initialSquare, 0)
         return bitmap
     }
 
-    private fun performAlgorithm(square: SierpinskiSquare, n: Int) {
+    private fun performAlgorithm(bitmap: Array<Array<String>>, square: SierpinskiSquare, n: Int) {
         val subSquares = square.divideInNineSubSquares()
         bitmap.applyColors(subSquares)
         for (subSquare in subSquares.filter { !it.isMiddle }) {
             if (n < DEPTH) {
-                performAlgorithm(subSquare, n + 1)
+                performAlgorithm(bitmap, subSquare, n + 1)
             }
         }
     }
 
-    private fun Bitmap.applyColors(squares: Set<SierpinskiSquare>) {
+    private fun Array<Array<String>>.applyColors(squares: Set<SierpinskiSquare>) {
         squares.forEach {
             for (x in it.left until it.right) {
                 for (y in it.top until it.bottom) {
-                    setPixel(x, y, if (it.isMiddle) Color.WHITE else color)
+                    this[x][y] = if (it.isMiddle) Color.WHITE else color
                 }
             }
         }

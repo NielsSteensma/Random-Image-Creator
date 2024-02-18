@@ -1,9 +1,7 @@
-package com.randomimagecreator.common.generators
+package algorithms
 
-import android.graphics.Bitmap
-import android.graphics.Color
-import com.randomimagecreator.common.Complex
-import com.randomimagecreator.configuration.Configuration
+import algorithms.common.Color
+import algorithms.common.Complex
 
 /**
  * Max range complex number can be from origin to be part of Mandelbrot set.
@@ -13,22 +11,23 @@ private const val ESCAPE_RADIUS = 2
 /**
  * Generates a [Bitmap] based on Mandelbrot algorithm.
  */
-class MandelbrotGenerator : ImageGenerator() {
+class Mandelbrot(
+    private val width: Int,
+    private val height: Int,
+    private val iterations: Int
+) : ImageCreating {
     private val plot = Plot()
 
-    override fun createBitmap(options: Configuration): Bitmap {
-        val bitmap =
-            Bitmap.createBitmap(options.width, options.height, Bitmap.Config.ARGB_8888).apply {
-                setHasAlpha(false)
-            }
+    override fun createBitmap(): Array<Array<String>> {
+        val bitmap = Array(width) { Array(height) { "" } }
 
-        for (x in 0 until bitmap.width) {
-            for (y in 0 until bitmap.height) {
-                val maxIterations = options.iterations
-                val complex = pixelCoordinatesToComplexCoordinates(options, x, y)
+        for (x in 0 until width) {
+            for (y in 0 until height) {
+                val maxIterations = iterations
+                val complex = pixelCoordinatesToComplexCoordinates(width, height, x, y)
                 val iterations = mandelbrot(maxIterations, complex)
                 val color = color(maxIterations, iterations)
-                bitmap.setPixel(x, y, color)
+                bitmap[x][y] = color
             }
         }
 
@@ -40,7 +39,7 @@ class MandelbrotGenerator : ImageGenerator() {
      * If [performedIterations] matches [maxIterations], black will be returned.
      * If not matching, color will be based on max reached iterations.
      */
-    private fun color(maxIterations: Int, performedIterations: Int): Int {
+    private fun color(maxIterations: Int, performedIterations: Int): String {
         if (performedIterations == maxIterations) {
             return Color.BLACK
         }
@@ -48,8 +47,7 @@ class MandelbrotGenerator : ImageGenerator() {
         val hue = 255f * performedIterations / maxIterations
         val saturation = 1f
         val value = 1f
-        val floatArray = floatArrayOf(hue, saturation, value)
-        return Color.HSVToColor(floatArray)
+        return Color.hsvToHex(hue, saturation, value)
     }
 
     /**
@@ -57,12 +55,13 @@ class MandelbrotGenerator : ImageGenerator() {
      * @return [Complex] with coordinates.
      */
     private fun pixelCoordinatesToComplexCoordinates(
-        options: Configuration,
+        width: Int,
+        height: Int,
         pixelX: Int,
         pixelY: Int
     ): Complex {
-        val complexX = plot.xMin + (plot.xMax - plot.xMin) * pixelX / options.width
-        val complexY = plot.yMin + (plot.yMax - plot.yMin) * pixelY / options.height
+        val complexX = plot.xMin + (plot.xMax - plot.xMin) * pixelX / width
+        val complexY = plot.yMin + (plot.yMax - plot.yMin) * pixelY / height
         return Complex(complexX, complexY)
     }
 
@@ -86,7 +85,7 @@ class MandelbrotGenerator : ImageGenerator() {
 }
 
 /**
- * Represents a plot for [MandelbrotGenerator].
+ * Represents a plot for [Mandelbrot].
  * Increasing/decreasing values changes zoom level.
  */
 private data class Plot(
