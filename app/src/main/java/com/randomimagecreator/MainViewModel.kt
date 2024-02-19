@@ -8,6 +8,7 @@ import androidx.core.database.getStringOrNull
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.randomimagecreator.common.errors.SaveDirectoryMissingError
 import com.randomimagecreator.common.extensions.query
 import com.randomimagecreator.configuration.Configuration
 import com.randomimagecreator.result.ImageCreationResult
@@ -56,9 +57,12 @@ class MainViewModel : ViewModel() {
     }
 
     fun createImages(context: Context) {
+        val saveDirectoryUri = configuration.saveDirectory ?: throw SaveDirectoryMissingError()
+        val saveDirectory =
+            DocumentFile.fromTreeUri(context, saveDirectoryUri) ?: throw SaveDirectoryMissingError()
+
         viewModelScope.launch {
             try {
-                val saveDirectory = DocumentFile.fromTreeUri(context, configuration.saveDirectory!!)!!
                 imageCreationResult =
                     ImageCreator().create(context.contentResolver, saveDirectory, configuration)
                 navigationRequestBroadcaster.emit(Screen.Result)

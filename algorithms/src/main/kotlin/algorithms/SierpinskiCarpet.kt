@@ -12,7 +12,7 @@ private const val DEPTH = 4
 class SierpinskiCarpet(val width: Int, val height: Int) : ImageCreating {
     val color = Color.randomHex()
 
-    override fun createBitmap(): Array<Array<String>> {
+    override fun createImage(): Array<Array<String>> {
         if (width % 3 != 0) {
             throw IllegalArgumentException("Width is not dividable by 3")
         }
@@ -22,18 +22,18 @@ class SierpinskiCarpet(val width: Int, val height: Int) : ImageCreating {
         if (width != height) {
             throw IllegalArgumentException("Width and height are not equal")
         }
-        val bitmap = Array(width) { Array(height) { "" } }
+        val image = Array(width) { Array(height) { "" } }
         val initialSquare = SierpinskiSquare(Rect(0, 0, width, height))
-        performAlgorithm(bitmap, initialSquare, 0)
-        return bitmap
+        performAlgorithm(image, initialSquare, 0)
+        return image
     }
 
-    private fun performAlgorithm(bitmap: Array<Array<String>>, square: SierpinskiSquare, n: Int) {
+    private fun performAlgorithm(image: Array<Array<String>>, square: SierpinskiSquare, n: Int) {
         val subSquares = square.divideInNineSubSquares()
-        bitmap.applyColors(subSquares)
+        image.applyColors(subSquares)
         for (subSquare in subSquares.filter { !it.isMiddle }) {
             if (n < DEPTH) {
-                performAlgorithm(bitmap, subSquare, n + 1)
+                performAlgorithm(image, subSquare, n + 1)
             }
         }
     }

@@ -32,16 +32,16 @@ class ImageCreator {
             ImagePattern.MANDELBROT -> Mandelbrot(width, height, configuration.iterations)
         }
 
-        val bitmaps = mutableListOf<Array<String>>()
+        val images = mutableListOf<Array<String>>()
         val creationDurationInMilliseconds = measureTimeMillis {
             for (i in 0..configuration.amount) {
-                val bitmap = algorithm.createBitmap()
-                val flattenedBitmap = bitmap.flatMap { it.asIterable() }.toTypedArray()
-                bitmaps.add(flattenedBitmap)
+                val image = algorithm.createImage()
+                val flattenedImage = image.flatMap { it.asIterable() }.toTypedArray()
+                images.add(flattenedImage)
             }
         }
 
-        val androidBitmaps = bitmaps.map { bitmap ->
+        val bitmaps = images.map { bitmap ->
             Bitmap.createBitmap(
                 bitmap.map { pixel -> Color.parseColor(pixel) }.toIntArray(),
                 configuration.width,
@@ -52,7 +52,7 @@ class ImageCreator {
 
         val uris = mutableListOf<Uri>()
         val saveDurationInMilliseconds = measureTimeMillis {
-            for (bitmap in androidBitmaps) {
+            for (bitmap in bitmaps) {
                 val uri = ImageSaver.saveBitmap(
                     bitmap,
                     contentResolver,

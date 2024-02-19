@@ -9,7 +9,7 @@ import algorithms.common.Complex
 private const val ESCAPE_RADIUS = 2
 
 /**
- * Generates a [Bitmap] based on Mandelbrot algorithm.
+ * Algorithm for creating an image based on Mandelbrot.
  */
 class Mandelbrot(
     private val width: Int,
@@ -18,8 +18,8 @@ class Mandelbrot(
 ) : ImageCreating {
     private val plot = Plot()
 
-    override fun createBitmap(): Array<Array<String>> {
-        val bitmap = Array(width) { Array(height) { "" } }
+    override fun createImage(): Array<Array<String>> {
+        val image = Array(width) { Array(height) { "" } }
 
         for (x in 0 until width) {
             for (y in 0 until height) {
@@ -27,11 +27,11 @@ class Mandelbrot(
                 val complex = pixelCoordinatesToComplexCoordinates(width, height, x, y)
                 val iterations = mandelbrot(maxIterations, complex)
                 val color = color(maxIterations, iterations)
-                bitmap[x][y] = color
+                image[x][y] = color
             }
         }
 
-        return bitmap
+        return image
     }
 
     /**

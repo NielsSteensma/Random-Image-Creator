@@ -16,24 +16,7 @@ internal object Color {
     fun randomHex(): String {
         val random = Random(System.currentTimeMillis())
         val possibleHexadecimalCharacters =
-            charArrayOf(
-                '0',
-                '1',
-                '2',
-                '3',
-                '4',
-                '5',
-                '6',
-                '7',
-                '8',
-                '9',
-                'A',
-                'B',
-                'C',
-                'D',
-                'E',
-                'F'
-            )
+            charArrayOf('0', '1', '2', '3', '4', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F')
         var color = "#"
         for (i in 0..5) {
             color += possibleHexadecimalCharacters[random.nextInt(0, 15)]
@@ -52,6 +35,7 @@ internal object Color {
 
     /**
      * Converts provided HSV value to a RGB color.
+     *
      * @implNote This code is a copy of [java.awt.Color.HSBtoRGB]. We cannot use java.awt one cause
      * Android doesn't support it. Therefore we use our own copy of this part of their code.
      */
