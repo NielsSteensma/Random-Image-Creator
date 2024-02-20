@@ -10,7 +10,7 @@ private const val DEPTH = 4
  * Algorithm for creating an image based on Sierpinski carpet.
  */
 class SierpinskiCarpet(val width: Int, val height: Int) : ImageCreating {
-    val color = Color.randomHex()
+    lateinit var color: String
 
     override fun createImage(): Array<Array<String>> {
         if (width % 3 != 0) {
@@ -22,6 +22,8 @@ class SierpinskiCarpet(val width: Int, val height: Int) : ImageCreating {
         if (width != height) {
             throw IllegalArgumentException("Width and height are not equal")
         }
+
+        color = Color.randomHex()
         val image = Array(width) { Array(height) { "" } }
         val initialSquare = SierpinskiSquare(Rect(0, 0, width, height))
         performAlgorithm(image, initialSquare, 0)
