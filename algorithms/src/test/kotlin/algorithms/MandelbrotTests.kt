@@ -1,5 +1,6 @@
 package algorithms
 
+import com.randomimagecreator.algorithms.Mandelbrot
 import org.junit.Assert
 import org.junit.Test
 

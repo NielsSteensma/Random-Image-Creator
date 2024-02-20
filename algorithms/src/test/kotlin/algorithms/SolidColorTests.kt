@@ -1,5 +1,6 @@
 package algorithms
 
+import com.randomimagecreator.algorithms.SolidColor
 import org.junit.Assert
 import org.junit.Test
 

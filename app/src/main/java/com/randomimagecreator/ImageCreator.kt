@@ -1,10 +1,10 @@
 package com.randomimagecreator
 
-import algorithms.ImageCreating
-import algorithms.Mandelbrot
-import algorithms.Pixelated
-import algorithms.SierpinskiCarpet
-import algorithms.SolidColor
+import com.randomimagecreator.algorithms.ImageCreating
+import com.randomimagecreator.algorithms.Mandelbrot
+import com.randomimagecreator.algorithms.Pixelated
+import com.randomimagecreator.algorithms.SierpinskiCarpet
+import com.randomimagecreator.algorithms.SolidColor
 import android.content.ContentResolver
 import android.graphics.Bitmap
 import android.graphics.Color

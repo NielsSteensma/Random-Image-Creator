@@ -1,4 +1,4 @@
-package algorithms.common
+package com.randomimagecreator.algorithms.common
 
 import kotlin.math.floor
 import kotlin.random.Random

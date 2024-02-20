@@ -1,5 +1,6 @@
 package algorithms
 
+import com.randomimagecreator.algorithms.Pixelated
 import org.junit.Assert
 import org.junit.Test
 

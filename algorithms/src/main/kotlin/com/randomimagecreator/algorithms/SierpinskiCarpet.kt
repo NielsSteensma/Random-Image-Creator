@@ -1,7 +1,7 @@
-package algorithms
+package com.randomimagecreator.algorithms
 
-import algorithms.common.Color
-import algorithms.common.Rect
+import com.randomimagecreator.algorithms.common.Color
+import com.randomimagecreator.algorithms.common.Rect
 
 
 private const val DEPTH = 4

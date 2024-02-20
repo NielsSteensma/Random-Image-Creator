@@ -1,4 +1,4 @@
-package algorithms
+package com.randomimagecreator.algorithms
 
 interface ImageCreating {
     /**

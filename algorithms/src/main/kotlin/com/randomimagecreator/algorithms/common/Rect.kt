@@ -1,4 +1,4 @@
-package algorithms.common
+package com.randomimagecreator.algorithms.common
 
 internal data class Rect(
     val left: Int,

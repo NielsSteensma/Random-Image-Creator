@@ -1,7 +1,7 @@
-package algorithms
+package com.randomimagecreator.algorithms
 
-import algorithms.common.Color
-import algorithms.common.Complex
+import com.randomimagecreator.algorithms.common.Color
+import com.randomimagecreator.algorithms.common.Complex
 
 /**
  * Max range complex number can be from origin to be part of Mandelbrot set.
