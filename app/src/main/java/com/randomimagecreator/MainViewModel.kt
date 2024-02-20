@@ -12,6 +12,7 @@ import com.randomimagecreator.common.errors.SaveDirectoryMissingError
 import com.randomimagecreator.common.extensions.query
 import com.randomimagecreator.configuration.Configuration
 import com.randomimagecreator.result.ImageCreationResult
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,8 +28,8 @@ class MainViewModel : ViewModel() {
     val configuration = Configuration()
     var navigationRequestBroadcaster: MutableSharedFlow<Screen> = MutableSharedFlow()
     val validationResult: Flow<Boolean> get() = _validationResult.filterNotNull()
+    val imageCreator = ImageCreator()
     private val _validationResult = MutableStateFlow<Boolean?>(null)
-    var bitmapSaveNotifier: MutableSharedFlow<Nothing?> = MutableSharedFlow()
     lateinit var imageCreationResult: ImageCreationResult
         private set
 
@@ -61,10 +62,10 @@ class MainViewModel : ViewModel() {
         val saveDirectory =
             DocumentFile.fromTreeUri(context, saveDirectoryUri) ?: throw SaveDirectoryMissingError()
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 imageCreationResult =
-                    ImageCreator().create(context.contentResolver, saveDirectory, configuration)
+                    imageCreator.create(context.contentResolver, saveDirectory, configuration)
                 navigationRequestBroadcaster.emit(Screen.Result)
             } catch (exception: Exception) {
                 Log.e(TAG, "", exception)

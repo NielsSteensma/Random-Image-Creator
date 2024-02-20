@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
  * Provides feedback to the user about the image generation.
  */
 class LoadingFragment : Fragment(R.layout.fragment_loading) {
-    private val mainViewModel: MainViewModel by activityViewModels()
+    private val viewModel: MainViewModel by activityViewModels()
     private lateinit var numberOfSavedImagesTextField: TextView
     private var numberOfSavedImages = 0
 
@@ -23,7 +23,7 @@ class LoadingFragment : Fragment(R.layout.fragment_loading) {
         numberOfSavedImagesTextField = view.findViewById(R.id.loading_saved_amount)
 
         viewLifecycleOwner.lifecycleScope.launch {
-            mainViewModel.bitmapSaveNotifier.collect {
+            viewModel.imageCreator.bitmapSaveNotifier.collect {
                 numberOfSavedImages++
                 updateNumberOfSavedImages()
             }
@@ -34,7 +34,7 @@ class LoadingFragment : Fragment(R.layout.fragment_loading) {
         numberOfSavedImagesTextField.text = getString(
             R.string.loading_saved_amount,
             numberOfSavedImages,
-            mainViewModel.configuration.amount
+            viewModel.configuration.amount
         )
     }
 
