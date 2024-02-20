@@ -14,11 +14,12 @@ import com.randomimagecreator.common.ImageSaver
 import com.randomimagecreator.configuration.Configuration
 import com.randomimagecreator.configuration.ImagePattern
 import com.randomimagecreator.result.ImageCreationResult
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlin.system.measureTimeMillis
 
 class ImageCreator {
-
-    fun create(
+    var bitmapSaveNotifier: MutableSharedFlow<Nothing?> = MutableSharedFlow()
+    suspend fun create(
         contentResolver: ContentResolver,
         saveDirectory: DocumentFile,
         configuration: Configuration
@@ -34,7 +35,7 @@ class ImageCreator {
 
         val images = mutableListOf<Array<String>>()
         val creationDurationInMilliseconds = measureTimeMillis {
-            for (i in 0..configuration.amount) {
+            for (i in 0..<configuration.amount) {
                 val image = algorithm.createImage()
                 val flattenedImage = image.flatMap { it.asIterable() }.toTypedArray()
                 images.add(flattenedImage)
@@ -47,12 +48,15 @@ class ImageCreator {
                 configuration.width,
                 configuration.height,
                 Bitmap.Config.ARGB_8888
-            )
+            ).also {
+                it.setHasAlpha(false)
+            }
         }
 
         val uris = mutableListOf<Uri>()
         val saveDurationInMilliseconds = measureTimeMillis {
             for (bitmap in bitmaps) {
+                bitmapSaveNotifier.emit(null)
                 val uri = ImageSaver.saveBitmap(
                     bitmap,
                     contentResolver,
