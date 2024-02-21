@@ -1,4 +1,4 @@
-package com.randomimagecreator.common
+package com.randomimagecreator.algorithms.common
 
 import kotlin.math.sqrt
 
@@ -8,7 +8,7 @@ import kotlin.math.sqrt
  * @param real real component of complex number.
  * @param imaginary imaginary component of complex number.
  */
-data class Complex(val real: Double, val imaginary: Double) {
+internal data class Complex(val real: Double, val imaginary: Double) {
     /**
      * Calculates distance between origin(0,0) and [Complex] number.
      * @return [Double] with distance between origin and [Complex] number.
