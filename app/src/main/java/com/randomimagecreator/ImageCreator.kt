@@ -1,15 +1,16 @@
 package com.randomimagecreator
 
-import com.randomimagecreator.algorithms.ImageCreating
-import com.randomimagecreator.algorithms.Mandelbrot
-import com.randomimagecreator.algorithms.Pixelated
-import com.randomimagecreator.algorithms.SierpinskiCarpet
-import com.randomimagecreator.algorithms.SolidColor
 import android.content.ContentResolver
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
+import com.randomimagecreator.algorithms.ImageCreating
+import com.randomimagecreator.algorithms.Mandelbrot
+import com.randomimagecreator.algorithms.Pixelated
+import com.randomimagecreator.algorithms.SierpinskiCarpet
+import com.randomimagecreator.algorithms.SolidColor
+import com.randomimagecreator.common.HsvToHexConverter
 import com.randomimagecreator.common.ImageSaver
 import com.randomimagecreator.configuration.Configuration
 import com.randomimagecreator.configuration.ImagePattern
@@ -30,7 +31,8 @@ class ImageCreator {
             ImagePattern.SOLID -> SolidColor(width, height)
             ImagePattern.PIXELATED -> Pixelated(width, height)
             ImagePattern.SIERPINSKI_CARPET -> SierpinskiCarpet(width, height)
-            ImagePattern.MANDELBROT -> Mandelbrot(width, height, configuration.iterations)
+            ImagePattern.MANDELBROT ->
+                Mandelbrot(width, height, configuration.iterations, HsvToHexConverter)
         }
 
         val images = mutableListOf<Array<String>>()

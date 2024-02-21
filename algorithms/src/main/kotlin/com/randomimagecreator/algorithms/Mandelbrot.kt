@@ -14,7 +14,8 @@ private const val ESCAPE_RADIUS = 2
 class Mandelbrot(
     private val width: Int,
     private val height: Int,
-    private val iterations: Int
+    private val iterations: Int,
+    private val hsvToHexConverter: HsvToHexConverting
 ) : ImageCreating {
     private val plot = Plot()
 
@@ -47,7 +48,7 @@ class Mandelbrot(
         val hue = 255f * performedIterations / maxIterations
         val saturation = 1f
         val value = 1f
-        return Color.hsvToHex(hue, saturation, value)
+        return hsvToHexConverter.convert(hue, saturation, value)
     }
 
     /**
@@ -82,6 +83,11 @@ class Mandelbrot(
         }
         return maxIterations
     }
+}
+
+
+interface HsvToHexConverting {
+    fun convert(hue: Float, saturation: Float, value: Float): String
 }
 
 /**
