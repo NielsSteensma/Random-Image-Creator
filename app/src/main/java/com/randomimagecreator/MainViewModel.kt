@@ -3,7 +3,6 @@ package com.randomimagecreator
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
-import android.util.Log
 import androidx.core.database.getStringOrNull
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.ViewModel
@@ -63,13 +62,15 @@ class MainViewModel : ViewModel() {
             DocumentFile.fromTreeUri(context, saveDirectoryUri) ?: throw SaveDirectoryMissingError()
 
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                imageCreationResult =
-                    imageCreator.create(context.contentResolver, saveDirectory, configuration)
-                navigationRequestBroadcaster.emit(Screen.Result)
-            } catch (exception: Exception) {
-                Log.e(TAG, "", exception)
-            }
+            imageCreator.create(context.contentResolver, saveDirectory, configuration).fold(
+                onSuccess = {
+                    imageCreationResult = it
+                    navigationRequestBroadcaster.emit(Screen.Result)
+                },
+                onFailure = {
+                    // Show error screen here
+                }
+            )
         }
     }
 
