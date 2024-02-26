@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import com.randomimagecreator.choosesavedirectory.ChooseSaveDirectoryFragment
 import com.randomimagecreator.common.Analytics
 import com.randomimagecreator.configuration.ConfigurationFragment
+import com.randomimagecreator.error.ErrorFragment
 import com.randomimagecreator.loading.LoadingFragment
 import com.randomimagecreator.result.ResultFragment
 import kotlinx.coroutines.launch
@@ -52,6 +53,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
             is Screen.Loading -> {
                 replaceFragment(LoadingFragment(), LoadingFragment.TAG)
+            }
+
+            is Screen.Error -> {
+                replaceFragment(ErrorFragment())
             }
 
             is Screen.Result -> {

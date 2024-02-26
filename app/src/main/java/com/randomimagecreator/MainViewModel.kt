@@ -7,9 +7,12 @@ import androidx.core.database.getStringOrNull
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.ktx.Firebase
+import com.randomimagecreator.common.Analytics
 import com.randomimagecreator.common.errors.SaveDirectoryMissingError
 import com.randomimagecreator.common.extensions.query
 import com.randomimagecreator.configuration.Configuration
+import com.randomimagecreator.configuration.ImagePattern
 import com.randomimagecreator.result.ImageCreationResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -18,7 +21,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 
-private const val TAG = "MainViewModel"
 
 /**
  * ViewModel used throughout the app.
@@ -60,15 +62,15 @@ class MainViewModel : ViewModel() {
         val saveDirectoryUri = configuration.saveDirectory ?: throw SaveDirectoryMissingError()
         val saveDirectory =
             DocumentFile.fromTreeUri(context, saveDirectoryUri) ?: throw SaveDirectoryMissingError()
-
+        val config = configuration.copy(width = -1)
         viewModelScope.launch(Dispatchers.IO) {
-            imageCreator.create(context.contentResolver, saveDirectory, configuration).fold(
+            imageCreator.create(context.contentResolver, saveDirectory, config).fold(
                 onSuccess = {
                     imageCreationResult = it
                     navigationRequestBroadcaster.emit(Screen.Result)
                 },
                 onFailure = {
-                    // Show error screen here
+                    navigationRequestBroadcaster.emit(Screen.Error)
                 }
             )
         }
