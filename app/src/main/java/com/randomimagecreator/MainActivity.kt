@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.FirebaseApp
 import com.randomimagecreator.choosesavedirectory.ChooseSaveDirectoryFragment
 import com.randomimagecreator.common.Analytics
 import com.randomimagecreator.configuration.ConfigurationFragment
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Analytics.setup()
+        FirebaseApp.initializeApp(applicationContext)
         replaceFragment(ConfigurationFragment(), isRootFragment = true)
         lifecycleScope.launch {
             viewModel.navigationRequestBroadcaster.collect(::onNavigationRequest)

@@ -7,12 +7,10 @@ import androidx.core.database.getStringOrNull
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.ktx.Firebase
-import com.randomimagecreator.common.Analytics
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.randomimagecreator.common.errors.SaveDirectoryMissingError
 import com.randomimagecreator.common.extensions.query
 import com.randomimagecreator.configuration.Configuration
-import com.randomimagecreator.configuration.ImagePattern
 import com.randomimagecreator.result.ImageCreationResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -70,6 +68,7 @@ class MainViewModel : ViewModel() {
                     navigationRequestBroadcaster.emit(Screen.Result)
                 },
                 onFailure = {
+                    FirebaseCrashlytics.getInstance().recordException(it)
                     navigationRequestBroadcaster.emit(Screen.Error)
                 }
             )
