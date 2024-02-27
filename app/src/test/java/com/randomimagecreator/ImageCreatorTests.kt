@@ -9,6 +9,10 @@ import com.randomimagecreator.configuration.Configuration
 import com.randomimagecreator.configuration.ImagePattern
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
@@ -41,6 +45,21 @@ class ImageCreatorTests {
         val configuration = createValidConfiguration()
         val result = imageCreator.create(contentResolverMock, documentFileMock, configuration)
         Assert.assertTrue(result.isSuccess)
+    }
+
+    @Test
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun `create, happy case, correctly emits image saves`() = runTest(UnconfinedTestDispatcher()) {
+        val configuration = createValidConfiguration()
+
+        var nrOfEmits = 0
+        backgroundScope.launch {
+            imageCreator.bitmapSafeNotifier.collectLatest {
+                nrOfEmits++
+            }
+        }
+        imageCreator.create(contentResolverMock, documentFileMock, configuration)
+        Assert.assertEquals(2, nrOfEmits)
     }
 
     @Test
