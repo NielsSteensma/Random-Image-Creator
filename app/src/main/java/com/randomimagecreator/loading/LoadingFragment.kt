@@ -23,7 +23,7 @@ class LoadingFragment : Fragment(R.layout.fragment_loading) {
         numberOfSavedImagesTextField = view.findViewById(R.id.loading_saved_amount)
 
         viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.imageCreator.bitmapSaveNotifier.collect {
+            viewModel.imageCreator.bitmapSafeNotifier.collect {
                 numberOfSavedImages++
                 updateNumberOfSavedImages()
             }

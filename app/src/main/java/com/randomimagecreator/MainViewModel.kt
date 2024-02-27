@@ -3,11 +3,11 @@ package com.randomimagecreator
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
-import android.util.Log
 import androidx.core.database.getStringOrNull
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.randomimagecreator.common.errors.SaveDirectoryMissingError
 import com.randomimagecreator.common.extensions.query
 import com.randomimagecreator.configuration.Configuration
@@ -19,7 +19,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 
-private const val TAG = "MainViewModel"
 
 /**
  * ViewModel used throughout the app.
@@ -61,15 +60,18 @@ class MainViewModel : ViewModel() {
         val saveDirectoryUri = configuration.saveDirectory ?: throw SaveDirectoryMissingError()
         val saveDirectory =
             DocumentFile.fromTreeUri(context, saveDirectoryUri) ?: throw SaveDirectoryMissingError()
-
+        val config = configuration.copy(width = -1)
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                imageCreationResult =
-                    imageCreator.create(context.contentResolver, saveDirectory, configuration)
-                navigationRequestBroadcaster.emit(Screen.Result)
-            } catch (exception: Exception) {
-                Log.e(TAG, "", exception)
-            }
+            imageCreator.create(context.contentResolver, saveDirectory, config).fold(
+                onSuccess = {
+                    imageCreationResult = it
+                    navigationRequestBroadcaster.emit(Screen.Result)
+                },
+                onFailure = {
+                    FirebaseCrashlytics.getInstance().recordException(it)
+                    navigationRequestBroadcaster.emit(Screen.Error)
+                }
+            )
         }
     }
 

@@ -20,6 +20,11 @@ sealed class Screen {
     data object Loading : Screen()
 
     /**
+     * Screen showing an error occurred during image generation.
+     */
+    data object Error : Screen()
+
+    /**
      * Screen showing images that got created.
      */
     data object Result : Screen()

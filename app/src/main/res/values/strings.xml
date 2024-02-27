@@ -34,4 +34,6 @@
     <string name="image_creator_pixelated">Pixelated</string>
     <string name="image_creator_mandelbrot">Mandelbrot</string>
     <string name="image_creator_sierpinski">Sierpinski carpet</string>
+    <string name="error_title">An error occurred :(</string>
+    <string name="error_instructions">Please try it again with a different configuration</string>
 </resources>

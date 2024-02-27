@@ -8,9 +8,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
+import com.google.firebase.FirebaseApp
 import com.randomimagecreator.choosesavedirectory.ChooseSaveDirectoryFragment
 import com.randomimagecreator.common.Analytics
 import com.randomimagecreator.configuration.ConfigurationFragment
+import com.randomimagecreator.error.ErrorFragment
 import com.randomimagecreator.loading.LoadingFragment
 import com.randomimagecreator.result.ResultFragment
 import kotlinx.coroutines.launch
@@ -21,6 +23,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Analytics.setup()
+        FirebaseApp.initializeApp(applicationContext)
         replaceFragment(ConfigurationFragment(), isRootFragment = true)
         lifecycleScope.launch {
             viewModel.navigationRequestBroadcaster.collect(::onNavigationRequest)
@@ -52,6 +55,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
             is Screen.Loading -> {
                 replaceFragment(LoadingFragment(), LoadingFragment.TAG)
+            }
+
+            is Screen.Error -> {
+                replaceFragment(ErrorFragment())
             }
 
             is Screen.Result -> {
