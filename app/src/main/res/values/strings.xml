@@ -21,8 +21,9 @@
     <string name="created_images_location">The created images can be found in the directory \"%1$s\"</string>
 
     <!-- Choose save directory -->
-    <string name="choose_save_directory_message">Please choose the directory to store the images in</string>
-    <string name="choose_save_directory_button">Choose directory</string>
+    <string name="choose_save_directory_message">Choose directory for storing images</string>
+    <string name="choose_save_directory_button">Select new directory</string>
+    <string name="choose_save_directory_reuse_button">Reuse %1$s</string>
     <string name="created_images_amount">Amount</string>
     <string name="created_images_pattern">Pattern</string>
     <string name="created_images_duration">Duration ( seconds )</string>

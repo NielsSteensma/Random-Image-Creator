@@ -1,8 +1,11 @@
 package com.randomimagecreator
 
+import android.content.ContentResolver
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.provider.OpenableColumns
+import android.util.Log
 import androidx.core.database.getStringOrNull
 import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.ViewModel
@@ -49,7 +52,12 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    fun onSaveDirectoryChosen(uri: Uri) {
+    fun onSaveDirectoryChosen(contentResolver: ContentResolver, uri: Uri, persist: Boolean) {
+        if (persist) {
+            val takeFlags: Int = Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            contentResolver.takePersistableUriPermission(uri, takeFlags)
+        }
         configuration.saveDirectory = uri
         viewModelScope.launch {
             navigationRequestBroadcaster.emit(Screen.Loading)
@@ -60,29 +68,27 @@ class MainViewModel : ViewModel() {
         val saveDirectoryUri = configuration.saveDirectory ?: throw SaveDirectoryMissingError()
         val saveDirectory =
             DocumentFile.fromTreeUri(context, saveDirectoryUri) ?: throw SaveDirectoryMissingError()
-        val config = configuration.copy(width = -1)
         viewModelScope.launch(Dispatchers.IO) {
-            imageCreator.create(context.contentResolver, saveDirectory, config).fold(
+            imageCreator.create(context.contentResolver, saveDirectory, configuration).fold(
                 onSuccess = {
                     imageCreationResult = it
                     navigationRequestBroadcaster.emit(Screen.Result)
                 },
                 onFailure = {
-                    FirebaseCrashlytics.getInstance().recordException(it)
+                    try {
+                        FirebaseCrashlytics.getInstance().recordException(it)
+                    } catch (exception: IllegalStateException) {
+                        Log.e(MainViewModel::class.toString(), "Crashlytics not initialized")
+                    }
+                    Log.e(MainViewModel::class.toString(), it.stackTraceToString())
                     navigationRequestBroadcaster.emit(Screen.Error)
                 }
             )
         }
     }
 
-    fun getSaveDirectoryName(context: Context): String? {
-        val saveDirectory = configuration.saveDirectory ?: run {
-            return null
-        }
-
-        val saveDirectoryUri =
-            DocumentFile.fromTreeUri(context, saveDirectory)?.uri ?: return null
-
+    fun getSaveDirectoryName(context: Context, saveDirectory: Uri): String? {
+        val saveDirectoryUri = DocumentFile.fromTreeUri(context, saveDirectory)?.uri ?: return null
         return context.contentResolver.query(saveDirectoryUri)?.use { cursor ->
             cursor.moveToFirst()
             val columnIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
