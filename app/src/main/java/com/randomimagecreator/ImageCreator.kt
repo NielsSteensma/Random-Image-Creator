@@ -46,7 +46,7 @@ class ImageCreator(
                 val image = try {
                     algorithm.createImage()
                 } catch (exception: Exception) {
-                    return Result.failure(ImageCreatingAlgorithmError())
+                    return Result.failure(ImageCreatingAlgorithmError(exception))
                 }
                 val flattenedImage = image.flatMap { it.asIterable() }.toTypedArray()
                 images.add(flattenedImage)
@@ -58,7 +58,7 @@ class ImageCreator(
                 bitmapCreator.create(bitmap, configuration.width, configuration.height)
             }
         } catch (exception: IllegalArgumentException) {
-            return Result.failure(BitmapCreationError())
+            return Result.failure(BitmapCreationError(exception))
         }
 
         val uris = mutableListOf<Uri>()
@@ -72,7 +72,7 @@ class ImageCreator(
                         configuration.format,
                     )
                 } catch (exception: Exception) {
-                    return Result.failure(BitmapSaveError())
+                    return Result.failure(BitmapSaveError(exception))
                 }
                 _bitmapSaveNotifier.emit(null)
                 uri?.let { uris.add(it) }
@@ -84,6 +84,6 @@ class ImageCreator(
     }
 }
 
-class ImageCreatingAlgorithmError : Error()
-class BitmapCreationError : Error()
-class BitmapSaveError : Error()
+class ImageCreatingAlgorithmError(cause: Throwable) : Error(cause)
+class BitmapCreationError(cause: Throwable) : Error(cause)
+class BitmapSaveError(cause: Throwable) : Error(cause)
