@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -30,19 +32,31 @@
         android:text="@string/choose_save_directory_message"
         android:textAlignment="center"
         android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="@id/guideline_begin"
-        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        android:layout_marginBottom="144dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_begin"
         app:layout_constraintTop_toBottomOf="@id/shared_logo" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/choose_save_directory_button"
-        android:layout_width="0dp"
         style="@style/Theme.RandomImageCreator.Button"
+        android:layout_width="0dp"
         android:layout_marginTop="16dp"
         android:text="@string/choose_save_directory_button"
-        app:layout_constraintStart_toStartOf="@id/guideline_begin"
         app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_begin"
         app:layout_constraintTop_toBottomOf="@+id/choose_save_directory_message" />
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/choose_save_directory_reuse_button"
+        style="@style/Theme.RandomImageCreator.Button"
+        tools:text="Reuse Directory"
+        android:layout_width="0dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintStart_toStartOf="@id/guideline_begin"
+        app:layout_constraintTop_toBottomOf="@+id/choose_save_directory_button" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
