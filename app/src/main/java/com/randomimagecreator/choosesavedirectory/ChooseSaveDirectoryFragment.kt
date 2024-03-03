@@ -37,7 +37,7 @@ class ChooseSaveDirectoryFragment : Fragment(R.layout.fragment_choose_save_direc
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ) = super.onCreateView(inflater, container, savedInstanceState)?.also { rootView ->
-        rootView.findViewById<Button>(R.id.choose_save_directory_button)?.setOnClickListener {
+        rootView.findViewById<Button>(R.id.choose_save_directory_button).setOnClickListener {
             launcher.launch(null)
         }
 
@@ -46,24 +46,23 @@ class ChooseSaveDirectoryFragment : Fragment(R.layout.fragment_choose_save_direc
             val saveDirectory = viewModel.getLastPersistedSaveDirectory()
             val saveDirectoryName =
                 saveDirectory?.let { mainViewModel.getSaveDirectoryName(saveDirectory) }
-            if (saveDirectory != null && saveDirectoryName != null) {
+            reuseButton.isVisible = saveDirectory != null && saveDirectoryName != null
+            saveDirectoryName?.let {
                 reuseButton.isVisible = true
-                reuseButton.text = requireContext().getString(
-                    R.string.choose_save_directory_reuse,
-                    saveDirectoryName
-                )
-            } else {
-                reuseButton.isVisible = false
+                reuseButton.text =
+                    requireContext().getString(R.string.choose_save_directory_reuse, it)
             }
         }
-        reuseButton.setOnClickListener {
-            lifecycleScope.launch {
-                val lastPersistedSaveDirectory = viewModel.getLastPersistedSaveDirectory()
-                assert(lastPersistedSaveDirectory != null) { "null but reuse enabled" }
-                lastPersistedSaveDirectory?.let {
-                    mainViewModel.onSaveDirectoryChosen(lastPersistedSaveDirectory)
-                    mainViewModel.createImages()
-                }
+        reuseButton.setOnClickListener { onReuseButtonClick() }
+    }
+
+    private fun onReuseButtonClick() {
+        lifecycleScope.launch {
+            val lastPersistedSaveDirectory = viewModel.getLastPersistedSaveDirectory()
+            assert(lastPersistedSaveDirectory != null) { "null but reuse enabled" }
+            lastPersistedSaveDirectory?.let {
+                mainViewModel.onSaveDirectoryChosen(lastPersistedSaveDirectory)
+                mainViewModel.createImages()
             }
         }
     }

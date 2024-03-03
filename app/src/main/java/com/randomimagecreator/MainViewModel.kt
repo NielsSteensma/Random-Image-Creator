@@ -1,7 +1,6 @@
 package com.randomimagecreator
 
 import android.app.Application
-import android.content.ContentResolver
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.util.Log
@@ -11,6 +10,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.randomimagecreator.common.errors.SaveDirectoryMissingError
+import com.randomimagecreator.common.extensions.contentResolver
+import com.randomimagecreator.common.extensions.context
 import com.randomimagecreator.common.extensions.query
 import com.randomimagecreator.configuration.Configuration
 import com.randomimagecreator.result.ImageCreationResult
@@ -32,10 +33,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     lateinit var imageCreationResult: ImageCreationResult
         private set
     private val _validationResult = MutableStateFlow<Boolean?>(null)
-    private val contentResolver: ContentResolver
-        get() {
-            return getApplication<Application>().contentResolver
-        }
 
     fun onUserWantsToGoBackToConfiguration() {
         _validationResult.value = null
@@ -86,7 +83,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun getSaveDirectoryName(saveDirectory: Uri): String? {
-        val context = getApplication<Application>()
         val saveDirectoryUri = DocumentFile.fromTreeUri(context, saveDirectory)?.uri ?: return null
         return contentResolver.query(saveDirectoryUri)?.use { cursor ->
             cursor.moveToFirst()
