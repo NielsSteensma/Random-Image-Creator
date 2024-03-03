@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
  * */
 class ChooseSaveDirectoryViewModel(application: Application) : AndroidViewModel(application) {
     private val dataStore = MainDataStore.getInstance(application)
+
     suspend fun getLastPersistedSaveDirectory(): Uri? {
         val saveDirectory = dataStore.getLastPersistedSaveDirectory() ?: return null
         return contentResolver.persistedUriPermissions.first {
