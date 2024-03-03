@@ -23,7 +23,7 @@
     <!-- Choose save directory -->
     <string name="choose_save_directory_message">Choose directory for storing images</string>
     <string name="choose_save_directory_button">Select new directory</string>
-    <string name="choose_save_directory_reuse_button">Reuse %1$s</string>
+    <string name="choose_save_directory_reuse">Reuse %1$s</string>
     <string name="created_images_amount">Amount</string>
     <string name="created_images_pattern">Pattern</string>
     <string name="created_images_duration">Duration ( seconds )</string>

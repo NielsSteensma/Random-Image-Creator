@@ -57,7 +57,7 @@ internal class ResultFragment : Fragment(R.layout.fragment_result) {
 
         rootView.findViewById<TextView>(R.id.created_images_directory).apply {
             viewModel.configuration.saveDirectory?.let { saveDirectory ->
-                text = viewModel.getSaveDirectoryName(requireContext(), saveDirectory) ?: ""
+                text = viewModel.getSaveDirectoryName(saveDirectory) ?: ""
             }
         }
 
