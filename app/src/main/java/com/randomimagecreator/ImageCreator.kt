@@ -3,7 +3,6 @@ package com.randomimagecreator
 import android.content.ContentResolver
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
-import com.randomimagecreator.algorithms.ImageCreating
 import com.randomimagecreator.algorithms.Mandelbrot
 import com.randomimagecreator.algorithms.Pixelated
 import com.randomimagecreator.algorithms.SierpinskiCarpet
@@ -30,21 +29,11 @@ class ImageCreator(
         saveDirectory: DocumentFile,
         configuration: Configuration
     ): Result<ImageCreationResult> {
-        val width = configuration.width
-        val height = configuration.height
-        val algorithm: ImageCreating = when (configuration.pattern) {
-            ImagePattern.SOLID -> SolidColor(width, height)
-            ImagePattern.PIXELATED -> Pixelated(width, height)
-            ImagePattern.SIERPINSKI_CARPET -> SierpinskiCarpet(width, height)
-            ImagePattern.MANDELBROT ->
-                Mandelbrot(width, height, configuration.iterations, HsvToHexConverter)
-        }
-
         val images = mutableListOf<Array<String>>()
         val creationDurationInMilliseconds = measureTimeMillis {
             for (i in 0..<configuration.amount) {
                 val image = try {
-                    algorithm.createImage()
+                    createImage(configuration)
                 } catch (exception: Exception) {
                     return Result.failure(ImageCreatingAlgorithmError(exception))
                 }
@@ -81,6 +70,18 @@ class ImageCreator(
 
         val durationInMilliseconds = creationDurationInMilliseconds + saveDurationInMilliseconds
         return Result.success(ImageCreationResult(uris, durationInMilliseconds))
+    }
+
+    private fun createImage(configuration: Configuration): Array<Array<String>> {
+        val width = configuration.width
+        val height = configuration.height
+        return when (configuration.pattern) {
+            ImagePattern.SOLID -> SolidColor.createImage(width, height)
+            ImagePattern.PIXELATED -> Pixelated.createImage(width, height)
+            ImagePattern.SIERPINSKI_CARPET -> SierpinskiCarpet.createImage(width, height)
+            ImagePattern.MANDELBROT ->
+                Mandelbrot.createImage(width, height, configuration.iterations, HsvToHexConverter)
+        }
     }
 }
 

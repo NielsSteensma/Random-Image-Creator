@@ -14,6 +14,8 @@ import com.randomimagecreator.common.extensions.contentResolver
 import com.randomimagecreator.common.extensions.context
 import com.randomimagecreator.common.extensions.query
 import com.randomimagecreator.configuration.Configuration
+import com.randomimagecreator.configuration.ConfigurationValidator
+import com.randomimagecreator.configuration.ConfigurationValidatorResult
 import com.randomimagecreator.result.ImageCreationResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -28,11 +30,11 @@ import kotlinx.coroutines.launch
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     val configuration = Configuration()
     var navigationRequestBroadcaster: MutableSharedFlow<Screen> = MutableSharedFlow()
-    val validationResult: Flow<Boolean> get() = _validationResult.filterNotNull()
+    val validationResult: Flow<ConfigurationValidatorResult> get() = _validationResult.filterNotNull()
     val imageCreator = ImageCreator()
     lateinit var imageCreationResult: ImageCreationResult
         private set
-    private val _validationResult = MutableStateFlow<Boolean?>(null)
+    private val _validationResult = MutableStateFlow<ConfigurationValidatorResult?>(null)
 
     fun onUserWantsToGoBackToConfiguration() {
         _validationResult.value = null
@@ -42,9 +44,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     suspend fun onUserSubmitsConfiguration() {
-        val isValid = configuration.validator.isValid
-        _validationResult.emit(isValid)
-        if (isValid) {
+        val validationResult = ConfigurationValidator.validate(configuration)
+        _validationResult.emit(validationResult)
+        if (validationResult.isValid) {
             viewModelScope.launch {
                 navigationRequestBroadcaster.emit(Screen.ChooseSaveDirectory)
             }

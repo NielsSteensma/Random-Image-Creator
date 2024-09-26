@@ -160,26 +160,19 @@ class ConfigurationFragment : Fragment(R.layout.fragment_configuration) {
         }
     }
 
-    private fun onValidationResult(isValid: Boolean) {
-        if (isValid) {
-            amountTextInput.error = null
-            widthTextInput.error = null
-            heightTextInput.error = null
-            iterationsTextInput.error = null
-        } else {
-            viewModel.configuration.validator.amountValidationMessage()?.let {
-                amountTextInput.error = resources.getString(it)
-            }
-            viewModel.configuration.validator.widthValidationMessage()?.let {
-                widthTextInput.error = resources.getString(it)
-            }
-            viewModel.configuration.validator.heightValidationMessage()?.let {
-                heightTextInput.error = resources.getString(it)
-            }
-            viewModel.configuration.validator.iterationsValidationMessage()?.let {
-                iterationsTextInput.error = resources.getString(it)
+    private fun onValidationResult(validationResult: ConfigurationValidatorResult) {
+        fun setValidationResult(textInput: TextInputEditText, warningResourceId: Int?) {
+            if (warningResourceId != null) {
+                textInput.error = resources.getString(warningResourceId)
+            } else {
+                textInput.error = null
             }
         }
+
+        setValidationResult(widthTextInput, validationResult.widthWarningResourceId)
+        setValidationResult(heightTextInput, validationResult.heightWarningResourceId)
+        setValidationResult(amountTextInput, validationResult.amountWarningResourceId)
+        setValidationResult(iterationsTextInput, validationResult.iterationsWarningResourceId)
     }
 }
 

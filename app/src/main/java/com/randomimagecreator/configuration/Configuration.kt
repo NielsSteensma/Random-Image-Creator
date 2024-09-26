@@ -18,9 +18,4 @@ data class Configuration(
     var pattern: ImagePattern = ImagePattern.SOLID,
     var format: ImageFileFormat = ImageFileFormat.JPEG,
     var saveDirectory: Uri? = null
-) {
-    val validator: ConfigurationValidator
-        get() {
-            return ConfigurationValidator(this)
-        }
-}
+)

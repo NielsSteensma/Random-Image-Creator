@@ -2,7 +2,8 @@ package com.randomimagecreator.configuration
 
 import com.randomimagecreator.R
 import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertNull
+import junit.framework.TestCase.assertFalse
+import junit.framework.TestCase.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -23,38 +24,41 @@ class ConfigurationValidatorForAllImagePatternsTest(imagePattern: ImagePattern) 
     }
 
     @Test
-    fun `when valid, returns no validation warning`() {
-        val validator = ConfigurationValidator(defaultValidConfiguration)
-        assertNull(validator.amountValidationMessage())
+    fun `when valid, returns isValid as true`() {
+        val validationResult = ConfigurationValidator.validate(defaultValidConfiguration)
+        assertTrue(validationResult.isValid)
     }
 
     @Test
     fun `when amount is invalid, returns value missing`() {
         val configuration = defaultValidConfiguration.copy(amount = 0)
-        val validator = ConfigurationValidator(configuration)
+        val validationResult = ConfigurationValidator.validate(configuration)
+        assertFalse(validationResult.isValid)
         assertEquals(
             R.string.image_creator_option_invalid,
-            validator.amountValidationMessage()
+            validationResult.amountWarningResourceId
         )
     }
 
     @Test
     fun `when width is invalid, returns validation warning`() {
         val configuration = defaultValidConfiguration.copy(width = 0)
-        val validator = ConfigurationValidator(configuration)
+        val validationResult = ConfigurationValidator.validate(configuration)
+        assertFalse(validationResult.isValid)
         assertEquals(
             R.string.image_creator_option_invalid,
-            validator.widthValidationMessage()
+            validationResult.widthWarningResourceId
         )
     }
 
     @Test
     fun `when height is invalid, returns validation warning`() {
         val configuration = defaultValidConfiguration.copy(height = 0)
-        val validator = ConfigurationValidator(configuration)
+        val validationResult = ConfigurationValidator.validate(configuration)
+        assertFalse(validationResult.isValid)
         assertEquals(
             R.string.image_creator_option_invalid,
-            validator.heightValidationMessage()
+            validationResult.heightWarningResourceId
         )
     }
 }
@@ -72,8 +76,12 @@ class ConfigurationValidatorForSpecificImagePatternsTest {
             iterations = 0,
             pattern = ImagePattern.MANDELBROT
         )
-        val validator = ConfigurationValidator(configuration)
-        assertEquals(R.string.image_creator_option_invalid, validator.iterationsValidationMessage())
+        val validationResult = ConfigurationValidator.validate(configuration)
+        assertFalse(validationResult.isValid)
+        assertEquals(
+            R.string.image_creator_option_invalid,
+            validationResult.iterationsWarningResourceId
+        )
     }
 
     @Test
@@ -84,10 +92,11 @@ class ConfigurationValidatorForSpecificImagePatternsTest {
                 height = 133,
                 pattern = ImagePattern.SIERPINSKI_CARPET
             )
-        val validator = ConfigurationValidator(configuration)
+        val validationResult = ConfigurationValidator.validate(configuration)
+        assertFalse(validationResult.isValid)
         assertEquals(
             R.string.image_creator_option_invalid_not_dividable_by_3,
-            validator.widthValidationMessage()
+            validationResult.widthWarningResourceId
         )
     }
 
@@ -99,10 +108,11 @@ class ConfigurationValidatorForSpecificImagePatternsTest {
                 height = 133,
                 pattern = ImagePattern.SIERPINSKI_CARPET
             )
-        val validator = ConfigurationValidator(configuration)
+        val validationResult = ConfigurationValidator.validate(configuration)
+        assertFalse(validationResult.isValid)
         assertEquals(
             R.string.image_creator_option_invalid_not_dividable_by_3,
-            validator.heightValidationMessage()
+            validationResult.heightWarningResourceId
         )
     }
 
@@ -110,10 +120,11 @@ class ConfigurationValidatorForSpecificImagePatternsTest {
     fun `validator for Sierpinski, when height and width are not equal, returns validation warning`() {
         val configuration =
             defaultConfiguration.copy(height = 300, pattern = ImagePattern.SIERPINSKI_CARPET)
-        val validator = ConfigurationValidator(configuration)
+        val validationResult = ConfigurationValidator.validate(configuration)
+        assertFalse(validationResult.isValid)
         assertEquals(
             R.string.image_creator_option_invalid_not_equal,
-            validator.heightValidationMessage()
+            validationResult.heightWarningResourceId
         )
     }
 
@@ -121,10 +132,11 @@ class ConfigurationValidatorForSpecificImagePatternsTest {
     fun `validator for Sierpinski, when width and height are not equal, returns validation warning`() {
         val configuration =
             defaultConfiguration.copy(width = 300, pattern = ImagePattern.SIERPINSKI_CARPET)
-        val validator = ConfigurationValidator(configuration)
+        val validationResult = ConfigurationValidator.validate(configuration)
+        assertFalse(validationResult.isValid)
         assertEquals(
             R.string.image_creator_option_invalid_not_equal,
-            validator.heightValidationMessage()
+            validationResult.heightWarningResourceId
         )
     }
 }

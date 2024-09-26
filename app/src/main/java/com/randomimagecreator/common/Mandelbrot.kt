@@ -1,7 +1,7 @@
 package com.randomimagecreator.common
 
 import android.graphics.Color
-import com.randomimagecreator.algorithms.HsvToHexConverting
+import com.randomimagecreator.algorithms.common.HsvToHexConverting
 
 object HsvToHexConverter : HsvToHexConverting {
     @OptIn(ExperimentalStdlibApi::class)

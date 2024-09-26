@@ -2,16 +2,18 @@ package com.randomimagecreator.configuration
 
 import com.randomimagecreator.R
 
-class ConfigurationValidator(val configuration: Configuration) {
-    val isValid: Boolean
-        get() {
-            return widthValidationMessage() == null &&
-                    heightValidationMessage() == null &&
-                    amountValidationMessage() == null &&
-                    iterationsValidationMessage() == null
-        }
+object ConfigurationValidator {
 
-    fun widthValidationMessage(): Int? {
+    fun validate(configuration: Configuration): ConfigurationValidatorResult {
+        return ConfigurationValidatorResult(
+            maybeGetWidthWarningMessage(configuration),
+            maybeGetHeightWarningMessage(configuration),
+            maybeGetAmountWarningMessage(configuration),
+            maybeGetIterationsWarningMessage(configuration)
+        )
+    }
+
+    private fun maybeGetWidthWarningMessage(configuration: Configuration): Int? {
         if (configuration.pattern != ImagePattern.SIERPINSKI_CARPET && configuration.width > 0) {
             return null
         }
@@ -31,7 +33,7 @@ class ConfigurationValidator(val configuration: Configuration) {
         }
     }
 
-    fun heightValidationMessage(): Int? {
+    private fun maybeGetHeightWarningMessage(configuration: Configuration): Int? {
         if (configuration.pattern != ImagePattern.SIERPINSKI_CARPET && configuration.height > 0) {
             return null
         }
@@ -51,12 +53,12 @@ class ConfigurationValidator(val configuration: Configuration) {
         }
     }
 
-    fun amountValidationMessage(): Int? {
+    private fun maybeGetAmountWarningMessage(configuration: Configuration): Int? {
         if (configuration.amount > 0) return null
         return R.string.image_creator_option_invalid
     }
 
-    fun iterationsValidationMessage(): Int? {
+    private fun maybeGetIterationsWarningMessage(configuration: Configuration): Int? {
         if (configuration.pattern != ImagePattern.MANDELBROT || configuration.iterations > 0) {
             return null
         }
