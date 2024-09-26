@@ -9,10 +9,12 @@ private const val DEPTH = 4
 /**
  * Algorithm for creating an image based on Sierpinski carpet.
  */
-class SierpinskiCarpet(val width: Int, val height: Int) : ImageCreating {
-    lateinit var color: String
+object SierpinskiCarpet {
 
-    override fun createImage(): Array<Array<String>> {
+    /**
+     * Creates a 2 dimensional array of pixels where each pixel is represented as a hexadecimal color.
+     */
+    fun createImage(width: Int, height: Int): Array<Array<String>> {
         if (width % 3 != 0) {
             throw IllegalArgumentException("Width is not dividable by 3")
         }
@@ -23,24 +25,24 @@ class SierpinskiCarpet(val width: Int, val height: Int) : ImageCreating {
             throw IllegalArgumentException("Width and height are not equal")
         }
 
-        color = Color.randomHex()
+        val color = Color.randomHex()
         val image = Array(width) { Array(height) { "" } }
         val initialSquare = SierpinskiSquare(Rect(0, 0, width, height))
-        performAlgorithm(image, initialSquare, 0)
+        performAlgorithm(image, initialSquare, 0, color)
         return image
     }
 
-    private fun performAlgorithm(image: Array<Array<String>>, square: SierpinskiSquare, n: Int) {
+    private fun performAlgorithm(image: Array<Array<String>>, square: SierpinskiSquare, n: Int, color: String) {
         val subSquares = square.divideInNineSubSquares()
-        image.applyColors(subSquares)
+        image.applyColors(subSquares, color)
         for (subSquare in subSquares.filter { !it.isMiddle }) {
             if (n < DEPTH) {
-                performAlgorithm(image, subSquare, n + 1)
+                performAlgorithm(image, subSquare, n + 1, color)
             }
         }
     }
 
-    private fun Array<Array<String>>.applyColors(squares: Set<SierpinskiSquare>) {
+    private fun Array<Array<String>>.applyColors(squares: Set<SierpinskiSquare>, color: String) {
         squares.forEach {
             for (x in it.left until it.right) {
                 for (y in it.top until it.bottom) {

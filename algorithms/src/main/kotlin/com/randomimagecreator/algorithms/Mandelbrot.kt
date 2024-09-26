@@ -2,6 +2,7 @@ package com.randomimagecreator.algorithms
 
 import com.randomimagecreator.algorithms.common.Color
 import com.randomimagecreator.algorithms.common.Complex
+import com.randomimagecreator.algorithms.common.HsvToHexConverting
 
 /**
  * Max range complex number can be from origin to be part of Mandelbrot set.
@@ -11,23 +12,25 @@ private const val ESCAPE_RADIUS = 2
 /**
  * Algorithm for creating an image based on Mandelbrot.
  */
-class Mandelbrot(
-    private val width: Int,
-    private val height: Int,
-    private val iterations: Int,
-    private val hsvToHexConverter: HsvToHexConverting
-) : ImageCreating {
-    private val plot = Plot()
+object Mandelbrot {
 
-    override fun createImage(): Array<Array<String>> {
+    /**
+     * Creates a 2 dimensional array of pixels where each pixel is represented as a hexadecimal color.
+     */
+    fun createImage(
+        width: Int,
+        height: Int,
+        maxIterations: Int,
+        hsvToHexConverter: HsvToHexConverting
+    ): Array<Array<String>> {
         val image = Array(width) { Array(height) { "" } }
+        val plot = Plot()
 
         for (x in 0 until width) {
             for (y in 0 until height) {
-                val maxIterations = iterations
-                val complex = pixelCoordinatesToComplexCoordinates(width, height, x, y)
+                val complex = pixelCoordinatesToComplexCoordinates(plot, width, height, x, y)
                 val iterations = mandelbrot(maxIterations, complex)
-                val color = color(maxIterations, iterations)
+                val color = color(maxIterations, iterations, hsvToHexConverter)
                 image[x][y] = color
             }
         }
@@ -40,7 +43,11 @@ class Mandelbrot(
      * If [performedIterations] matches [maxIterations], black will be returned.
      * If not matching, color will be based on max reached iterations.
      */
-    private fun color(maxIterations: Int, performedIterations: Int): String {
+    private fun color(
+        maxIterations: Int,
+        performedIterations: Int,
+        hsvToHexConverter: HsvToHexConverting
+    ): String {
         if (performedIterations == maxIterations) {
             return Color.BLACK
         }
@@ -56,6 +63,7 @@ class Mandelbrot(
      * @return [Complex] with coordinates.
      */
     private fun pixelCoordinatesToComplexCoordinates(
+        plot: Plot,
         width: Int,
         height: Int,
         pixelX: Int,
@@ -83,11 +91,6 @@ class Mandelbrot(
         }
         return maxIterations
     }
-}
-
-
-interface HsvToHexConverting {
-    fun convert(hue: Float, saturation: Float, value: Float): String
 }
 
 /**

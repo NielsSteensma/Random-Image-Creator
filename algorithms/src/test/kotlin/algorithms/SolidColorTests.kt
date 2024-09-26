@@ -7,7 +7,7 @@ import org.junit.Test
 class SolidColorTests {
     @Test
     fun `createBitmap, correctly returns bitmap with one solid color`() {
-        val bitmap = SolidColor(100, 100).createImage()
+        val bitmap = SolidColor.createImage(100, 100)
         val firstPixelColor = bitmap[0]
         Assert.assertFalse(bitmap.any { pixel -> !pixel.contentEquals(firstPixelColor) })
     }
