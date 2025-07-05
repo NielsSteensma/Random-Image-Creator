@@ -14,6 +14,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.randomimagecreator.MainViewModel
 import com.randomimagecreator.R
 import com.randomimagecreator.common.extensions.toInt
+import com.randomimagecreator.configuration.validation.ConfigurationValidationResult
 import kotlinx.coroutines.launch
 
 /**
@@ -79,7 +80,7 @@ class ConfigurationFragment : Fragment(R.layout.fragment_configuration) {
                     NoFilterArrayAdapter(
                         this@ConfigurationFragment.requireContext(),
                         R.layout.dropdown_item,
-                        ImagePattern.values()
+                        ImagePattern.entries
                             .map { requireContext().getString(it.localizationResourceId) }
                     )
                 )
@@ -90,7 +91,7 @@ class ConfigurationFragment : Fragment(R.layout.fragment_configuration) {
                 NoFilterArrayAdapter(
                     this@ConfigurationFragment.requireContext(),
                     R.layout.dropdown_item,
-                    ImagePattern.values()
+                    ImagePattern.entries
                         .map { requireContext().getString(it.localizationResourceId) }
                 )
             )
@@ -137,7 +138,7 @@ class ConfigurationFragment : Fragment(R.layout.fragment_configuration) {
                     NoFilterArrayAdapter(
                         this@ConfigurationFragment.requireContext(),
                         R.layout.dropdown_item,
-                        ImageFileFormat.values()
+                        ImageFileFormat.entries.toTypedArray()
                     )
                 )
 
@@ -160,23 +161,23 @@ class ConfigurationFragment : Fragment(R.layout.fragment_configuration) {
         }
     }
 
-    private fun onValidationResult(isValid: Boolean) {
-        if (isValid) {
+    private fun onValidationResult(validationResult: ConfigurationValidationResult) {
+        if (validationResult.isValid) {
             amountTextInput.error = null
             widthTextInput.error = null
             heightTextInput.error = null
             iterationsTextInput.error = null
         } else {
-            viewModel.configuration.validator.amountValidationMessage()?.let {
+            validationResult.amountValidationMessage?.let {
                 amountTextInput.error = resources.getString(it)
             }
-            viewModel.configuration.validator.widthValidationMessage()?.let {
+            validationResult.widthValidationMessage?.let {
                 widthTextInput.error = resources.getString(it)
             }
-            viewModel.configuration.validator.heightValidationMessage()?.let {
+            validationResult.heightValidationMessage?.let {
                 heightTextInput.error = resources.getString(it)
             }
-            viewModel.configuration.validator.iterationsValidationMessage()?.let {
+            validationResult.iterationsValidationMessage?.let {
                 iterationsTextInput.error = resources.getString(it)
             }
         }

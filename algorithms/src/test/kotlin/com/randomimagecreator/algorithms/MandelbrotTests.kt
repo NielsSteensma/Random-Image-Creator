@@ -1,7 +1,5 @@
-package algorithms
+package com.randomimagecreator.algorithms
 
-import com.randomimagecreator.algorithms.HsvToHexConverting
-import com.randomimagecreator.algorithms.Mandelbrot
 import org.junit.Assert
 import org.junit.Test
 
