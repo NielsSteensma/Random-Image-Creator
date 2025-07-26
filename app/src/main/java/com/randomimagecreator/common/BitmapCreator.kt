@@ -6,7 +6,7 @@ import android.graphics.Color
 /**
  * Wrapper class for creating Bitmaps.
  */
-class BitmapCreator {
+object BitmapCreator {
     fun create(
         bitmap: Array<String>,
         width: Int,

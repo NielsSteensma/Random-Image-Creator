@@ -1,10 +1,9 @@
-package algorithms
+package com.randomimagecreator.algorithms
 
-import com.randomimagecreator.algorithms.Pixelated
 import org.junit.Assert
 import org.junit.Test
 
-class PixelatedTests {
+class PixelatedTest {
     @Test
     fun `createBitmap, correctly returns bitmap with pixels having different colors`() {
         val bitmap = Pixelated(100, 100).createImage()

@@ -18,10 +18,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlin.system.measureTimeMillis
 
-class ImageCreator(
-    private val imageSaver: ImageSaver = ImageSaver(),
-    private val bitmapCreator: BitmapCreator = BitmapCreator()
-) {
+class ImageCreator{
     val bitmapSafeNotifier get() = _bitmapSaveNotifier.asSharedFlow()
     private var _bitmapSaveNotifier: MutableSharedFlow<Nothing?> = MutableSharedFlow()
 
@@ -55,7 +52,7 @@ class ImageCreator(
 
         val bitmaps = try {
             images.map { bitmap ->
-                bitmapCreator.create(bitmap, configuration.width, configuration.height)
+                BitmapCreator.create(bitmap, configuration.width, configuration.height)
             }
         } catch (exception: IllegalArgumentException) {
             return Result.failure(BitmapCreationError(exception))
@@ -65,7 +62,7 @@ class ImageCreator(
         val saveDurationInMilliseconds = measureTimeMillis {
             for (bitmap in bitmaps) {
                 val uri = try {
-                    imageSaver.saveBitmap(
+                    ImageSaver.saveBitmap(
                         bitmap,
                         contentResolver,
                         saveDirectory,

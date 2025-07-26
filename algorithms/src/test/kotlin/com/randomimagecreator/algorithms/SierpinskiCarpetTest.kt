@@ -1,10 +1,9 @@
-package algorithms
+package com.randomimagecreator.algorithms
 
-import com.randomimagecreator.algorithms.SierpinskiCarpet
 import org.junit.Assert
 import org.junit.Test
 
-class SierpinskiCarpetTests {
+class SierpinskiCarpetTest {
     @Test
     fun `createBitmap, given valid configuration, correctly returns bitmap`() {
         val bitmap = SierpinskiCarpet(300, 300).createImage()
