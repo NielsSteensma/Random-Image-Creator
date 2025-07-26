@@ -9,7 +9,7 @@ import com.randomimagecreator.configuration.ImageFileFormat
 /**
  * Helper class for saving images.
  */
-class ImageSaver {
+object ImageSaver {
     /**
      * Saves the given bitmap to the provided [saveDirectory].
      *

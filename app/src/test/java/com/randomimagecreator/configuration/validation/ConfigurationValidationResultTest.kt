@@ -1,13 +1,13 @@
 package com.randomimagecreator.configuration.validation
 
-import junit.framework.TestCase.assertEquals
+import org.junit.Assert
 import org.junit.Test
 
 class ConfigurationValidationResultTest {
     @Test
     fun `isValid, when has no validation messages, returns true`() {
         val configurationValidationResult = ConfigurationValidationResult.valid()
-        assertEquals(true, configurationValidationResult.isValid)
+        Assert.assertTrue(configurationValidationResult.isValid)
     }
 
     @Test
@@ -18,7 +18,7 @@ class ConfigurationValidationResultTest {
             amountValidationMessage = null,
             iterationsValidationMessage = null
         )
-        assertEquals(false, configurationValidationResult.isValid)
+        Assert.assertFalse(configurationValidationResult.isValid)
     }
 
     @Test
@@ -29,7 +29,7 @@ class ConfigurationValidationResultTest {
             amountValidationMessage = null,
             iterationsValidationMessage = null
         )
-        assertEquals(false, configurationValidationResult.isValid)
+        Assert.assertFalse(configurationValidationResult.isValid)
     }
 
     @Test
@@ -40,7 +40,7 @@ class ConfigurationValidationResultTest {
             amountValidationMessage = 1,
             iterationsValidationMessage = null
         )
-        assertEquals(false, configurationValidationResult.isValid)
+        Assert.assertFalse(configurationValidationResult.isValid)
     }
 
     @Test
@@ -51,6 +51,6 @@ class ConfigurationValidationResultTest {
             amountValidationMessage = null,
             iterationsValidationMessage = 1
         )
-        assertEquals(false, configurationValidationResult.isValid)
+        Assert.assertFalse(configurationValidationResult.isValid)
     }
 }

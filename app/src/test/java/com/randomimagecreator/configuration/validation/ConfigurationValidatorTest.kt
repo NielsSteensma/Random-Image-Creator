@@ -4,6 +4,7 @@ import com.randomimagecreator.R
 import com.randomimagecreator.configuration.Configuration
 import com.randomimagecreator.configuration.ImagePattern
 import junit.framework.TestCase.assertEquals
+import org.junit.Assert
 import org.junit.Test
 
 class ConfigurationValidatorTest {
@@ -19,7 +20,7 @@ class ConfigurationValidatorTest {
                 pattern = ImagePattern.SOLID
             )
         val validationResult = ConfigurationValidator.validate(configuration)
-        assertEquals(true, validationResult.isValid)
+        Assert.assertTrue(validationResult.isValid)
     }
 
     @Test
@@ -82,7 +83,7 @@ class ConfigurationValidatorTest {
                 pattern = ImagePattern.PIXELATED
             )
         val validationResult = ConfigurationValidator.validate(configuration)
-        assertEquals(true, validationResult.isValid)
+        Assert.assertTrue(validationResult.isValid)
     }
 
     @Test
@@ -146,7 +147,7 @@ class ConfigurationValidatorTest {
                 pattern = ImagePattern.MANDELBROT
             )
         val validationResult = ConfigurationValidator.validate(configuration)
-        assertEquals(true, validationResult.isValid)
+        Assert.assertTrue(validationResult.isValid)
     }
 
     @Test
@@ -229,7 +230,7 @@ class ConfigurationValidatorTest {
                 pattern = ImagePattern.SIERPINSKI_CARPET
             )
         val validationResult = ConfigurationValidator.validate(configuration)
-        assertEquals(true, validationResult.isValid)
+        Assert.assertTrue(validationResult.isValid)
     }
 
     @Test

@@ -9,10 +9,10 @@ class MandelbrotTests {
         val bitmap = Mandelbrot(100, 100, 5, HsvToHexConverter()).createImage()
         Assert.assertEquals(100, bitmap.size)
     }
-}
 
-internal class HsvToHexConverter : HsvToHexConverting {
-    override fun convert(hue: Float, saturation: Float, value: Float): String {
-        return "#FFFFFF"
+    private class HsvToHexConverter : HsvToHexConverting {
+        override fun convert(hue: Float, saturation: Float, value: Float): String {
+            return "#FFFFFF"
+        }
     }
 }

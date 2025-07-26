@@ -13,5 +13,5 @@ val AndroidViewModel.contentResolver
 
 val AndroidViewModel.context
     get(): Context {
-        return this.getApplication<Application>()
+        return this.getApplication()
     }
