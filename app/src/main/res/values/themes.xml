@@ -16,4 +16,17 @@
     <style name="Theme.RandomImageCreator.Button" parent="@style/Widget.MaterialComponents.Button">
         <item name="android:layout_height">60dp</item>
     </style>/>
+
+    <style name="Theme.RandomImageCreator.Result.TableLayout.Key" parent="@style/Widget.AppCompat.TextView">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:paddingEnd">8dp</item>
+        <item name="android:layout_column">1</item>
+    </style>
+
+    <style name="Theme.RandomImageCreator.Result.TableLayout.Value" parent="@style/Widget.AppCompat.TextView">
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_column">2</item>
+    </style>
 </resources>

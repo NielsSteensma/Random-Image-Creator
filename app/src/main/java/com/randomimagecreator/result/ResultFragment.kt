@@ -62,9 +62,9 @@ internal class ResultFragment : Fragment(R.layout.fragment_result) {
         }
 
         rootView.findViewById<TextView>(R.id.created_images_duration).apply {
-            text = DurationFormatter
-                .seconds(viewModel.imageCreationResult.durationInMilliseconds)
-                .toString()
+            val duration =
+                DurationFormatter.seconds(viewModel.imageCreationResult.durationInMilliseconds)
+            text = resources.getString(R.string.created_images_duration_value, duration)
         }
     }
 }
