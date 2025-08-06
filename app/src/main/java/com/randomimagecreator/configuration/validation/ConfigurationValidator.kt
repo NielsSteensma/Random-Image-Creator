@@ -36,6 +36,17 @@ object ConfigurationValidator {
                     amountValidationMessage = validateAmountIsNotZero(configuration)
                 )
             }
+
+            ImagePattern.VICSEK -> {
+                ConfigurationValidationResult(
+                    widthValidationMessage = validateWidthIsNotZero(configuration)
+                        ?: validateWidthAndHeightAreEqual(configuration)
+                        ?: validateWidthIsDividableByThree(configuration),
+                    heightValidationMessage = validateHeightIsNotZero(configuration),
+                    iterationsValidationMessage = validateIterationsIsNotZero(configuration),
+                    amountValidationMessage = validateAmountIsNotZero(configuration)
+                )
+            }
         }
     }
 

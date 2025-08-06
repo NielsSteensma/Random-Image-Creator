@@ -124,6 +124,7 @@ class ConfigurationFragment : Fragment(R.layout.fragment_configuration) {
                     requireContext().getString(R.string.image_creator_pixelated) -> ImagePattern.PIXELATED
                     requireContext().getString(R.string.image_creator_mandelbrot) -> ImagePattern.MANDELBROT
                     requireContext().getString(R.string.image_creator_sierpinski) -> ImagePattern.SIERPINSKI_CARPET
+                    requireContext().getString(R.string.image_creator_vicsek) -> ImagePattern.VICSEK
                     else -> {
                         ImagePattern.SOLID
                     }

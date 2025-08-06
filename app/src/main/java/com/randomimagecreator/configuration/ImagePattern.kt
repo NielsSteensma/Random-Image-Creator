@@ -9,5 +9,6 @@ enum class ImagePattern(val localizationResourceId: Int) {
     SOLID(R.string.image_creator_solid),
     PIXELATED(R.string.image_creator_pixelated),
     MANDELBROT(R.string.image_creator_mandelbrot),
-    SIERPINSKI_CARPET(R.string.image_creator_sierpinski);
+    SIERPINSKI_CARPET(R.string.image_creator_sierpinski),
+    VICSEK(R.string.image_creator_vicsek);
 }
