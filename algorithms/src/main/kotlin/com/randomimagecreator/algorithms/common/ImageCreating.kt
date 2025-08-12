@@ -1,4 +1,4 @@
-package com.randomimagecreator.algorithms
+package com.randomimagecreator.algorithms.common
 
 interface ImageCreating {
     /**

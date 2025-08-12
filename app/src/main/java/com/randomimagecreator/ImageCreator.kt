@@ -3,11 +3,12 @@ package com.randomimagecreator
 import android.content.ContentResolver
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
-import com.randomimagecreator.algorithms.ImageCreating
+import com.randomimagecreator.algorithms.common.ImageCreating
 import com.randomimagecreator.algorithms.Mandelbrot
 import com.randomimagecreator.algorithms.Pixelated
 import com.randomimagecreator.algorithms.SierpinskiCarpet
 import com.randomimagecreator.algorithms.SolidColor
+import com.randomimagecreator.algorithms.Vicsek
 import com.randomimagecreator.common.BitmapCreator
 import com.randomimagecreator.common.HsvToHexConverter
 import com.randomimagecreator.common.ImageSaver
@@ -33,6 +34,7 @@ class ImageCreator{
             ImagePattern.SOLID -> SolidColor(width, height)
             ImagePattern.PIXELATED -> Pixelated(width, height)
             ImagePattern.SIERPINSKI_CARPET -> SierpinskiCarpet(width, height)
+            ImagePattern.VICSEK -> Vicsek(width, height)
             ImagePattern.MANDELBROT ->
                 Mandelbrot(width, height, configuration.iterations, HsvToHexConverter)
         }

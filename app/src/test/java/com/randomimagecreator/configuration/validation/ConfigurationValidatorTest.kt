@@ -313,4 +313,99 @@ class ConfigurationValidatorTest {
         )
     }
     // endregion
+
+    // region Vicsek image pattern tests
+    @Test
+    fun `validator for vicsek image pattern, when amount, width and height are valid, returns valid`() {
+        val configuration =
+            Configuration(
+                width = 300,
+                height = 300,
+                amount = 10,
+                pattern = ImagePattern.VICSEK
+            )
+        val validationResult = ConfigurationValidator.validate(configuration)
+        Assert.assertTrue(validationResult.isValid)
+    }
+
+    @Test
+    fun `validator for vicsek image pattern, when amount is zero, returns validation warning`() {
+        val configuration =
+            Configuration(
+                width = 100,
+                height = 100,
+                amount = 0,
+                pattern = ImagePattern.VICSEK
+            )
+        val validationResult = ConfigurationValidator.validate(configuration)
+        assertEquals(
+            R.string.image_creator_option_invalid,
+            validationResult.amountValidationMessage
+        )
+    }
+
+    @Test
+    fun `validator for vicsek image pattern, when width is zero, returns validation warning`() {
+        val configuration =
+            Configuration(
+                width = 0,
+                height = 100,
+                amount = 10,
+                pattern = ImagePattern.VICSEK
+            )
+        val validationResult = ConfigurationValidator.validate(configuration)
+        assertEquals(
+            R.string.image_creator_option_invalid,
+            validationResult.widthValidationMessage
+        )
+    }
+
+    @Test
+    fun `validator for vicsek image pattern, when height is zero, returns validation warning`() {
+        val configuration =
+            Configuration(
+                width = 100,
+                height = 0,
+                amount = 10,
+                pattern = ImagePattern.VICSEK
+            )
+        val validationResult = ConfigurationValidator.validate(configuration)
+        assertEquals(
+            R.string.image_creator_option_invalid,
+            validationResult.heightValidationMessage
+        )
+    }
+
+    @Test
+    fun `validator for vicsek image pattern, when width and height are not equal, returns validation warning`() {
+        val configuration =
+            Configuration(
+                width = 300,
+                height = 600,
+                amount = 10,
+                pattern = ImagePattern.VICSEK
+            )
+        val validationResult = ConfigurationValidator.validate(configuration)
+        assertEquals(
+            R.string.image_creator_option_invalid_not_equal,
+            validationResult.widthValidationMessage
+        )
+    }
+
+    @Test
+    fun `validator for vicsek image pattern, when width not dividable by 3, returns validation warning`() {
+        val configuration =
+            Configuration(
+                width = 200,
+                height = 200,
+                amount = 10,
+                pattern = ImagePattern.VICSEK
+            )
+        val validationResult = ConfigurationValidator.validate(configuration)
+        assertEquals(
+            R.string.image_creator_option_invalid_not_dividable_by_3,
+            validationResult.widthValidationMessage
+        )
+    }
+    // endregion
 }

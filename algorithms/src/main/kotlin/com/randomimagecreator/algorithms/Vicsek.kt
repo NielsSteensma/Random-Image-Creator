@@ -8,22 +8,12 @@ import com.randomimagecreator.algorithms.common.Square
 private const val DEPTH = 4
 
 /**
- * Algorithm for creating an image based on Sierpinski carpet.
+ * Algorithm for creating an image based on Vicsek.
  */
-class SierpinskiCarpet(val width: Int, val height: Int) : ImageCreating {
+class Vicsek(val width: Int, val height: Int) : ImageCreating {
     private lateinit var color: String
 
     override fun createImage(): Array<Array<String>> {
-        if (width % 3 != 0) {
-            throw IllegalArgumentException("Width is not dividable by 3")
-        }
-        if (height % 3 != 0) {
-            throw IllegalArgumentException("Height is not dividable by 3")
-        }
-        if (width != height) {
-            throw IllegalArgumentException("Width and height are not equal")
-        }
-
         color = Color.randomHex()
         val image = Image.new(width, height)
         val initialSquare = Square(0, 0, width, height)
@@ -35,9 +25,10 @@ class SierpinskiCarpet(val width: Int, val height: Int) : ImageCreating {
         val subSquares = square.divideInNineSubSquares()
         for ((index, subSquare) in subSquares.withIndex()) {
             val isSquareInMiddle = index == 4
-            val color = if (isSquareInMiddle) Color.WHITE else color
+            val isSquareInCorner = setOf(0,2,6,8).contains(index)
+            val color = if (isSquareInMiddle || isSquareInCorner) color else Color.WHITE
             image.applyColor(subSquare, color)
-            if (n < DEPTH && !isSquareInMiddle) {
+            if (n < DEPTH && (isSquareInMiddle || isSquareInCorner)) {
                 performAlgorithm(image, subSquare, n + 1)
             }
         }
