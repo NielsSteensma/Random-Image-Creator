@@ -19,7 +19,7 @@ internal data class Square(
      * Indices of the returned [LinkedHashSet] can be used to determine the sub square's position
      * in the parent.
      *
-     * See also the following mapping:
+     * See also the following mapping for the representation in indices:
      * ```
      * 0  3  6
      * 1  4  7
