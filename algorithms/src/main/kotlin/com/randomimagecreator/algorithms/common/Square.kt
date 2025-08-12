@@ -1,6 +1,6 @@
-package com.randomimagecreator.algorithms
+package com.randomimagecreator.algorithms.common
 
-internal class Square(
+internal data class Square(
     val left: Int,
     val top: Int,
     val right: Int,

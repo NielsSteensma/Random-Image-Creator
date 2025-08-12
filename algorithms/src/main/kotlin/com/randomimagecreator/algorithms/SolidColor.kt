@@ -1,6 +1,7 @@
 package com.randomimagecreator.algorithms
 
 import com.randomimagecreator.algorithms.common.Color
+import com.randomimagecreator.algorithms.common.ImageCreating
 
 /**
  * Algorithm for creating an image with a random solid color

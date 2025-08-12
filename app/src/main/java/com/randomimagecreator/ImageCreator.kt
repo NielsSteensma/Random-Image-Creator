@@ -3,7 +3,7 @@ package com.randomimagecreator
 import android.content.ContentResolver
 import android.net.Uri
 import androidx.documentfile.provider.DocumentFile
-import com.randomimagecreator.algorithms.ImageCreating
+import com.randomimagecreator.algorithms.common.ImageCreating
 import com.randomimagecreator.algorithms.Mandelbrot
 import com.randomimagecreator.algorithms.Pixelated
 import com.randomimagecreator.algorithms.SierpinskiCarpet

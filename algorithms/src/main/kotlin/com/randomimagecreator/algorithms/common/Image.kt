@@ -1,7 +1,5 @@
 package com.randomimagecreator.algorithms.common
 
-import com.randomimagecreator.algorithms.Square
-
 internal class Image(val pixels: Array<Array<String>>) {
 
     fun applyColor(square: Square, color: String) {

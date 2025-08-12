@@ -2,6 +2,8 @@ package com.randomimagecreator.algorithms
 
 import com.randomimagecreator.algorithms.common.Color
 import com.randomimagecreator.algorithms.common.Image
+import com.randomimagecreator.algorithms.common.ImageCreating
+import com.randomimagecreator.algorithms.common.Square
 
 private const val DEPTH = 4
 
