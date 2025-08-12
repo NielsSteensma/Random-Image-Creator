@@ -1,8 +1,8 @@
 package com.randomimagecreator.algorithms
 
 import com.randomimagecreator.algorithms.common.Color
+import com.randomimagecreator.algorithms.common.Image
 import com.randomimagecreator.algorithms.common.Rect
-
 
 private const val DEPTH = 4
 
@@ -24,58 +24,21 @@ class SierpinskiCarpet(val width: Int, val height: Int) : ImageCreating {
         }
 
         color = Color.randomHex()
-        val image = Array(width) { Array(height) { "" } }
-        val initialSquare = SierpinskiSquare(Rect(0, 0, width, height))
+        val image = Image.new(width, height)
+        val initialSquare = Square(Rect(0, 0, width, height))
         performAlgorithm(image, initialSquare, 0)
-        return image
+        return image.pixels
     }
 
-    private fun performAlgorithm(image: Array<Array<String>>, square: SierpinskiSquare, n: Int) {
+    private fun performAlgorithm(image: Image, square: Square, n: Int) {
         val subSquares = square.divideInNineSubSquares()
-        image.applyColors(subSquares)
-        for (subSquare in subSquares.filter { !it.isMiddle }) {
-            if (n < DEPTH) {
+        for ((index, subSquare) in subSquares.withIndex()) {
+            val isSquareInMiddle = index == 4
+            val color = if (isSquareInMiddle) Color.WHITE else color
+            image.applyColor(subSquare, color)
+            if (n < DEPTH && !isSquareInMiddle) {
                 performAlgorithm(image, subSquare, n + 1)
             }
         }
-    }
-
-    private fun Array<Array<String>>.applyColors(squares: Set<SierpinskiSquare>) {
-        squares.forEach {
-            for (x in it.left until it.right) {
-                for (y in it.top until it.bottom) {
-                    this[x][y] = if (it.isMiddle) Color.WHITE else color
-                }
-            }
-        }
-    }
-}
-
-
-private class SierpinskiSquare(rect: Rect, val isMiddle: Boolean = false) {
-    val left = rect.left
-    val right = rect.right
-    val top = rect.top
-    val bottom = rect.bottom
-
-    /**
-     * Divides current square in nine sub squares.
-     */
-    fun divideInNineSubSquares(): Set<SierpinskiSquare> {
-        val sideLength = (right - left) / 3
-
-        val squares = mutableSetOf<SierpinskiSquare>()
-        for (x in 0..2) {
-            for (y in 0..2) {
-                val rect = Rect(
-                    left + (sideLength * x),
-                    top + (sideLength * y),
-                    left + (sideLength * (x + 1)),
-                    top + (sideLength * (y + 1))
-                )
-                squares.add(SierpinskiSquare(rect, x == 1 && y == 1))
-            }
-        }
-        return squares
     }
 }
