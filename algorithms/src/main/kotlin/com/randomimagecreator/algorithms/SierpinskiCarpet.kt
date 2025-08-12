@@ -2,7 +2,6 @@ package com.randomimagecreator.algorithms
 
 import com.randomimagecreator.algorithms.common.Color
 import com.randomimagecreator.algorithms.common.Image
-import com.randomimagecreator.algorithms.common.Rect
 
 private const val DEPTH = 4
 
@@ -10,7 +9,7 @@ private const val DEPTH = 4
  * Algorithm for creating an image based on Sierpinski carpet.
  */
 class SierpinskiCarpet(val width: Int, val height: Int) : ImageCreating {
-    lateinit var color: String
+    private lateinit var color: String
 
     override fun createImage(): Array<Array<String>> {
         if (width % 3 != 0) {
@@ -25,7 +24,7 @@ class SierpinskiCarpet(val width: Int, val height: Int) : ImageCreating {
 
         color = Color.randomHex()
         val image = Image.new(width, height)
-        val initialSquare = Square(Rect(0, 0, width, height))
+        val initialSquare = Square(0, 0, width, height)
         performAlgorithm(image, initialSquare, 0)
         return image.pixels
     }
