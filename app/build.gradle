@@ -14,8 +14,8 @@ android {
         namespace = "com.randomimagecreator"
         minSdkVersion 23
         targetSdkVersion 37
-        versionCode 16
-        versionName "0.7.0"
+        versionCode 17
+        versionName "17"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
